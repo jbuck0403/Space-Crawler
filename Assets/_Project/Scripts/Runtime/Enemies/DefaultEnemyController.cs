@@ -1,10 +1,30 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DefaultEnemyController : BaseEnemyController
 {
     [SerializeField]
     private float RetreatHealthThreshold = 10f;
+
+    private void Update()
+    {
+        if (movementController == null || target == null)
+            return;
+
+        // float distanceToTarget = MovementUtils.GetDistanceToTarget(
+        //     transform.position,
+        //     target.position
+        // );
+        // if (distanceToTarget <= 7.5f)
+        // {
+        //     ChangeStrategy(Strategies.Retreat);
+        // }
+        // else if (distanceToTarget >= 15f)
+        // {
+        //     ChangeStrategy(Strategies.Default);
+        // }
+    }
 
     protected override void InitializeStrategies()
     {

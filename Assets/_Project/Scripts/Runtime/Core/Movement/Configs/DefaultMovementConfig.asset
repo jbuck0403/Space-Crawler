@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 5
   acceleration: 50
-  deceleration: 50
+  deceleration: 7.5
   rotationSpeed: 10
