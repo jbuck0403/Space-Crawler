@@ -1,0 +1,41 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+public class DefaultEnemyController : BaseEnemyController
+{
+    [SerializeField]
+    public float RetreatHealthThreshold = 10f;
+
+    protected override void InitializeStrategies()
+    {
+        availableStrategies = new Dictionary<string, IMovementStrategy>
+        {
+            { Strategies.Default, new DefaultMovementStrategy(movementConfig) },
+            { Strategies.Retreat, new RetreatMovementStrategy(movementConfig) }
+        };
+    }
+
+    protected override void SetDefaultStrategy()
+    {
+        ChangeStrategy(Strategies.Default);
+    }
+
+    // subscribe to "low health" event in health module (TBI)
+    private void Retreat(float currentHealth)
+    {
+        if (currentHealth < RetreatHealthThreshold)
+        {
+            ChangeStrategy(Strategies.Retreat);
+        }
+    }
+
+    // // Optional: Add health system reference and handle strategy changes based on health
+    // private void OnHealthChanged(float healthPercent)
+    // {
+    //     // Example: Change strategy based on health
+    //     if (healthPercent < 0.3f)
+    //     {
+    //         ChangeStrategy(Strategies.Retreat);
+    //     }
+    // }
+}

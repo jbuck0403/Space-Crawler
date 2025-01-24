@@ -62,3 +62,6 @@ Thumbs.db
 # Project specific
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 /[Aa]ssets/[Aa]ddressables/*
+
+# Cursor specific
+**/*.cursorrules
