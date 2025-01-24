@@ -1,16 +1,35 @@
 using UnityEngine;
 
-// [RequireComponent(MovementHandler)]
 public class MovementController : MonoBehaviour
 {
     [SerializeField]
-    private MovementConfig defaultConfig;
+    public Transform DefaultTarget;
+    private Transform currentTarget;
+    private Transform previousTarget;
 
-    [SerializeField]
-    private Transform target;
-
-    private MovementHandler movementHandler;
     private IMovementStrategy currentStrategy;
+    private MovementHandler movementHandler;
+
+    public void Start()
+    {
+        currentTarget = DefaultTarget;
+    }
+
+    public void ChangeTarget(Transform target)
+    {
+        previousTarget = this.currentTarget;
+        currentTarget = target;
+    }
+
+    public void TargetPreviousTarget()
+    {
+        ChangeTarget(previousTarget);
+    }
+
+    public void TargetDefaultTarget()
+    {
+        ChangeTarget(DefaultTarget);
+    }
 
     public void SetStrategy(IMovementStrategy newStrategy)
     {
@@ -26,7 +45,7 @@ public class MovementController : MonoBehaviour
         movementHandler = new MovementHandler(newStrategy.GetMovementConfig());
 
         // Enter new strategy
-        currentStrategy.OnEnter(transform, target);
+        currentStrategy.OnEnter(transform, currentTarget);
     }
 
     private void Update()
@@ -35,7 +54,7 @@ public class MovementController : MonoBehaviour
             return;
 
         // Update current strategy
-        currentStrategy.OnUpdate(transform, target);
+        currentStrategy.OnUpdate(transform, currentTarget);
 
         // Check if strategy is complete and needs changing
         if (currentStrategy.IsComplete())

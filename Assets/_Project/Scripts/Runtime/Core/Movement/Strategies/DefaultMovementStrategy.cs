@@ -4,11 +4,13 @@ public class DefaultMovementStrategy : IMovementStrategy
 {
     private readonly MovementConfig config;
     private readonly float followDistance = 5f;
+    private readonly MovementHandler movementHandler;
     private bool isInitialized;
 
     public DefaultMovementStrategy(MovementConfig config)
     {
         this.config = config;
+        movementHandler = new MovementHandler(config);
     }
 
     public void OnEnter(Transform self, Transform target)
@@ -18,24 +20,31 @@ public class DefaultMovementStrategy : IMovementStrategy
 
     public void OnUpdate(Transform self, Transform target)
     {
+        Debug.Log(target);
         if (!isInitialized || target == null)
             return;
 
-        // Simple follow behavior
-        Vector3 directionToTarget = (target.position - self.position).normalized;
-        float distanceToTarget = Vector3.Distance(self.position, target.position);
+        Vector2 directionToTarget = MovementUtils.GetTargetDirection(
+            self.position,
+            target.position
+        );
+        float distanceToTarget = MovementUtils.GetDistanceToTarget(self.position, target.position);
 
         // Only move if we're further than follow distance
-        if (distanceToTarget > followDistance)
-        {
-            self.position += directionToTarget * config.maxSpeed * Time.deltaTime;
-        }
+        Vector2 targetDirection =
+            distanceToTarget > followDistance ? directionToTarget : Vector2.zero;
+
+        Debug.Log(targetDirection);
+
+        movementHandler.ApplyMovement(self, targetDirection, Time.deltaTime);
     }
 
     public void OnExit()
     {
         isInitialized = false;
     }
+
+    public void SetDefaultStrategy() { }
 
     public MovementConfig GetMovementConfig() => config;
 }

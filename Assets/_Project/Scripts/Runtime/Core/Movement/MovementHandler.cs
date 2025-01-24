@@ -44,6 +44,21 @@ public class MovementHandler
         return currentPosition + (currentVelocity * deltaTime);
     }
 
+    public void ApplyMovement(Transform transform, Vector2 targetDirection, float deltaTime)
+    {
+        Vector2 newPosition = CalculateMovement(targetDirection, transform.position, deltaTime);
+        transform.position = new Vector3(newPosition.x, newPosition.y, transform.position.z);
+    }
+
+    public void ApplyMovementAndRotation(
+        Transform transform,
+        Vector2 newPosition,
+        float newRotation
+    )
+    {
+        transform.SetPositionAndRotation(newPosition, Quaternion.Euler(0, 0, newRotation));
+    }
+
     public float CalculateRotation(
         Vector2 targetDirection,
         float currentRotation,

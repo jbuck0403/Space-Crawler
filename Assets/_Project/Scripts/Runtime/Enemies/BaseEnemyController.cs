@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(MovementController))]
 public abstract class BaseEnemyController : MonoBehaviour
 {
     [SerializeField]
     protected MovementConfig movementConfig;
 
-    [SerializeField]
     protected Transform target; // Usually the player
 
     protected Dictionary<string, IMovementStrategy> availableStrategies;
@@ -15,12 +15,12 @@ public abstract class BaseEnemyController : MonoBehaviour
     protected virtual void Awake()
     {
         movementController = GetComponent<MovementController>();
+        target = movementController.DefaultTarget;
         InitializeStrategies();
     }
 
     protected virtual void Start()
     {
-        // Set initial strategy
         SetDefaultStrategy();
     }
 

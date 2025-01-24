@@ -4,7 +4,7 @@ using UnityEngine;
 public class DefaultEnemyController : BaseEnemyController
 {
     [SerializeField]
-    public float RetreatHealthThreshold = 10f;
+    private float RetreatHealthThreshold = 10f;
 
     protected override void InitializeStrategies()
     {

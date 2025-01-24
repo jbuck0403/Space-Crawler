@@ -1,3 +1,5 @@
+using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -8,6 +10,7 @@ public class PlayerController : MonoBehaviour
 
     private MovementHandler movementHandler;
     private Vector2 moveInput;
+    private Vector2 aimDirection;
     private Camera mainCamera;
 
     private void Awake()
@@ -18,17 +21,35 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        // Get movement input
+        GetMoveInput();
+        GetAimDirection();
+        MoveAndFaceTarget();
+    }
+
+    private void GetMoveInput()
+    {
         moveInput = new Vector2(
             Input.GetAxisRaw("Horizontal"),
             Input.GetAxisRaw("Vertical")
         ).normalized;
+    }
 
-        // Get mouse position for rotation
-        Vector2 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 aimDirection = (mousePosition - (Vector2)transform.position).normalized;
+    private void GetAimDirection()
+    {
+        // get mouse position in world space
+        Vector3 mouseWorldPosition = mainCamera.ScreenToWorldPoint(
+            new Vector3(
+                Input.mousePosition.x,
+                Input.mousePosition.y,
+                -mainCamera.transform.position.z
+            )
+        );
+        aimDirection = ((Vector2)mouseWorldPosition - (Vector2)transform.position).normalized;
+    }
 
-        // Calculate new position and rotation
+    private void MoveAndFaceTarget()
+    {
+        // calculate new position and rotation
         Vector2 newPosition = movementHandler.CalculateMovement(
             moveInput,
             transform.position,
@@ -42,8 +63,6 @@ public class PlayerController : MonoBehaviour
             Time.deltaTime
         );
 
-        // Apply movement and rotation
-        transform.position = newPosition;
-        transform.rotation = Quaternion.Euler(0, 0, newRotation);
+        movementHandler.ApplyMovementAndRotation(transform, newPosition, newRotation);
     }
 }
