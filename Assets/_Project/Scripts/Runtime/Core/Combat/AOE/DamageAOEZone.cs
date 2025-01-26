@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 
 public class DamageAOEZone : BaseAOEZone
@@ -8,25 +7,25 @@ public class DamageAOEZone : BaseAOEZone
 
     public override void OnTargetEnter(AOEDamageReceiver target)
     {
-        if (AOEData.triggerOnEnter)
+        if (AOEData != null && AOEData.triggerOnEnter)
             AOEDamage(target);
     }
 
     public override void OnTargetStay(AOEDamageReceiver target)
     {
-        if (AOEData.triggerOverTime)
+        if (AOEData != null && AOEData.triggerOverTime)
             AOEDamage(target);
     }
 
     public override void OnTargetExit(AOEDamageReceiver target)
     {
-        if (AOEData.triggerOnExit)
+        if (AOEData != null && AOEData.triggerOnExit)
             AOEDamage(target);
     }
 
     private void AOEDamage(AOEDamageReceiver target)
     {
-        if (AOEData != null && CanTriggerEffect())
+        if (CanTriggerEffect())
         {
             onDamageOverTimeTick.Raise(damageType);
 

@@ -4,6 +4,8 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
+  - damageProfile: {fileID: 11400000, guid: 6ceb20bb6f0f03d4a97f476c177f3dae, type: 2}
+  - aoeData: {fileID: 11400000, guid: 13ea6f91313dff04bbf6958c23fa951b, type: 2}
   - onDamageOverTimeTick: {fileID: 11400000, guid: 80663e8e44558cd4ca729bb8a7c2840a, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}

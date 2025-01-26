@@ -5,7 +5,8 @@ public abstract class BaseAOEZone : MonoBehaviour
     [SerializeField]
     private readonly DamageProfile damageProfile;
 
-    private readonly AOEData aoeData;
+    [SerializeField]
+    private AOEData aoeData;
 
     protected float lastTickTime;
     protected float spawnTime;

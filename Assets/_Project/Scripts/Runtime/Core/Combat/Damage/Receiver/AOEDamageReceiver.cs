@@ -7,7 +7,6 @@ public class AOEDamageReceiver : BaseDamageReceiver
         var aoeZone = other.GetComponent<BaseAOEZone>();
         if (aoeZone != null && aoeZone.AOEData.triggerOnEnter)
         {
-            // ReceiveDamage(aoeZone.GetDamageData());
             aoeZone.OnTargetEnter(this);
         }
     }
@@ -17,8 +16,7 @@ public class AOEDamageReceiver : BaseDamageReceiver
         var aoeZone = other.GetComponent<BaseAOEZone>();
         if (aoeZone != null && aoeZone.AOEData.triggerOnExit)
         {
-            // ReceiveDamage(aoeZone.GetDamageData());
-            aoeZone.OnTargetEnter(this);
+            aoeZone.OnTargetExit(this);
         }
     }
 
@@ -27,8 +25,7 @@ public class AOEDamageReceiver : BaseDamageReceiver
         var aoeZone = other.GetComponent<BaseAOEZone>();
         if (aoeZone != null && aoeZone.AOEData.triggerOverTime && aoeZone.CanTriggerEffect())
         {
-            // ReceiveDamage(aoeZone.GetDamageData());
-            aoeZone.OnTargetEnter(this);
+            aoeZone.OnTargetStay(this);
         }
     }
 }
