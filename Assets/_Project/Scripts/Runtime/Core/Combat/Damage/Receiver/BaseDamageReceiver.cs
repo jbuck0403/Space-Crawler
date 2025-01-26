@@ -14,7 +14,7 @@ public class BaseDamageReceiver : MonoBehaviour, IDamageReceiver
         }
     }
 
-    protected void ReceiveDamage(DamageData damageData)
+    public void ReceiveDamage(DamageData damageData)
     {
         if (damageHandler == null)
         {

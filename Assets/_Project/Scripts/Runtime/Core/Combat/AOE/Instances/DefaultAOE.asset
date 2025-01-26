@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1208722ea15f2324993ce2b9bd5d7264, type: 3}
+  m_Name: DefaultAOE
+  m_EditorClassIdentifier: 
+  radius: 5
+  triggerOnEnter: 1
+  triggerOnExit: 0
+  triggerOverTime: 0
+  tickRate: 1
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  duration: 5
+  destroyOnEnd: 1

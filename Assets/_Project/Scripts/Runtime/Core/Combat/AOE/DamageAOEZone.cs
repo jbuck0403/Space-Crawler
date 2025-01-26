@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class DamageAOEZone : BaseAOEZone
@@ -5,10 +6,31 @@ public class DamageAOEZone : BaseAOEZone
     [SerializeField]
     private DamageTypeEvent onDamageOverTimeTick;
 
-    protected override void ApplyEffect(Collider2D target)
+    public override void OnTargetEnter(AOEDamageReceiver target)
     {
-        onDamageOverTimeTick.Raise(damageType);
+        if (AOEData.triggerOnEnter)
+            AOEDamage(target);
+    }
 
-        // rest of code
+    public override void OnTargetStay(AOEDamageReceiver target)
+    {
+        if (AOEData.triggerOverTime)
+            AOEDamage(target);
+    }
+
+    public override void OnTargetExit(AOEDamageReceiver target)
+    {
+        if (AOEData.triggerOnExit)
+            AOEDamage(target);
+    }
+
+    private void AOEDamage(AOEDamageReceiver target)
+    {
+        if (AOEData != null && CanTriggerEffect())
+        {
+            onDamageOverTimeTick.Raise(damageType);
+
+            target.ReceiveDamage(damageData);
+        }
     }
 }
