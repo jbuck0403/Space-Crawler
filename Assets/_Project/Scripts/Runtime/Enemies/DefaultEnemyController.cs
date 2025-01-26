@@ -1,7 +1,9 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
+[RequireComponent(typeof(MovementController))]
+[RequireComponent(typeof(DamageHandler))]
+[RequireComponent(typeof(HealthSystem))]
 public class DefaultEnemyController : BaseEnemyController
 {
     [SerializeField]

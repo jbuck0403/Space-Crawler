@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(DamageHandler))]
 public class DamageCollider : MonoBehaviour, IDamageReceiver
 {
     private DamageHandler damageHandler;

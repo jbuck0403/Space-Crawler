@@ -6,12 +6,26 @@ public class HealthSystem : MonoBehaviour
     [SerializeField]
     private float maxHealth = 100f;
     private float currentHealth;
+    private bool isDead = false;
 
-    public UnityEvent<float> OnHealthChanged;
-    public UnityEvent<float> OnHealthPercentChanged;
-    public UnityEvent OnDamageTaken;
-    public UnityEvent OnHealingReceived;
-    public UnityEvent OnDeath;
+    [SerializeField]
+    public FloatEvent OnHealthChanged;
+
+    [SerializeField]
+    public FloatEvent OnHealthPercentChanged;
+
+    [SerializeField]
+    public VoidEvent OnDamageTaken;
+
+    [SerializeField]
+    public VoidEvent OnHealingReceived;
+
+    [SerializeField]
+    public VoidEvent OnDeath;
+
+    public float MaxHealth => maxHealth;
+    public float CurrentHealth => currentHealth;
+    public bool IsDead => isDead;
 
     private void Awake()
     {
@@ -26,21 +40,22 @@ public class HealthSystem : MonoBehaviour
 
         if (amount > 0)
         {
-            OnHealingReceived.Invoke();
+            OnHealingReceived.Raise(default);
         }
         else if (amount < 0)
         {
-            OnDamageTaken.Invoke();
+            OnDamageTaken.Raise(default);
         }
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
 
-        OnHealthChanged.Invoke(currentHealth);
-        OnHealthPercentChanged.Invoke(currentHealth / maxHealth);
+        OnHealthChanged.Raise(currentHealth);
+        OnHealthPercentChanged.Raise(currentHealth / maxHealth);
 
         if (currentHealth <= 0)
         {
-            OnDeath.Invoke();
+            isDead = true;
+            OnDeath.Raise(default);
         }
     }
 

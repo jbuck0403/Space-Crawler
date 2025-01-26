@@ -1,11 +1,13 @@
 using UnityEngine;
 
 [RequireComponent(typeof(HealthSystem))]
-// [RequireComponent(typeof(DefenseHandler))]
 public class DamageHandler : MonoBehaviour
 {
     private IDefenseHandler defenseHandler;
     private HealthSystem healthSystem;
+
+    [SerializeField]
+    private VoidEvent onCriticalHit;
 
     private void Awake()
     {
@@ -53,6 +55,13 @@ public class DamageHandler : MonoBehaviour
 
     private float ApplyCriticalHit(float finalDamage, float critMultiplier, float critChance)
     {
-        return finalDamage * (RandomUtils.Chance(critChance) ? critMultiplier : 1);
+        bool isCrit = RandomUtils.Chance(critChance);
+
+        if (isCrit)
+        {
+            onCriticalHit.Raise(default);
+        }
+
+        return finalDamage * (isCrit ? critMultiplier : 1);
     }
 }

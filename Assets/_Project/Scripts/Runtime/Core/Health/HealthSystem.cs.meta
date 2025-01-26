@@ -3,7 +3,12 @@ guid: bc27104ff07129d4cb86523b19723560
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - OnHealthChanged: {fileID: 11400000, guid: cf4f944a285852c4989e56e0446e6d30, type: 2}
+  - OnHealthPercentChanged: {fileID: 11400000, guid: 69351775823ecf047afb3d13b31401a3, type: 2}
+  - OnDamageTaken: {fileID: 11400000, guid: febdc8f4f5f0d0d4bbb1a33ee6195643, type: 2}
+  - OnHealingReceived: {fileID: 11400000, guid: 573bc6b5eb542924090acdf4339ffa85, type: 2}
+  - OnDeath: {fileID: 11400000, guid: 0d8db1a2cef0dd0489c7071f9d5931de, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
