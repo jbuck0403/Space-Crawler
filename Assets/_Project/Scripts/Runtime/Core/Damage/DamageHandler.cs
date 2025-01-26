@@ -1,24 +1,39 @@
 using UnityEngine;
 
 [RequireComponent(typeof(HealthSystem))]
-[RequireComponent(typeof(DefenseHandler))]
+// [RequireComponent(typeof(DefenseHandler))]
 public class DamageHandler : MonoBehaviour
 {
-    private DefenseHandler defenseHandler;
+    private IDefenseHandler defenseHandler;
     private HealthSystem healthSystem;
 
     private void Awake()
     {
-        defenseHandler = GetComponent<DefenseHandler>();
         healthSystem = GetComponent<HealthSystem>();
+    }
+
+    public void Initialize(IDefenseHandler defenseHandler)
+    {
+        this.defenseHandler = defenseHandler;
     }
 
     public void HandleDamage(DamageData rawDamageData)
     {
+        if (healthSystem == null)
+        {
+            Debug.LogError($"No HealthSystem found on {gameObject.name}");
+            return;
+        }
+
+        if (defenseHandler == null)
+        {
+            Debug.LogError($"No DefenseHandler initialized on {gameObject.name}");
+            return;
+        }
+
         float preMitigationDamage = CalculatePreMitigationDamage(rawDamageData);
         float finalDamage = defenseHandler.HandleDefense(preMitigationDamage, rawDamageData);
-
-        healthSystem.ModifyHealth(-finalDamage);
+        healthSystem.ModifyHealth(finalDamage);
     }
 
     private float CalculatePreMitigationDamage(DamageData rawDamageData)
