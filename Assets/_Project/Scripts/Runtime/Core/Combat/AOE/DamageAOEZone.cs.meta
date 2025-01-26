@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 8516ec9499b3adf4b9d059d6888ba2b5
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - onDamageOverTimeTick: {fileID: 11400000, guid: 80663e8e44558cd4ca729bb8a7c2840a, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -40,11 +40,11 @@ public class HealthSystem : MonoBehaviour
 
         if (amount > 0)
         {
-            OnHealingReceived.Raise(default);
+            OnHealingReceived.Raise();
         }
         else if (amount < 0)
         {
-            OnDamageTaken.Raise(default);
+            OnDamageTaken.Raise();
         }
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
@@ -55,7 +55,7 @@ public class HealthSystem : MonoBehaviour
         if (currentHealth <= 0)
         {
             isDead = true;
-            OnDeath.Raise(default);
+            OnDeath.Raise();
         }
     }
 

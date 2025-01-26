@@ -23,9 +23,3 @@ public struct DamageData
         Type = damageType;
     }
 }
-
-public enum DamageType
-{
-    Physical,
-    True
-}

@@ -59,7 +59,7 @@ public class DamageHandler : MonoBehaviour
 
         if (isCrit)
         {
-            onCriticalHit.Raise(default);
+            onCriticalHit.Raise();
         }
 
         return finalDamage * (isCrit ? critMultiplier : 1);

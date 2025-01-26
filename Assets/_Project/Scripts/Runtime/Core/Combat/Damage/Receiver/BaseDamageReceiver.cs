@@ -1,8 +1,7 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(DamageHandler))]
-public class DamageCollider : MonoBehaviour, IDamageReceiver
+public class BaseDamageReceiver : MonoBehaviour, IDamageReceiver
 {
     private DamageHandler damageHandler;
 
@@ -15,7 +14,7 @@ public class DamageCollider : MonoBehaviour, IDamageReceiver
         }
     }
 
-    public void ReceiveDamage(DamageData damageData)
+    protected void ReceiveDamage(DamageData damageData)
     {
         if (damageHandler == null)
         {
@@ -23,13 +22,5 @@ public class DamageCollider : MonoBehaviour, IDamageReceiver
             return;
         }
         damageHandler.HandleDamage(damageData);
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.TryGetComponent<Projectile>(out var projectile))
-        {
-            ReceiveDamage(projectile.damageData);
-        }
     }
 }
