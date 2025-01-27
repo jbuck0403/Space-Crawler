@@ -1,14 +1,16 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class BaseAOEZone : MonoBehaviour
 {
+    private HashSet<AOEDamageReceiver> activeReceivers = new HashSet<AOEDamageReceiver>();
+
     [SerializeField]
     private readonly DamageProfile damageProfile;
 
     [SerializeField]
     private AOEData aoeData;
 
-    protected float lastTickTime;
     protected float spawnTime;
     protected DamageType damageType;
     protected CircleCollider2D effectCollider;
@@ -80,20 +82,7 @@ public abstract class BaseAOEZone : MonoBehaviour
 
     protected virtual void OnEffectExpired()
     {
-        // Override this in child classes if needed
-    }
-
-    public bool CanTriggerEffect()
-    {
-        if (!aoeData.triggerOverTime)
-            return false;
-
-        if (Time.time >= lastTickTime + (1f / aoeData.tickRate))
-        {
-            lastTickTime = Time.time;
-            return true;
-        }
-        return false;
+        // override this in child classes if needed (explosions at the end, etc.)
     }
 
     protected bool IsInTargetLayer(GameObject obj)
@@ -110,7 +99,45 @@ public abstract class BaseAOEZone : MonoBehaviour
 
     public Transform GetOwner() => owner;
 
-    public abstract void OnTargetEnter(AOEDamageReceiver target);
-    public abstract void OnTargetExit(AOEDamageReceiver target);
-    public abstract void OnTargetStay(AOEDamageReceiver target);
+    protected virtual void OnDestroy()
+    {
+        // clean up all receiver references when zone is destroyed
+        foreach (var receiver in activeReceivers)
+        {
+            if (receiver != null)
+            {
+                receiver.OnZoneDestroyed(this);
+            }
+        }
+    }
+
+    public void OnTargetEnter(AOEDamageReceiver target)
+    {
+        if (!IsInTargetLayer(target.gameObject))
+            return;
+
+        activeReceivers.Add(target);
+        OnTargetEnterEffect(target); // Abstract method for specific implementation
+    }
+
+    public void OnTargetExit(AOEDamageReceiver target)
+    {
+        if (!IsInTargetLayer(target.gameObject))
+            return;
+
+        OnTargetExitEffect(target); // Abstract method for specific implementation
+    }
+
+    public void OnTargetStay(AOEDamageReceiver target)
+    {
+        if (!IsInTargetLayer(target.gameObject))
+            return;
+
+        OnTargetStayEffect(target); // Abstract method for specific implementation
+    }
+
+    // Protected abstract methods that derived classes must implement
+    protected abstract void OnTargetEnterEffect(AOEDamageReceiver target);
+    protected abstract void OnTargetExitEffect(AOEDamageReceiver target);
+    protected abstract void OnTargetStayEffect(AOEDamageReceiver target);
 }

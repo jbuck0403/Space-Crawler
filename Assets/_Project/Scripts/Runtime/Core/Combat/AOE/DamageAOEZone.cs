@@ -5,19 +5,19 @@ public class DamageAOEZone : BaseAOEZone
     [SerializeField]
     private DamageTypeEvent onDamageOverTimeTick;
 
-    public override void OnTargetEnter(AOEDamageReceiver target)
+    protected override void OnTargetEnterEffect(AOEDamageReceiver target)
     {
         if (AOEData != null && AOEData.triggerOnEnter)
             AOEDamage(target);
     }
 
-    public override void OnTargetStay(AOEDamageReceiver target)
+    protected override void OnTargetStayEffect(AOEDamageReceiver target)
     {
         if (AOEData != null && AOEData.triggerOverTime)
             AOEDamage(target);
     }
 
-    public override void OnTargetExit(AOEDamageReceiver target)
+    protected override void OnTargetExitEffect(AOEDamageReceiver target)
     {
         if (AOEData != null && AOEData.triggerOnExit)
             AOEDamage(target);
@@ -25,7 +25,7 @@ public class DamageAOEZone : BaseAOEZone
 
     private void AOEDamage(AOEDamageReceiver target)
     {
-        if (CanTriggerEffect())
+        if (target.CanTriggerEffect(this))
         {
             onDamageOverTimeTick.Raise(damageType);
 
