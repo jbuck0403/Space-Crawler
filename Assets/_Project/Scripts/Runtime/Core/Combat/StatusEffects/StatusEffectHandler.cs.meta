@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 894c48982aeb3104895636fd6dc62901
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - onStatusEffectApplied: {fileID: 11400000, guid: 2594968fef6f741498a17d64b13f2801, type: 2}
+  - onStatusEffectRemoved: {fileID: 11400000, guid: 9197439c1d4101143ad1e8d39eb0b163, type: 2}
+  - onStatusEffectTick: {fileID: 11400000, guid: 1373c6c36bae90d4a98fbb7073f47f32, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public abstract class BaseAOEZone : MonoBehaviour
 {
-    private HashSet<AOEDamageReceiver> activeReceivers = new HashSet<AOEDamageReceiver>();
+    private readonly HashSet<AOEDamageReceiver> activeReceivers = new HashSet<AOEDamageReceiver>();
 
     [SerializeField]
     private readonly DamageProfile damageProfile;
@@ -117,7 +117,7 @@ public abstract class BaseAOEZone : MonoBehaviour
             return;
 
         activeReceivers.Add(target);
-        OnTargetEnterEffect(target); // Abstract method for specific implementation
+        OnTargetEnterEffect(target);
     }
 
     public void OnTargetExit(AOEDamageReceiver target)
@@ -125,7 +125,7 @@ public abstract class BaseAOEZone : MonoBehaviour
         if (!IsInTargetLayer(target.gameObject))
             return;
 
-        OnTargetExitEffect(target); // Abstract method for specific implementation
+        OnTargetExitEffect(target);
     }
 
     public void OnTargetStay(AOEDamageReceiver target)
@@ -133,10 +133,9 @@ public abstract class BaseAOEZone : MonoBehaviour
         if (!IsInTargetLayer(target.gameObject))
             return;
 
-        OnTargetStayEffect(target); // Abstract method for specific implementation
+        OnTargetStayEffect(target);
     }
 
-    // Protected abstract methods that derived classes must implement
     protected abstract void OnTargetEnterEffect(AOEDamageReceiver target);
     protected abstract void OnTargetExitEffect(AOEDamageReceiver target);
     protected abstract void OnTargetStayEffect(AOEDamageReceiver target);

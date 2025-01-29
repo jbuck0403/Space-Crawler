@@ -12,4 +12,4 @@ public abstract class BaseGameEvent<T> : ScriptableObject
     }
 }
 
-public struct Void { } // Empty struct for parameterless events
+public struct Void { } // empty struct for parameterless events
