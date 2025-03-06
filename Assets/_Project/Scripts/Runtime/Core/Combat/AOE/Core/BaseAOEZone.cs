@@ -3,7 +3,7 @@ using UnityEngine;
 
 public abstract class BaseAOEZone : MonoBehaviour
 {
-    private readonly HashSet<AOEDamageReceiver> activeReceivers = new HashSet<AOEDamageReceiver>();
+    private readonly HashSet<AOEReceiver> activeReceivers = new HashSet<AOEReceiver>();
 
     [SerializeField]
     private readonly DamageProfile damageProfile;
@@ -111,7 +111,7 @@ public abstract class BaseAOEZone : MonoBehaviour
         }
     }
 
-    public void OnTargetEnter(AOEDamageReceiver target)
+    public void OnTargetEnter(AOEReceiver target)
     {
         if (!IsInTargetLayer(target.gameObject))
             return;
@@ -120,7 +120,7 @@ public abstract class BaseAOEZone : MonoBehaviour
         OnTargetEnterEffect(target);
     }
 
-    public void OnTargetExit(AOEDamageReceiver target)
+    public void OnTargetExit(AOEReceiver target)
     {
         if (!IsInTargetLayer(target.gameObject))
             return;
@@ -128,7 +128,7 @@ public abstract class BaseAOEZone : MonoBehaviour
         OnTargetExitEffect(target);
     }
 
-    public void OnTargetStay(AOEDamageReceiver target)
+    public void OnTargetStay(AOEReceiver target)
     {
         if (!IsInTargetLayer(target.gameObject))
             return;
@@ -136,7 +136,7 @@ public abstract class BaseAOEZone : MonoBehaviour
         OnTargetStayEffect(target);
     }
 
-    protected abstract void OnTargetEnterEffect(AOEDamageReceiver target);
-    protected abstract void OnTargetExitEffect(AOEDamageReceiver target);
-    protected abstract void OnTargetStayEffect(AOEDamageReceiver target);
+    protected abstract void OnTargetEnterEffect(AOEReceiver target);
+    protected abstract void OnTargetExitEffect(AOEReceiver target);
+    protected abstract void OnTargetStayEffect(AOEReceiver target);
 }

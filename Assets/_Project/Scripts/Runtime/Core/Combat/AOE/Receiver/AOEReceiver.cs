@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AOEDamageReceiver : BaseDamageReceiver
+public class AOEReceiver : BaseDamageReceiver
 {
     // Track timing per zone AND if we're in the zone
     private Dictionary<BaseAOEZone, (float lastTickTime, bool isInZone)> zoneData =

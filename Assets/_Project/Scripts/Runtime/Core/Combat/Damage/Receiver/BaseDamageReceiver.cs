@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(DamageHandler))]
-public class BaseDamageReceiver : MonoBehaviour, IDamageReceiver
+public class BaseDamageReceiver : MonoBehaviour
 {
     private DamageHandler damageHandler;
 
