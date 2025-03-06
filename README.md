@@ -13,8 +13,9 @@ The Combat System is a modular framework for handling damage, health, defense, a
 5. [Area of Effect (AOE) System](#area-of-effect-aoe-system)
 6. [Status Effects](#status-effects)
 7. [Event System](#event-system)
-8. [Best Practices](#best-practices)
-9. [Adapting for 3D](#adapting-for-3d)
+8. [Extensibility](#extensibility)
+9. [Best Practices](#best-practices)
+10. [Adapting for 3D](#adapting-for-3d)
 
 ## Core Components
 
@@ -36,7 +37,8 @@ The Combat System consists of several key components that work together:
 ### Defense System
 - Handles damage mitigation through resistances
 - Supports physical and elemental resistance types
-- Uses customizable defense profiles for different entity types
+- Uses `DefenseData` for storing resistance values
+- Implements `IDefenseHandler` interface for defense calculations
 
 ### Status Effects
 - Framework for applying, stacking, and removing temporary effects
@@ -47,6 +49,7 @@ The Combat System consists of several key components that work together:
 - Base implementation for creating damage zones
 - Supports different AOE behaviors (on enter, over time, on exit)
 - Uses layer-based targeting for selective damage application
+- Includes timing control for effect application
 
 ## Setting Up a Damageable Entity
 
@@ -63,12 +66,10 @@ To create an entity that can receive damage:
 // 2. Initialize the defense handler in Start() or Awake()
 void Start()
 {
-    // Create a defense profile (or load from ScriptableObject)
-    DefenseProfile defenseProfile = new DefenseProfile();
-    defenseProfile.PhysicalResistance = 0.2f;  // 20% physical damage reduction
-    
-    // Create defense data from profile
-    DefenseData defenseData = new DefenseData(defenseProfile);
+    // Create defense data with specific resistances
+    DefenseData defenseData = new DefenseData();
+    defenseData.SetPhysicalResistance(0.2f);  // 20% physical damage reduction
+    defenseData.SetElementalResistance(DamageType.Fire, 0.5f);  // 50% fire resistance
     
     // Create and initialize defense handler
     IDefenseHandler defenseHandler = new BaseDefenseHandler(defenseData);
@@ -92,8 +93,8 @@ DamageData damageData = new DamageData(
     damageType: DamageType.Fire // Damage type (affects resistance calculations)
 );
 
-// 2. Find target and apply damage using IDamageReceiver
-IDamageReceiver receiver = hitObject.GetComponent<IDamageReceiver>();
+// 2. Find target and apply damage
+BaseDamageReceiver receiver = hitObject.GetComponent<BaseDamageReceiver>();
 if (receiver != null)
 {
     receiver.ReceiveDamage(damageData);
@@ -172,6 +173,22 @@ AOEDamageReceiver aoeReceiver = gameObject.AddComponent<AOEDamageReceiver>();
 // The receiver will automatically:
 // - Process direct damage through the ReceiveDamage method
 // - Detect and process AOE damage through trigger collisions with AOE zones
+// - Control effect timing through the CanTriggerEffect method
+```
+
+### AOE Timing Control
+
+The `AOEDamageReceiver` includes timing control for effects:
+
+```csharp
+// This method is called internally to determine if an effect should trigger
+// You can override this in derived classes for custom timing logic
+public bool CanTriggerEffect(BaseAOEZone zone)
+{
+    // Check if enough time has passed since the last effect application
+    // based on the zone's tick rate
+    // This prevents effects from being applied too frequently
+}
 ```
 
 ## Status Effects
@@ -184,7 +201,7 @@ The status effect system applies temporary effects to entities:
 // 1. Create status effect data
 StatusEffectData effectData = new StatusEffectData(
     effectName: "Burning",      // Unique identifier
-    effectType: StatusEffect.Burning, // Effect type enum
+    effectType: StatusEffect.Burning, // Effect type (Burning, Stun, Invulnerable)
     duration: 5f,               // How long it lasts
     tickRate: 1f,               // How often it applies (once per second)
     stackable: true,            // Can multiple instances stack?
@@ -247,6 +264,114 @@ private void OnDestroy()
     {
         healthSystem.OnHealthChanged.RemoveListener(OnHealthChanged);
         healthSystem.OnDeath.RemoveListener(OnDeath);
+    }
+}
+```
+
+## Extensibility
+
+The Combat System is designed to be highly extensible. The current implementation provides the core framework and minimal implementations to illustrate how to extend the system:
+
+### Extending Damage Types
+
+The `DamageType` enum can be extended with additional damage types:
+
+```csharp
+// Current implementation
+public enum DamageType
+{
+    // base types
+    Physical,
+    True,
+
+    // elemental types
+    Fire,
+    Ice,
+    Lightning,
+    Poison,
+    
+    // Add your custom types here
+    // Earth,
+    // Water,
+    // Shadow,
+    // etc.
+}
+```
+
+### Creating Custom Receivers
+
+You can create custom damage receivers by inheriting from `BaseDamageReceiver`:
+
+```csharp
+// Example: A receiver that applies damage over time
+public class DoTDamageReceiver : BaseDamageReceiver
+{
+    [SerializeField] private float tickRate = 1f;
+    private float lastTickTime;
+    private DamageData storedDamageData;
+    private bool isDamageActive = false;
+
+    public void StartDoTDamage(DamageData damageData, float duration)
+    {
+        storedDamageData = damageData;
+        isDamageActive = true;
+        lastTickTime = Time.time;
+        
+        // Stop the DoT after duration
+        Invoke(nameof(StopDoTDamage), duration);
+    }
+    
+    public void StopDoTDamage()
+    {
+        isDamageActive = false;
+    }
+    
+    private void Update()
+    {
+        if (isDamageActive && Time.time >= lastTickTime + (1f / tickRate))
+        {
+            lastTickTime = Time.time;
+            base.ReceiveDamage(storedDamageData);
+        }
+    }
+}
+```
+
+### Custom Status Effects
+
+You can create custom status effects by extending the `BaseStatusEffect` class:
+
+```csharp
+// Example: A custom slow effect
+public class SlowEffect : BaseStatusEffect
+{
+    private float slowPercentage;
+    private Rigidbody2D targetRigidbody;
+    private float originalSpeed;
+    
+    public SlowEffect(StatusEffectData data, float slowAmount) : base(data)
+    {
+        slowPercentage = slowAmount;
+    }
+    
+    public override void OnApply(GameObject target)
+    {
+        base.OnApply(target);
+        targetRigidbody = target.GetComponent<Rigidbody2D>();
+        if (targetRigidbody != null)
+        {
+            // Store original speed and apply slow
+            // Implementation depends on your movement system
+        }
+    }
+    
+    public override void OnRemove()
+    {
+        base.OnRemove();
+        if (targetRigidbody != null)
+        {
+            // Restore original speed
+        }
     }
 }
 ```
