@@ -9,6 +9,8 @@ public class DefenseProfile : ScriptableObject
     [SerializeField]
     private float critResistance;
 
+    private ElementalResistanceData elementalResistance;
+
     [SerializeField]
     private DefenseHandlerType handlerType;
 

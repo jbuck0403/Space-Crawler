@@ -4,47 +4,69 @@ public class BaseDefenseHandler : IDefenseHandler
 {
     protected DefenseData defenseData;
 
-    public float GetCritResistance() => defenseData.CritResistance;
-
-    public BaseDefenseHandler(DefenseData defenseData)
+    public BaseDefenseHandler(DefenseData defenseData = null)
     {
-        if (defenseData.PhysicalResistance < 0 || defenseData.PhysicalResistance > 1)
-        {
-            Debug.LogError(
-                $"Physical resistance must be between 0 and 1. Current value: {defenseData.PhysicalResistance}"
-            );
-        }
-        if (defenseData.CritResistance < 0 || defenseData.CritResistance > 100)
-        {
-            Debug.LogError(
-                $"Crit resistance must be between 0 and 100. Current value: {defenseData.CritResistance}"
-            );
-        }
-        this.defenseData = defenseData;
+        this.defenseData = defenseData ?? new DefenseData();
     }
 
     public virtual float HandleDefense(float incomingDamage, DamageData damageData)
     {
         float finalDamage = CalculateDamageAfterDefense(incomingDamage, damageData.Type);
-
-        return -finalDamage;
+        return -finalDamage; // negative because it's damage
     }
 
     protected virtual float CalculateDamageAfterDefense(float incomingDamage, DamageType type)
     {
         float damageReduction = 0f;
 
-        switch (type)
+        if (type == DamageType.Physical)
         {
-            case DamageType.Physical:
-                damageReduction = defenseData.PhysicalResistance;
-                break;
-
-            case DamageType.True:
-                damageReduction = 0;
-                break;
+            damageReduction = defenseData.PhysicalResistance;
+        }
+        else if (type == DamageType.True)
+        {
+            damageReduction = 0f; // true damage ignores resistance
+        }
+        else if (ElementalResistanceData.IsElemental(type))
+        {
+            damageReduction = defenseData.GetElementalResistance(type);
         }
 
         return Mathf.Max(0, incomingDamage * (1 - damageReduction));
+    }
+
+    // interface implementation
+    public float GetCritResistance() => defenseData.CritResistance;
+
+    public float GetPhysicalResistance() => defenseData.PhysicalResistance;
+
+    public void SetPhysicalResistance(float value)
+    {
+        defenseData.SetPhysicalResistance(value);
+    }
+
+    public void ModifyPhysicalResistance(float amount)
+    {
+        defenseData.ModifyPhysicalResistance(amount);
+    }
+
+    public float GetElementalResistance(DamageType type)
+    {
+        return defenseData.GetElementalResistance(type);
+    }
+
+    public void SetElementalResistance(DamageType type, float value)
+    {
+        defenseData.SetElementalResistance(type, value);
+    }
+
+    public void ModifyElementalResistance(DamageType type, float amount)
+    {
+        defenseData.ModifyElementalResistance(type, amount);
+    }
+
+    public DefenseData GetDefenseData()
+    {
+        return defenseData;
     }
 }

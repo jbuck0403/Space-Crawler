@@ -1,6 +1,12 @@
 public enum DamageType
 {
+    // base types
     Physical,
     True,
-    Fire
+
+    // elemental types
+    Fire,
+    Ice,
+    Lightning,
+    Poison,
 }
