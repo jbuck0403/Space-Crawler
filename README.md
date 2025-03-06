@@ -32,7 +32,7 @@ The Combat System consists of several key components that work together:
 - `DamageType`: Enum defining damage categories (Physical, True, Fire, Ice, etc.)
 - Receivers: Components that receive and process damage
   - `BaseDamageReceiver`: Base implementation for receiving direct damage
-  - `AOEDamageReceiver`: Extended receiver that handles both direct and area-of-effect damage
+  - `AOEReceiver`: Extended receiver that handles both direct and area-of-effect damage
 
 ### Defense System
 - Handles damage mitigation through resistances
@@ -61,7 +61,7 @@ To create an entity that can receive damage:
 // - DamageHandler (for damage processing)
 // - Choose ONE receiver type:
 //   * BaseDamageReceiver for direct damage only
-//   * AOEDamageReceiver for both direct and AOE damage
+//   * AOEReceiver for both direct and AOE damage
 
 // 2. Initialize the defense handler in Start() or Awake()
 void Start()
@@ -163,12 +163,12 @@ DamageAOEZone aoeZone = BaseAOEZone.Create<DamageAOEZone>(
 
 ### Receiving AOE Damage
 
-Entities need an `AOEDamageReceiver` component to receive AOE damage:
+Entities need an `AOEReceiver` component to receive AOE damage:
 
 ```csharp
-// Add AOEDamageReceiver to your entity
+// Add AOEReceiver to your entity
 // This component inherits from BaseDamageReceiver, so it handles both direct and AOE damage
-AOEDamageReceiver aoeReceiver = gameObject.AddComponent<AOEDamageReceiver>();
+AOEReceiver aoeReceiver = gameObject.AddComponent<AOEReceiver>();
 
 // The receiver will automatically:
 // - Process direct damage through the ReceiveDamage method
@@ -178,7 +178,7 @@ AOEDamageReceiver aoeReceiver = gameObject.AddComponent<AOEDamageReceiver>();
 
 ### AOE Timing Control
 
-The `AOEDamageReceiver` includes timing control for effects:
+The `AOEReceiver` includes timing control for effects:
 
 ```csharp
 // This method is called internally to determine if an effect should trigger
@@ -337,6 +337,40 @@ public class DoTDamageReceiver : BaseDamageReceiver
 }
 ```
 
+### Damage Receiver Architecture
+
+The damage receiver system is designed with extensibility in mind through inheritance:
+
+1. **BaseDamageReceiver**: The foundation class that provides the core `ReceiveDamage` method which forwards damage to the DamageHandler.
+
+2. **Specialized Receivers**: Inherit from BaseDamageReceiver to create receivers that handle specific damage sources:
+   - **AOEReceiver**: Handles area-of-effect damage and effects
+   - **Other Potential Receivers**: You can create your own specialized receivers for other damage sources
+        - e.g. **ProjectileReceiver**: Handles projectile collisions
+
+3. **Multiple Receivers**: You can add multiple different receiver types to the same GameObject to handle different damage sources. Each receiver:
+   - Detects a specific type of damage source through collisions/triggers
+   - Uses the inherited `ReceiveDamage` method to process damage
+   - Forwards damage through the same DamageHandler pipeline
+
+4. **Important Note**: Never add multiple receivers of the same type to a single GameObject, as this would cause damage to be applied multiple times for a single hit.
+
+```csharp
+// Example: Entity that could receive both projectile and AOE damage
+public class Enemy : MonoBehaviour
+{
+    private void Awake()
+    {
+        // Add different receiver types for different damage sources
+        gameObject.AddComponent<ProjectileReceiver>();
+        gameObject.AddComponent<AOEReceiver>();
+        
+        // Both receivers will use the same DamageHandler component
+        // All damage will flow through the same unified pipeline
+    }
+}
+```
+
 ### Custom Status Effects
 
 You can create custom status effects by extending the `BaseStatusEffect` class:
@@ -378,41 +412,32 @@ public class SlowEffect : BaseStatusEffect
 
 ## Best Practices
 
-1. **Component Organization**:
-   - Add all required components to your entity in the correct order
-   - Initialize defense handlers in Start() or Awake()
-   - Use RequireComponent attributes to ensure dependencies
+Key points to remember when using the Combat System:
 
-2. **Damage Types**:
-   - Use appropriate damage types for different attacks
-   - `DamageType.Physical`: Standard physical damage (affected by physical resistance)
-   - `DamageType.True`: Damage that ignores resistances
-   - Elemental types: For specialized damage with corresponding resistances
+1. **Damage Flow**: Always apply damage through the `ReceiveDamage` method on receivers, never modify health directly.
 
-3. **Defense Balancing**:
-   - Keep resistance values between 0 and 1 (0% to 100%)
-   - Consider diminishing returns for high resistance values
-   - Balance resistances against damage values for appropriate difficulty
+2. **Receiver Usage**: Be careful when adding multiple receivers of the same type to a single GameObject - each will respond to the same trigger events independently.
 
-4. **Status Effects**:
-   - Use descriptive names for status effects
-   - Consider effect interactions (e.g., Wet + Fire = Steam)
-   - Limit the number of simultaneous effects for performance
+3. **Component Order**: Initialize the DamageHandler with a DefenseHandler before receiving damage - the system will log errors but won't crash if not initialized.
 
-5. **AOE Usage**:
-   - Use appropriate layer masks for targeting specific entity types
-   - Consider performance with many AOE zones
-   - Destroy AOE zones when no longer needed
+4. **AOE Configuration**: For persistent AOE zones, either set a reasonable duration or manually destroy them when no longer needed. For manual cleanup, use the `DestroyZone()` method:
+   ```csharp
+   // Example: Creating a persistent zone and destroying it later
+   DamageAOEZone persistentZone = BaseAOEZone.Create<DamageAOEZone>(
+       owner: transform,
+       position: transform.position,
+       damageData: damageData,
+       customRadius: 5f
+   );
+   
+   // Set to not auto-destroy
+   persistentZone.AOEData.destroyOnEnd = false;
+   
+   // Later, when you want to destroy it:
+   persistentZone.DestroyZone();
+   ```
 
-6. **Event Handling**:
-   - Always unsubscribe from events when objects are destroyed
-   - Use events for loose coupling between systems
-   - Consider using ScriptableObject-based events for global communication
-
-7. **Damage Receivers**:
-   - `BaseDamageReceiver` is for entities that only need to receive direct damage
-   - `AOEDamageReceiver` is for entities that need to receive both direct and AOE damage
-   - Choose the appropriate receiver based on your entity's needs
+5. **Defense Values**: DamageType.True ignores all resistance calculations by design.
 
 ## Adapting for 3D
 
@@ -425,7 +450,7 @@ For damage receivers, change the collision methods from 2D to 3D:
 ```csharp
 // 2D version (current)
 [RequireComponent(typeof(Collider2D))]
-public class AOEDamageReceiver : BaseDamageReceiver
+public class AOEReceiver : BaseDamageReceiver
 {
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -445,7 +470,7 @@ public class AOEDamageReceiver : BaseDamageReceiver
 
 // 3D version
 [RequireComponent(typeof(Collider))]
-public class AOEDamageReceiver : BaseDamageReceiver
+public class AOEReceiver : BaseDamageReceiver
 {
     private void OnTriggerEnter(Collider other)
     {

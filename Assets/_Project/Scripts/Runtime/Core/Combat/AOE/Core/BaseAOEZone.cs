@@ -75,8 +75,7 @@ public abstract class BaseAOEZone : MonoBehaviour
     {
         if (aoeData.destroyOnEnd && Time.time >= spawnTime + aoeData.duration)
         {
-            OnEffectExpired();
-            Destroy(gameObject);
+            DestroyZone();
         }
     }
 
@@ -98,6 +97,13 @@ public abstract class BaseAOEZone : MonoBehaviour
     }
 
     public Transform GetOwner() => owner;
+
+    //use this for zones with destroyOnEnd=false that need manual cleanup.
+    public void DestroyZone()
+    {
+        OnEffectExpired();
+        Destroy(gameObject);
+    }
 
     protected virtual void OnDestroy()
     {
