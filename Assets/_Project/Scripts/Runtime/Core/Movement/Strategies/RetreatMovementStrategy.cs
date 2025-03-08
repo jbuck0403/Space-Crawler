@@ -12,7 +12,7 @@ public class RetreatMovementStrategy : IMovementStrategy
     public RetreatMovementStrategy(MovementConfig config)
     {
         this.config = config;
-        this.movementHandler = new MovementHandler(config);
+        movementHandler = new MovementHandler(config);
     }
 
     public void OnEnter(Transform self, Transform target)

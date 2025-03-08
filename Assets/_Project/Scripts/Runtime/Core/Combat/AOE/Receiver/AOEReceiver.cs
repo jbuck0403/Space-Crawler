@@ -19,7 +19,7 @@ public class AOEReceiver : BaseDamageReceiver
             }
             else
             {
-                // Otherwise just mark as in zone but keep the timer
+                // otherwise just mark as in zone but keep the timer
                 zoneData[aoeZone] = (zoneData[aoeZone].lastTickTime, true);
             }
 
@@ -39,7 +39,7 @@ public class AOEReceiver : BaseDamageReceiver
             {
                 aoeZone.OnTargetExit(this);
             }
-            // Just mark as not in zone, keep the timer
+            // just mark as not in zone, keep the timer
             if (zoneData.ContainsKey(aoeZone))
             {
                 zoneData[aoeZone] = (zoneData[aoeZone].lastTickTime, false);

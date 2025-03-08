@@ -20,7 +20,6 @@ public class DefaultMovementStrategy : IMovementStrategy
 
     public void OnUpdate(Transform self, Transform target)
     {
-        Debug.Log(target);
         if (!isInitialized || target == null)
             return;
 
@@ -30,7 +29,7 @@ public class DefaultMovementStrategy : IMovementStrategy
         );
         float distanceToTarget = MovementUtils.GetDistanceToTarget(self.position, target.position);
 
-        // Only move if we're further than follow distance
+        // only move if we're further than follow distance
         Vector2 targetDirection =
             distanceToTarget > followDistance ? directionToTarget : Vector2.zero;
 
@@ -44,7 +43,7 @@ public class DefaultMovementStrategy : IMovementStrategy
         isInitialized = false;
     }
 
-    public void SetDefaultStrategy() { }
+    // public void SetDefaultStrategy() { }
 
     public MovementConfig GetMovementConfig() => config;
 }

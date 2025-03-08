@@ -79,11 +79,6 @@ public abstract class BaseAOEZone : MonoBehaviour
         }
     }
 
-    protected virtual void OnEffectExpired()
-    {
-        // override this in child classes if needed (explosions at the end, etc.)
-    }
-
     protected bool IsInTargetLayer(GameObject obj)
     {
         return (aoeData.targetLayers.value & (1 << obj.layer)) != 0;
@@ -141,6 +136,8 @@ public abstract class BaseAOEZone : MonoBehaviour
 
         OnTargetStayEffect(target);
     }
+
+    protected virtual void OnEffectExpired() { } // optional method that triggers on zone expiration
 
     protected abstract void OnTargetEnterEffect(AOEReceiver target);
     protected abstract void OnTargetExitEffect(AOEReceiver target);

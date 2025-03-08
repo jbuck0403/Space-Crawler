@@ -268,6 +268,27 @@ private void OnDestroy()
 }
 ```
 
+### Important Note About VoidEvents
+
+When using VoidEvents (parameterless events), always remove a listener before adding it again to the same event. This prevents potential issues with duplicate event handling:
+
+```csharp
+// Good practice - remove before adding
+healthSystem.OnLowHealth.RemoveListener(HandleLowHealth);
+healthSystem.OnLowHealth.AddListener(HandleLowHealth);
+
+// Always unsubscribe in OnDestroy
+private void OnDestroy()
+{
+    if (healthSystem != null)
+    {
+        healthSystem.OnLowHealth.RemoveListener(HandleLowHealth);
+    }
+}
+```
+
+This precaution is only necessary for VoidEvents (events without parameters). Other event types like FloatEvent or BoolEvent don't have this requirement since they pass parameters of their specific type directly to the listener.
+
 ## Extensibility
 
 The Combat System is designed to be highly extensible. The current implementation provides the core framework and minimal implementations to illustrate how to extend the system:

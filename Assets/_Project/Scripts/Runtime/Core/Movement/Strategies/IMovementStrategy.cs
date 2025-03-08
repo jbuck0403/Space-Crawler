@@ -2,15 +2,15 @@ using UnityEngine;
 
 public interface IMovementStrategy
 {
-    // State pattern methods
+    // state pattern methods
     void OnEnter(Transform self, Transform target);
     void OnUpdate(Transform self, Transform target);
     void OnExit();
 
-    // Configuration
+    // configuration
     MovementConfig GetMovementConfig();
 
-    // Optional: Helper methods for checking state conditions
+    // optional: helper methods for checking state conditions
     bool CanExit() => true;
     bool IsComplete() => false;
 }

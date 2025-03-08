@@ -10,6 +10,14 @@ public abstract class BaseGameEvent<T> : ScriptableObject
     {
         onEventRaised.Invoke(value);
     }
-}
 
-public struct Void { } // empty struct for parameterless events
+    public virtual void AddListener(UnityAction<T> subscriber)
+    {
+        OnEventRaised.AddListener(subscriber);
+    }
+
+    public virtual void RemoveListener(UnityAction<T> action)
+    {
+        OnEventRaised.RemoveListener(action);
+    }
+}

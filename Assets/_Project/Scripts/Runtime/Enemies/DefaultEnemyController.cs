@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,23 +10,25 @@ public class DefaultEnemyController : BaseEnemyController
     [SerializeField]
     private float RetreatHealthThreshold = 10f;
 
+    [SerializeField]
+    private float timeToStopRetreating = 5f;
+    private bool canRetreat = true;
+
+    private Coroutine retreatCoroutine;
+    private HealthSystem healthSystem;
+
+    protected override void Start()
+    {
+        base.Start();
+
+        healthSystem = GetComponent<HealthSystem>();
+        healthSystem.OnLowHealth.AddListener(TriggerRetreat);
+    }
+
     private void Update()
     {
         if (movementController == null || target == null)
             return;
-
-        // float distanceToTarget = MovementUtils.GetDistanceToTarget(
-        //     transform.position,
-        //     target.position
-        // );
-        // if (distanceToTarget <= 7.5f)
-        // {
-        //     ChangeStrategy(Strategies.Retreat);
-        // }
-        // else if (distanceToTarget >= 15f)
-        // {
-        //     ChangeStrategy(Strategies.Default);
-        // }
     }
 
     protected override void InitializeStrategies()
@@ -43,21 +46,54 @@ public class DefaultEnemyController : BaseEnemyController
     }
 
     // subscribe to "low health" event in health module (TBI)
-    private void Retreat(float currentHealth)
+    public void HandleRetreat()
     {
-        if (currentHealth < RetreatHealthThreshold)
+        ChangeStrategy(Strategies.Retreat);
+        canRetreat = false;
+
+        retreatCoroutine = StartCoroutine(StopRetreatAfterTime());
+    }
+
+    private void TriggerRetreat()
+    {
+        if (canRetreat)
         {
-            ChangeStrategy(Strategies.Retreat);
+            HandleRetreat();
         }
     }
 
-    // // Optional: Add health system reference and handle strategy changes based on health
-    // private void OnHealthChanged(float healthPercent)
-    // {
-    //     // Example: Change strategy based on health
-    //     if (healthPercent < 0.3f)
-    //     {
-    //         ChangeStrategy(Strategies.Retreat);
-    //     }
-    // }
+    private IEnumerator StopRetreatAfterTime()
+    {
+        if (retreatCoroutine == null)
+        {
+            yield return new WaitForSeconds(timeToStopRetreating);
+
+            SetDefaultStrategy();
+        }
+    }
+
+    private void StrategyTest()
+    {
+        float distanceToTarget = MovementUtils.GetDistanceToTarget(
+            transform.position,
+            target.position
+        );
+        if (distanceToTarget <= 7.5f)
+        {
+            ChangeStrategy(Strategies.Retreat);
+        }
+        else if (distanceToTarget >= 15f)
+        {
+            ChangeStrategy(Strategies.Default);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // unsubscribe from events to prevent memory leaks
+        if (healthSystem != null)
+        {
+            healthSystem.OnLowHealth.RemoveListener(TriggerRetreat);
+        }
+    }
 }
