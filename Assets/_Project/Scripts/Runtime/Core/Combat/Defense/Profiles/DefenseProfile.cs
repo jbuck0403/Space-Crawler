@@ -17,6 +17,12 @@ public class DefenseProfile : ScriptableObject
     [SerializeField]
     private ElementalResistanceData elementalResistanceData;
 
+    // populate resistance list based on defined elemental enum types
+    void OnValidate()
+    {
+        elementalResistanceData ??= CreateElementalResistanceData();
+    }
+
     public ElementalResistanceData CreateElementalResistanceData()
     {
         ElementalResistanceData data = new ElementalResistanceData(defaultElementalResistance);
@@ -26,7 +32,7 @@ public class DefenseProfile : ScriptableObject
 
     public DefenseData CreateDefenseData()
     {
-        elementalResistanceData = CreateElementalResistanceData();
+        elementalResistanceData ??= CreateElementalResistanceData();
 
         // create a new DefenseData with our values
         DefenseData data = new DefenseData(

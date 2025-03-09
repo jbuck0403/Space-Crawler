@@ -10,7 +10,7 @@ public class ElementalResistanceData
 
     private float defaultElementalResistance;
 
-    public bool initialized = false;
+    private bool initialized = false;
 
     public ElementalResistanceData(float elementalResistance)
     {

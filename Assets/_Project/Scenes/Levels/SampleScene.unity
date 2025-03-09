@@ -583,6 +583,10 @@ GameObject:
   - component: {fileID: 2053508454}
   - component: {fileID: 2053508457}
   - component: {fileID: 2053508456}
+  - component: {fileID: 2053508461}
+  - component: {fileID: 2053508460}
+  - component: {fileID: 2053508459}
+  - component: {fileID: 2053508458}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -647,6 +651,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementConfig: {fileID: 11400000, guid: c564bd8396d385347a6f3fb00ce28522, type: 2}
   RetreatHealthThreshold: 10
+  timeToStopRetreating: 5
 --- !u!114 &2053508457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -660,6 +665,64 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DefaultTarget: {fileID: 2065395717}
+--- !u!114 &2053508458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2053508452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0833b1a2b4591c34b8cb6298be32635d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2053508459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2053508452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a775f724c065d124e8fb1cf303451ca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onCriticalHit: {fileID: 11400000, guid: 63de57adf05122c4ab74e0df8bbdb63b, type: 2}
+--- !u!114 &2053508460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2053508452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc27104ff07129d4cb86523b19723560, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  lowHealthPercent: 20
+  OnHealthChanged: {fileID: 11400000, guid: 8af369b4ac10cc94f9ae09e0498607ac, type: 2}
+  OnHealthPercentChanged: {fileID: 11400000, guid: e1429aa32901cee44a1b4d4d62b06f7e, type: 2}
+  OnDamageTaken: {fileID: 11400000, guid: 84635edb17010c84eb66cca8c8bdad52, type: 2}
+  OnHealingReceived: {fileID: 11400000, guid: ec269003a615ca747871ee2133c0341b, type: 2}
+  OnDeath: {fileID: 11400000, guid: 7f4c005e502676a47b66fd8574778eeb, type: 2}
+  OnLowHealth: {fileID: 11400000, guid: 76957933d9e76a04587408cd48fdd473, type: 2}
+--- !u!114 &2053508461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2053508452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ed9d986c9faa3e4885892f95a1e628f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defenseProfile: {fileID: 11400000, guid: 8376dbadb45447d4785b0a94ecf3f57a, type: 2}
 --- !u!1 &2065395714
 GameObject:
   m_ObjectHideFlags: 0
@@ -671,6 +734,10 @@ GameObject:
   - component: {fileID: 2065395717}
   - component: {fileID: 2065395716}
   - component: {fileID: 2065395715}
+  - component: {fileID: 2065395721}
+  - component: {fileID: 2065395720}
+  - component: {fileID: 2065395719}
+  - component: {fileID: 2065395718}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -734,6 +801,64 @@ Transform:
   - {fileID: 146617639}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2065395718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065395714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0833b1a2b4591c34b8cb6298be32635d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2065395719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065395714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a775f724c065d124e8fb1cf303451ca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onCriticalHit: {fileID: 11400000, guid: 63de57adf05122c4ab74e0df8bbdb63b, type: 2}
+--- !u!114 &2065395720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065395714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc27104ff07129d4cb86523b19723560, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  lowHealthPercent: 20
+  OnHealthChanged: {fileID: 11400000, guid: 8af369b4ac10cc94f9ae09e0498607ac, type: 2}
+  OnHealthPercentChanged: {fileID: 11400000, guid: e1429aa32901cee44a1b4d4d62b06f7e, type: 2}
+  OnDamageTaken: {fileID: 11400000, guid: 84635edb17010c84eb66cca8c8bdad52, type: 2}
+  OnHealingReceived: {fileID: 11400000, guid: ec269003a615ca747871ee2133c0341b, type: 2}
+  OnDeath: {fileID: 11400000, guid: 7f4c005e502676a47b66fd8574778eeb, type: 2}
+  OnLowHealth: {fileID: 11400000, guid: 76957933d9e76a04587408cd48fdd473, type: 2}
+--- !u!114 &2065395721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065395714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ed9d986c9faa3e4885892f95a1e628f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defenseProfile: {fileID: 11400000, guid: 8376dbadb45447d4785b0a94ecf3f57a, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
