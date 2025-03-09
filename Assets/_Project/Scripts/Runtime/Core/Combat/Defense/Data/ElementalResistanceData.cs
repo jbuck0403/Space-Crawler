@@ -8,8 +8,16 @@ public class ElementalResistanceData
     [SerializeField]
     private List<ElementalResistance> resistances = new List<ElementalResistance>();
 
-    [SerializeField, Range(0f, 1f)]
-    private float defaultResistance = 0f;
+    private float defaultElementalResistance;
+
+    public bool initialized = false;
+
+    public ElementalResistanceData(float elementalResistance)
+    {
+        defaultElementalResistance = elementalResistance;
+        PopulateWithAllElementalTypes();
+        initialized = true;
+    }
 
     // helper to check if a damage type is elemental
     public static bool IsElemental(DamageType type)
@@ -29,7 +37,7 @@ public class ElementalResistanceData
                 return resistance.Value;
         }
 
-        return defaultResistance;
+        return defaultElementalResistance;
     }
 
     public void SetResistance(DamageType type, float value)
@@ -63,14 +71,50 @@ public class ElementalResistanceData
         SetResistance(type, currentValue + amount);
     }
 
+    public bool HasResistance(DamageType type)
+    {
+        if (type != DamageType.Physical && type != DamageType.True)
+        {
+            foreach (ElementalResistance resistance in resistances)
+            {
+                if (resistance.Type == type)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public void SetDefaultResistance(float value)
     {
-        defaultResistance = Mathf.Clamp01(value);
+        defaultElementalResistance = Mathf.Clamp01(value);
     }
 
     public float GetDefaultResistance()
     {
-        return defaultResistance;
+        return defaultElementalResistance;
+    }
+
+    public void PopulateWithAllElementalTypes()
+    {
+        if (!initialized)
+        {
+            foreach (DamageType damageType in Enum.GetValues(typeof(DamageType)))
+            {
+                // Skip non-elemental types
+                if (damageType == DamageType.Physical || damageType == DamageType.True)
+                    continue;
+
+                // Check if this type already exists in the list
+                if (!HasResistance(damageType))
+                {
+                    // If not, add it with the default resistance value
+                    SetResistance(damageType, defaultElementalResistance);
+                }
+            }
+        }
     }
 }
 

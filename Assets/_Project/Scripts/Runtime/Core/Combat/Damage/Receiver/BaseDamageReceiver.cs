@@ -1,8 +1,10 @@
 using UnityEngine;
 
+[RequireComponent(typeof(IDefenseHandler))]
 [RequireComponent(typeof(DamageHandler))]
 public class BaseDamageReceiver : MonoBehaviour
 {
+    protected IDefenseHandler defenseHandler;
     private DamageHandler damageHandler;
 
     private void Awake()

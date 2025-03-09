@@ -2,9 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(MovementController))]
-[RequireComponent(typeof(DamageHandler))]
-[RequireComponent(typeof(HealthSystem))]
+[RequireComponent(typeof(BaseMovementController))]
 public class DefaultEnemyController : BaseEnemyController
 {
     [SerializeField]
@@ -29,6 +27,8 @@ public class DefaultEnemyController : BaseEnemyController
     {
         if (movementController == null || target == null)
             return;
+
+        StrategyTest();
     }
 
     protected override void InitializeStrategies()
@@ -45,7 +45,6 @@ public class DefaultEnemyController : BaseEnemyController
         ChangeStrategy(Strategies.Default);
     }
 
-    // subscribe to "low health" event in health module (TBI)
     public void HandleRetreat()
     {
         ChangeStrategy(Strategies.Retreat);
@@ -90,7 +89,6 @@ public class DefaultEnemyController : BaseEnemyController
 
     private void OnDestroy()
     {
-        // unsubscribe from events to prevent memory leaks
         if (healthSystem != null)
         {
             healthSystem.OnLowHealth.RemoveListener(TriggerRetreat);

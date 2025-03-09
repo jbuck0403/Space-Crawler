@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(HealthSystem))]
+[RequireComponent(typeof(IDefenseHandler))]
 public class DamageHandler : MonoBehaviour
 {
     private IDefenseHandler defenseHandler;
@@ -12,9 +13,10 @@ public class DamageHandler : MonoBehaviour
     private void Awake()
     {
         healthSystem = GetComponent<HealthSystem>();
+        defenseHandler = GetComponent<IDefenseHandler>();
     }
 
-    public void Initialize(IDefenseHandler defenseHandler)
+    public void SetNewDefenseHandler(IDefenseHandler defenseHandler)
     {
         this.defenseHandler = defenseHandler;
     }
@@ -36,6 +38,11 @@ public class DamageHandler : MonoBehaviour
         float preMitigationDamage = CalculatePreMitigationDamage(rawDamageData);
         float finalDamage = defenseHandler.HandleDefense(preMitigationDamage, rawDamageData);
         healthSystem.ModifyHealth(finalDamage);
+    }
+
+    public void SetDefenseHandler(IDefenseHandler defenseHandler)
+    {
+        this.defenseHandler = defenseHandler;
     }
 
     private float CalculatePreMitigationDamage(DamageData rawDamageData)

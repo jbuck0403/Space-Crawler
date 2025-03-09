@@ -48,5 +48,7 @@ public class RetreatMovementStrategy : IMovementStrategy
         isInitialized = false;
     }
 
+    public void OnStrategyComplete() { }
+
     public MovementConfig GetMovementConfig() => config;
 }

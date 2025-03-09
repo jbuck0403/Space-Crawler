@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MovementController : MonoBehaviour
+public class BaseMovementController : MonoBehaviour
 {
     [SerializeField]
     public Transform DefaultTarget;
@@ -33,18 +33,18 @@ public class MovementController : MonoBehaviour
 
     public void SetStrategy(IMovementStrategy newStrategy)
     {
-        // Check if current strategy allows exit
+        // check if current strategy allows exit
         if (currentStrategy != null && !currentStrategy.CanExit())
             return;
 
-        // Exit current strategy
+        // exit current strategy
         currentStrategy?.OnExit();
 
-        // Set and initialize new strategy
+        // set and initialize new strategy
         currentStrategy = newStrategy;
         movementHandler = new MovementHandler(newStrategy.GetMovementConfig());
 
-        // Enter new strategy
+        // enter new strategy
         currentStrategy.OnEnter(transform, currentTarget);
     }
 
@@ -53,13 +53,13 @@ public class MovementController : MonoBehaviour
         if (currentStrategy == null || movementHandler == null)
             return;
 
-        // Update current strategy
+        // update current strategy
         currentStrategy.OnUpdate(transform, currentTarget);
 
-        // Check if strategy is complete and needs changing
+        // check if strategy is complete and needs changing
         if (currentStrategy.IsComplete())
         {
-            // Handle strategy completion (could trigger new strategy)
+            currentStrategy.OnStrategyComplete();
         }
     }
 }

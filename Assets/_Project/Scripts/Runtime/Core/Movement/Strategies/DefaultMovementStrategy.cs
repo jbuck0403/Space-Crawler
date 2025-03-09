@@ -43,7 +43,7 @@ public class DefaultMovementStrategy : IMovementStrategy
         isInitialized = false;
     }
 
-    // public void SetDefaultStrategy() { }
+    public void OnStrategyComplete() { }
 
     public MovementConfig GetMovementConfig() => config;
 }

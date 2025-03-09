@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Windows.Speech;
 
 [Serializable]
 public class DefenseData
@@ -11,14 +13,16 @@ public class DefenseData
     private float critResistance = 0f;
 
     [SerializeField]
-    private ElementalResistanceData elementalResistances = new ElementalResistanceData();
+    private float defaultElementalResistance = 0f;
+
+    [SerializeField]
+    private ElementalResistanceData elementalResistanceData;
 
     // properties with public getters
     public float PhysicalResistance => physicalResistance;
     public float CritResistance => critResistance;
-    public ElementalResistanceData ElementalResistances => elementalResistances;
+    public float DefaultElementalResistance => defaultElementalResistance;
 
-    // default constructor with sensible defaults
     public DefenseData()
     {
         // default values already set in field initialization
@@ -28,12 +32,14 @@ public class DefenseData
     public DefenseData(
         float physicalResistance,
         float critResistance,
-        ElementalResistanceData elementalResistances = null
+        float defaultElementalResistance,
+        ElementalResistanceData elementalResistanceData
     )
     {
         this.physicalResistance = Mathf.Clamp01(physicalResistance);
         this.critResistance = Mathf.Clamp(critResistance, 0f, 100f);
-        this.elementalResistances = elementalResistances ?? new ElementalResistanceData();
+        this.defaultElementalResistance = defaultElementalResistance;
+        this.elementalResistanceData = elementalResistanceData;
     }
 
     // methods to modify values
@@ -60,26 +66,28 @@ public class DefenseData
     // Direct methods for elemental resistances
     public float GetElementalResistance(DamageType type)
     {
-        return elementalResistances.GetResistance(type);
+        return elementalResistanceData.GetResistance(type);
     }
 
     public void SetElementalResistance(DamageType type, float value)
     {
-        elementalResistances.SetResistance(type, value);
+        elementalResistanceData.SetResistance(type, value);
     }
 
-    public void ModifyElementalResistance(DamageType type, float amount)
+    public void ModifyElementalResistance(DamageType type, float value)
     {
-        elementalResistances.ModifyResistance(type, amount);
+        elementalResistanceData.ModifyResistance(type, value);
     }
+}
 
-    public void SetDefaultElementalResistance(float value)
-    {
-        elementalResistances.SetDefaultResistance(value);
-    }
+public struct ElementalResistancePair
+{
+    public DamageType type;
+    public float resistance;
 
-    public float GetDefaultElementalResistance()
+    public ElementalResistancePair(DamageType type, float resistance)
     {
-        return elementalResistances.GetDefaultResistance();
+        this.type = type;
+        this.resistance = resistance;
     }
 }

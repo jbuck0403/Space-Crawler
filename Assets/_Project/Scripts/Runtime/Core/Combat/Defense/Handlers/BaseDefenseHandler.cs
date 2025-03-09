@@ -1,12 +1,25 @@
 using UnityEngine;
 
-public class BaseDefenseHandler : IDefenseHandler
+public class BaseDefenseHandler : MonoBehaviour, IDefenseHandler
 {
+    [SerializeField]
+    protected DefenseProfile defenseProfile;
     protected DefenseData defenseData;
 
-    public BaseDefenseHandler(DefenseData defenseData = null)
+    private void Awake()
     {
-        this.defenseData = defenseData ?? new DefenseData();
+        if (defenseProfile == null)
+        {
+            Debug.LogError($"DefenseProfile is null on {gameObject.name}");
+            return;
+        }
+
+        defenseData = defenseProfile.CreateDefenseData();
+    }
+
+    public virtual void SetNewDefenseData(DefenseData defenseData)
+    {
+        this.defenseData = defenseData;
     }
 
     public virtual float HandleDefense(float incomingDamage, DamageData damageData)
@@ -19,17 +32,20 @@ public class BaseDefenseHandler : IDefenseHandler
     {
         float damageReduction = 0f;
 
-        if (type == DamageType.Physical)
+        if (defenseData != null)
         {
-            damageReduction = defenseData.PhysicalResistance;
-        }
-        else if (type == DamageType.True)
-        {
-            damageReduction = 0f; // true damage ignores resistance
-        }
-        else if (ElementalResistanceData.IsElemental(type))
-        {
-            damageReduction = defenseData.GetElementalResistance(type);
+            if (type == DamageType.Physical)
+            {
+                damageReduction = defenseData.PhysicalResistance;
+            }
+            else if (type == DamageType.True)
+            {
+                damageReduction = 0f; // true damage ignores resistance
+            }
+            else
+            {
+                damageReduction = defenseData.GetElementalResistance(type);
+            }
         }
 
         return Mathf.Max(0, incomingDamage * (1 - damageReduction));
