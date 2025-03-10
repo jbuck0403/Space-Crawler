@@ -24,14 +24,18 @@ public abstract class BaseWeapon : StrategyController<IFireStrategy>, IFireWeapo
     public virtual bool FireWeapon(Vector2? direction = null)
     {
         // get the fire direction
-        Vector2 finalDirection = direction ?? Vector2.right; // assuming the weapon points along its right axis
+        Vector2 finalDirection = direction ?? Vector2.up; // assuming the weapon points along its right axis
+        Vector2 directionAfterAccuracy = ApplyAccuracySpread(
+            finalDirection,
+            weaponConfig.fireConfig.spread
+        );
 
         // fire the projectile
         Projectile projectile = FireProjectile.Fire(
             projectilePool,
             weaponConfig.damageProfile,
             firePoint != null ? firePoint : transform,
-            finalDirection,
+            directionAfterAccuracy,
             weaponConfig.fireConfig.projectileSpeed,
             transform
         );
@@ -60,5 +64,37 @@ public abstract class BaseWeapon : StrategyController<IFireStrategy>, IFireWeapo
     {
         if (canFire)
             strategy.OnUpdate(this, weaponConfig.fireConfig);
+    }
+
+    private Vector2 ApplyAccuracySpread(Vector2 baseDirection, float spreadDegrees)
+    {
+        if (weaponConfig.fireConfig.accuracy >= 1f)
+            return baseDirection;
+
+        float maxSpreadRadians =
+            ConvertSpreadDegreesToRadians(spreadDegrees) * (1f - weaponConfig.fireConfig.accuracy);
+
+        // generate a random angle within our spread cone
+        float randomSpread = UnityEngine.Random.Range(
+            -maxSpreadRadians / 2f,
+            maxSpreadRadians / 2f
+        );
+
+        // rotate our base direction by the spread amount
+        float cos = Mathf.Cos(randomSpread);
+        float sin = Mathf.Sin(randomSpread);
+        return new Vector2(
+            baseDirection.x * cos - baseDirection.y * sin,
+            baseDirection.x * sin + baseDirection.y * cos
+        );
+    }
+
+    private float ConvertSpreadDegreesToRadians(float spreadDegrees)
+    {
+        // Clamp the input to valid range
+        spreadDegrees = Mathf.Clamp(spreadDegrees, 0f, 180f);
+
+        // 180 degrees = PI radians
+        return spreadDegrees * Mathf.PI / 180f;
     }
 }

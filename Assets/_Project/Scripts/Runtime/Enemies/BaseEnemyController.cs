@@ -10,10 +10,8 @@ public abstract class BaseEnemyController : MonoBehaviour
 
     protected BaseWeapon weapon;
 
-    // public Transform target; // usually the player
-
     protected Dictionary<string, IMovementStrategy> availableMovementStrategies;
-    protected Dictionary<string, IFireStrategy> availableFiringStrategies;
+
     protected BaseMovementController movementController;
 
     protected Transform target;
@@ -49,14 +47,6 @@ public abstract class BaseEnemyController : MonoBehaviour
         if (availableMovementStrategies.TryGetValue(strategyKey, out IMovementStrategy strategy))
         {
             movementController.SetStrategy(strategy);
-        }
-    }
-
-    protected void ChangeFiringStrategy(string strategyKey)
-    {
-        if (availableFiringStrategies.TryGetValue(strategyKey, out IFireStrategy strategy))
-        {
-            weapon.SetStrategy(strategy);
         }
     }
 }

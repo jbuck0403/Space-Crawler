@@ -12,6 +12,12 @@ public class FireConfig : ScriptableObject
     [Range(0, 1)]
     public float accuracy = 0.9f;
 
+    [Tooltip(
+        "Cone size for accuracy spread (where 0 is a straight line and 180 is a 180 degree cone)"
+    )]
+    [Range(0, 180)]
+    public float spread = 90f;
+
     [Range(10, 100)]
     public float projectileSpeed = 10f;
 
