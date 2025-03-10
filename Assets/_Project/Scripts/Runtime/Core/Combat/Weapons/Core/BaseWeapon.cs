@@ -1,35 +1,27 @@
+using System;
 using UnityEngine;
 
-public abstract class BaseWeapon : StrategyController<IFireStrategy>
+public abstract class BaseWeapon : StrategyController<IFireStrategy>, IFireWeapon
 {
-    [Header("Projectile Settings")]
     [SerializeField]
-    private ProjectilePool projectilePool;
-
-    [SerializeField]
-    private DamageProfile damageProfile;
+    public WeaponConfig weaponConfig;
 
     [SerializeField]
-    private Transform firePoint;
+    public Transform firePoint;
 
     [SerializeField]
-    private float projectileSpeed = 10f;
+    public VoidEvent OnFireWeapon;
 
-    [SerializeField]
-    private VoidEvent OnFire;
+    public ProjectilePool projectilePool { private set; get; }
 
-    [Header("Weapon Settings")]
-    [SerializeField]
-    private float fireRate = 0.5f;
+    private bool canFire = false;
 
-    private BaseEnemyController enemyController;
-
-    private void Start()
+    protected virtual void Start()
     {
-        enemyController = GetComponent<BaseEnemyController>();
+        projectilePool = FindAnyObjectByType<ProjectilePool>();
     }
 
-    public bool Fire(Vector2? direction = null)
+    public virtual bool FireWeapon(Vector2? direction = null)
     {
         // get the fire direction
         Vector2 finalDirection = direction ?? Vector2.right; // assuming the weapon points along its right axis
@@ -37,16 +29,21 @@ public abstract class BaseWeapon : StrategyController<IFireStrategy>
         // fire the projectile
         Projectile projectile = FireProjectile.Fire(
             projectilePool,
-            damageProfile,
+            weaponConfig.damageProfile,
             firePoint != null ? firePoint : transform,
             finalDirection,
-            projectileSpeed,
+            weaponConfig.fireConfig.projectileSpeed,
             transform
         );
 
-        OnFire.Raise(); // trigger OnFire subscribers
+        OnFireWeapon.Raise(); // trigger OnFire subscribers
 
         return projectile != null;
+    }
+
+    public virtual void SetCanFire(bool canFire)
+    {
+        this.canFire = canFire;
     }
 
     protected override void OnStrategyExit(IFireStrategy strategy)
@@ -56,11 +53,12 @@ public abstract class BaseWeapon : StrategyController<IFireStrategy>
 
     protected override void OnStrategyEnter(IFireStrategy strategy)
     {
-        strategy.OnEnter(this, firePoint, enemyController.GetTarget());
+        strategy.OnEnter(this, weaponConfig.fireConfig);
     }
 
     protected override void OnStrategyUpdate(IFireStrategy strategy)
     {
-        strategy.OnUpdate(this, firePoint, enemyController.GetTarget());
+        if (canFire)
+            strategy.OnUpdate(this, weaponConfig.fireConfig);
     }
 }

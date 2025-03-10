@@ -8,15 +8,36 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private MovementConfig movementConfig;
 
+    public Transform firePoint;
+
+    [SerializeField]
+    public VoidEvent OnFireWeapon;
+
     private MovementHandler movementHandler;
     private Vector2 moveInput;
     private Vector2 aimDirection;
     private Camera mainCamera;
 
+    private BaseWeapon weapon;
+
     private void Awake()
     {
         movementHandler = new MovementHandler(movementConfig);
         mainCamera = Camera.main;
+        weapon = GetComponent<BaseWeapon>();
+
+        // Set a firing strategy for the weapon
+        if (weapon != null && weapon.weaponConfig != null)
+        {
+            // Use a firing strategy from the weapon config if available
+            if (
+                weapon.weaponConfig.firingStrategies != null
+                && weapon.weaponConfig.firingStrategies.Count > 0
+            )
+            {
+                weapon.SetStrategy(weapon.weaponConfig.firingStrategies[0]);
+            }
+        }
     }
 
     private void Update()
@@ -24,6 +45,15 @@ public class PlayerController : MonoBehaviour
         GetMoveInput();
         GetAimDirection();
         MoveAndFaceTarget();
+
+        if (Input.GetMouseButton(0))
+        {
+            weapon.SetCanFire(true);
+        }
+        else
+        {
+            weapon.SetCanFire(false);
+        }
     }
 
     private void GetMoveInput()

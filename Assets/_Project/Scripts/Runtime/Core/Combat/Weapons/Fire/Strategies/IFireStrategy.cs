@@ -7,7 +7,7 @@ public interface IFireStrategy : IStrategy
     FireConfig GetFireConfig();
 
     // State pattern methods
-    void OnEnter(BaseWeapon weapon, Transform self, Transform target);
-    void OnUpdate(BaseWeapon weapon, Transform self, Transform target);
+    void OnEnter(BaseWeapon weapon, FireConfig config);
+    void OnUpdate(BaseWeapon weapon, FireConfig config);
     void OnExit();
 }

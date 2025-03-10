@@ -31,9 +31,16 @@ public class ProjectilePool : PoolBase
     {
         obj.transform.SetPositionAndRotation(weaponTip.position, weaponTip.rotation);
 
-        Rigidbody rb = obj.GetComponent<Rigidbody>();
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
+        Rigidbody2D rb = obj.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.velocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
+        else
+        {
+            Debug.LogWarning("Projectile does not have a Rigidbody2D component!");
+        }
     }
 
     public GameObject GetProjectile(Transform weaponTip)
