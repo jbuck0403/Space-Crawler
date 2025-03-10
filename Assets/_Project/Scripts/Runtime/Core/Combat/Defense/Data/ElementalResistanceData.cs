@@ -22,6 +22,11 @@ public class ElementalResistanceData
     // helper to check if a damage type is elemental
     public static bool IsElemental(DamageType type)
     {
+        if (!Enum.IsDefined(typeof(DamageType), type))
+        {
+            return false;
+        }
+
         return type != DamageType.Physical && type != DamageType.True;
     }
 
@@ -99,6 +104,8 @@ public class ElementalResistanceData
 
     public void PopulateWithAllElementalTypes()
     {
+        RemoveNonElemental();
+
         if (!initialized)
         {
             foreach (DamageType damageType in Enum.GetValues(typeof(DamageType)))
@@ -113,6 +120,24 @@ public class ElementalResistanceData
                     // If not, add it with the default resistance value
                     SetResistance(damageType, defaultElementalResistance);
                 }
+            }
+        }
+    }
+
+    public void RemoveNonElemental()
+    {
+        resistances.RemoveAll(pair => !IsElemental(pair.Type));
+    }
+
+    public void MakeResistancesMeetDefault()
+    {
+        for (int i = 0; i < resistances.Count; i++)
+        {
+            ElementalResistance pair = resistances[i];
+            if (pair.Value < defaultElementalResistance || pair.Value > defaultElementalResistance)
+            {
+                pair.Value = defaultElementalResistance;
+                resistances[i] = pair;
             }
         }
     }

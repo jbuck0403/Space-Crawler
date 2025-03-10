@@ -66,10 +66,8 @@ public class BaseDefenseHandler : MonoBehaviour, IDefenseHandler
         defenseData.ModifyPhysicalResistance(amount);
     }
 
-    public float GetElementalResistance(DamageType type)
-    {
-        return defenseData.GetElementalResistance(type);
-    }
+    public float GetElementalResistance(DamageType type) =>
+        defenseData.GetElementalResistance(type);
 
     public void SetElementalResistance(DamageType type, float value)
     {

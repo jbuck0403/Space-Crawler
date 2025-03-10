@@ -1,4 +1,4 @@
-public class Strategies
+public class MovementStrategies
 {
     public const string Default = "Default";
     public const string Circle = "Circle";

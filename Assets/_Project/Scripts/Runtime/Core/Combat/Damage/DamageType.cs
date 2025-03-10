@@ -9,4 +9,5 @@ public enum DamageType
     Ice,
     Lightning,
     Poison,
+    Magic,
 }

@@ -17,10 +17,12 @@ public class DefenseProfile : ScriptableObject
     [SerializeField]
     private ElementalResistanceData elementalResistanceData;
 
+    private float prevDefaultElementalResistance;
+
     // populate resistance list based on defined elemental enum types
     void OnValidate()
     {
-        elementalResistanceData ??= CreateElementalResistanceData();
+        UpdateElementalResistanceData();
     }
 
     public ElementalResistanceData CreateElementalResistanceData()
@@ -32,7 +34,7 @@ public class DefenseProfile : ScriptableObject
 
     public DefenseData CreateDefenseData()
     {
-        elementalResistanceData ??= CreateElementalResistanceData();
+        UpdateElementalResistanceData();
 
         // create a new DefenseData with our values
         DefenseData data = new DefenseData(
@@ -43,5 +45,24 @@ public class DefenseProfile : ScriptableObject
         );
 
         return data;
+    }
+
+    private void UpdateElementalResistanceData()
+    {
+        prevDefaultElementalResistance = elementalResistanceData.GetDefaultResistance();
+
+        if (elementalResistanceData == null)
+        {
+            elementalResistanceData = CreateElementalResistanceData();
+        }
+        else
+        {
+            Debug.Log("Updating Resistance Data");
+            elementalResistanceData.PopulateWithAllElementalTypes();
+            elementalResistanceData.SetDefaultResistance(defaultElementalResistance);
+
+            if (prevDefaultElementalResistance != defaultElementalResistance)
+                elementalResistanceData.MakeResistancesMeetDefault();
+        }
     }
 }

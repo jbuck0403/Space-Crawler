@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(HealthSystem))]
 [RequireComponent(typeof(BaseMovementController))]
 public class DefaultEnemyController : BaseEnemyController
 {
@@ -28,26 +29,26 @@ public class DefaultEnemyController : BaseEnemyController
         if (movementController == null || target == null)
             return;
 
-        StrategyTest();
+        // StrategyTest();
     }
 
     protected override void InitializeStrategies()
     {
-        availableStrategies = new Dictionary<string, IMovementStrategy>
+        availableMovementStrategies = new Dictionary<string, IMovementStrategy>
         {
-            { Strategies.Default, new DefaultMovementStrategy(movementConfig) },
-            { Strategies.Retreat, new RetreatMovementStrategy(movementConfig) }
+            { MovementStrategies.Default, new DefaultMovementStrategy(movementConfig) },
+            { MovementStrategies.Retreat, new RetreatMovementStrategy(movementConfig) }
         };
     }
 
     protected override void SetDefaultStrategy()
     {
-        ChangeStrategy(Strategies.Default);
+        ChangeMovementStrategy(MovementStrategies.Default);
     }
 
     public void HandleRetreat()
     {
-        ChangeStrategy(Strategies.Retreat);
+        ChangeMovementStrategy(MovementStrategies.Retreat);
         canRetreat = false;
 
         retreatCoroutine = StartCoroutine(StopRetreatAfterTime());
@@ -79,11 +80,11 @@ public class DefaultEnemyController : BaseEnemyController
         );
         if (distanceToTarget <= 7.5f)
         {
-            ChangeStrategy(Strategies.Retreat);
+            ChangeMovementStrategy(MovementStrategies.Retreat);
         }
         else if (distanceToTarget >= 15f)
         {
-            ChangeStrategy(Strategies.Default);
+            ChangeMovementStrategy(MovementStrategies.Default);
         }
     }
 

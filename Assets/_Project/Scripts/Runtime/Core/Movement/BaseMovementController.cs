@@ -1,24 +1,30 @@
 using UnityEngine;
+using UnityEngine.AI;
 
-public class BaseMovementController : MonoBehaviour
+public class BaseMovementController : StrategyController<IMovementStrategy>
 {
     [SerializeField]
     public Transform DefaultTarget;
-    private Transform currentTarget;
-    private Transform previousTarget;
+    public Transform currentTarget;
+    public Transform previousTarget;
 
-    private IMovementStrategy currentStrategy;
-    private MovementHandler movementHandler;
+    BaseEnemyController enemyController;
 
     public void Start()
     {
         currentTarget = DefaultTarget;
+        enemyController = GetComponent<BaseEnemyController>();
     }
 
     public void ChangeTarget(Transform target)
     {
-        previousTarget = this.currentTarget;
+        previousTarget = currentTarget;
         currentTarget = target;
+
+        if (enemyController != null)
+        {
+            enemyController.UpdateTarget(currentTarget);
+        }
     }
 
     public void TargetPreviousTarget()
@@ -31,35 +37,18 @@ public class BaseMovementController : MonoBehaviour
         ChangeTarget(DefaultTarget);
     }
 
-    public void SetStrategy(IMovementStrategy newStrategy)
+    protected override void OnStrategyExit(IMovementStrategy strategy)
     {
-        // check if current strategy allows exit
-        if (currentStrategy != null && !currentStrategy.CanExit())
-            return;
-
-        // exit current strategy
-        currentStrategy?.OnExit();
-
-        // set and initialize new strategy
-        currentStrategy = newStrategy;
-        movementHandler = new MovementHandler(newStrategy.GetMovementConfig());
-
-        // enter new strategy
-        currentStrategy.OnEnter(transform, currentTarget);
+        strategy.OnExit();
     }
 
-    private void Update()
+    protected override void OnStrategyEnter(IMovementStrategy strategy)
     {
-        if (currentStrategy == null || movementHandler == null)
-            return;
+        strategy.OnEnter(transform, currentTarget);
+    }
 
-        // update current strategy
-        currentStrategy.OnUpdate(transform, currentTarget);
-
-        // check if strategy is complete and needs changing
-        if (currentStrategy.IsComplete())
-        {
-            currentStrategy.OnStrategyComplete();
-        }
+    protected override void OnStrategyUpdate(IMovementStrategy strategy)
+    {
+        strategy.OnUpdate(transform, currentTarget);
     }
 }
