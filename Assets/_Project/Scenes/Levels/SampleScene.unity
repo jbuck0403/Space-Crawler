@@ -203,6 +203,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Default Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 5529026550726558395, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
+      propertyPath: defaultStrategy.strategyType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8699095912087521350, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.26

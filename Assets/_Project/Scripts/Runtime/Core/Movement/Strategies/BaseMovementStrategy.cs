@@ -33,7 +33,7 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
         Vector2 targetDirection =
             distanceToTarget > followDistance ? directionToTarget : Vector2.zero;
 
-        Debug.Log($"DIRECTION: {directionToTarget} DISTANCE: {distanceToTarget}");
+        // Debug.Log($"DIRECTION: {directionToTarget} DISTANCE: {distanceToTarget}");
 
         movementHandler.ApplyMovement(self, targetDirection, Time.deltaTime);
     }

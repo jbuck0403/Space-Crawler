@@ -10,7 +10,8 @@ public class DamageProfile : ScriptableObject
     private float critMultiplier = 1.5f;
 
     [SerializeField]
-    private float critChance = 0.1f;
+    [Range(0, 100)]
+    private float critChance = 20f;
 
     [SerializeField]
     private DamageType damageType;

@@ -14,13 +14,11 @@ public class DefaultEnemyController : BaseEnemyController
     private bool canRetreat = true;
 
     private Coroutine retreatCoroutine;
-    private HealthSystem healthSystem;
 
     protected override void Start()
     {
         base.Start();
 
-        healthSystem = GetComponent<HealthSystem>();
         healthSystem.OnLowHealth.AddListener(TriggerRetreat);
     }
 
@@ -63,6 +61,7 @@ public class DefaultEnemyController : BaseEnemyController
         }
     }
 
+    // testing purposes only
     private void StrategyTest()
     {
         float distanceToTarget = MovementUtils.GetDistanceToTarget(

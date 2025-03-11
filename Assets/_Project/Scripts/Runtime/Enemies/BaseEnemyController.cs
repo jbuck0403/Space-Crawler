@@ -11,6 +11,7 @@ public abstract class BaseEnemyController : BaseCharacterController
     [SerializeField]
     protected MovementStrategyPair defaultStrategy;
     protected BaseMovementController movementController;
+    protected HealthSystem healthSystem;
 
     protected Transform target;
 
@@ -29,6 +30,7 @@ public abstract class BaseEnemyController : BaseCharacterController
         base.Awake();
 
         movementController = GetComponent<BaseMovementController>();
+        healthSystem = GetComponent<HealthSystem>();
         InitializeStrategies();
     }
 

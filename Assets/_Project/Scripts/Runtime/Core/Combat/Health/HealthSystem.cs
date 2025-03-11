@@ -8,6 +8,8 @@ public class HealthSystem : MonoBehaviour
 
     [SerializeField]
     private float lowHealthPercent = 20f;
+
+    [SerializeField]
     private float currentHealth;
     private bool isDead = false;
 
@@ -55,7 +57,7 @@ public class HealthSystem : MonoBehaviour
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
 
-        if (CurrentHealth / MaxHealth <= lowHealthPercent)
+        if (CurrentHealth / MaxHealth <= lowHealthPercent / 100)
         {
             OnLowHealth.Raise();
         }

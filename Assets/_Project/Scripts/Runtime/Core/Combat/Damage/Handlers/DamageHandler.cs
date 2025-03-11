@@ -23,6 +23,9 @@ public class DamageHandler : MonoBehaviour
 
     public void HandleDamage(DamageData rawDamageData)
     {
+        print(
+            $"HandleDamage Raw:{rawDamageData.Amount} Crit% {rawDamageData.CritChance} CritX {rawDamageData.CritMultiplier}"
+        );
         if (healthSystem == null)
         {
             Debug.LogError($"No HealthSystem found on {gameObject.name}");
@@ -36,7 +39,10 @@ public class DamageHandler : MonoBehaviour
         }
 
         float preMitigationDamage = CalculatePreMitigationDamage(rawDamageData);
+        print($"PreMitigation Damage: {preMitigationDamage}");
+
         float finalDamage = defenseHandler.HandleDefense(preMitigationDamage, rawDamageData);
+        print($"Final Damage: {finalDamage}");
         healthSystem.ModifyHealth(finalDamage);
     }
 
@@ -63,6 +69,7 @@ public class DamageHandler : MonoBehaviour
     private float ApplyCriticalHit(float finalDamage, float critMultiplier, float critChance)
     {
         bool isCrit = RandomUtils.Chance(critChance);
+        print($"Crit: {isCrit} Crit%: {critChance}");
 
         if (isCrit)
         {
