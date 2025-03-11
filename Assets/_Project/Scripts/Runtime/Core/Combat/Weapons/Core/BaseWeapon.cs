@@ -91,7 +91,7 @@ public abstract class BaseWeapon : StrategyController<IFireStrategy>, IFireWeapo
 
     private float ConvertSpreadDegreesToRadians(float spreadDegrees)
     {
-        // Clamp the input to valid range
+        // Clamp the input to valid range (to ensure projectiles don't shoot towards the character)
         spreadDegrees = Mathf.Clamp(spreadDegrees, 0f, 180f);
 
         // 180 degrees = PI radians

@@ -32,23 +32,14 @@ public class DefaultEnemyController : BaseEnemyController
         // StrategyTest();
     }
 
-    protected override void InitializeStrategies()
-    {
-        availableMovementStrategies = new Dictionary<string, IMovementStrategy>
-        {
-            { MovementStrategies.Default, new DefaultMovementStrategy(movementConfig) },
-            { MovementStrategies.Retreat, new RetreatMovementStrategy(movementConfig) }
-        };
-    }
-
     protected override void SetDefaultStrategy()
     {
-        ChangeMovementStrategy(MovementStrategies.Default);
+        ChangeMovementStrategy(MovementStrategyType.Default);
     }
 
     public void HandleRetreat()
     {
-        ChangeMovementStrategy(MovementStrategies.Retreat);
+        ChangeMovementStrategy(MovementStrategyType.Retreat);
         canRetreat = false;
 
         retreatCoroutine = StartCoroutine(StopRetreatAfterTime());
@@ -78,13 +69,15 @@ public class DefaultEnemyController : BaseEnemyController
             transform.position,
             target.position
         );
+        print("DISTANCE TO TARGET " + distanceToTarget);
         if (distanceToTarget <= 7.5f)
         {
-            ChangeMovementStrategy(MovementStrategies.Retreat);
+            print("RETREAT");
+            HandleRetreat();
         }
         else if (distanceToTarget >= 15f)
         {
-            ChangeMovementStrategy(MovementStrategies.Default);
+            ChangeMovementStrategy(MovementStrategyType.Default);
         }
     }
 

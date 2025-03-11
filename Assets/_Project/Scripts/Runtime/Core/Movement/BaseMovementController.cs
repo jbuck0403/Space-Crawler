@@ -1,17 +1,18 @@
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(BaseEnemyController))]
 public class BaseMovementController : StrategyController<IMovementStrategy>
 {
-    [SerializeField]
-    public Transform DefaultTarget;
-    public Transform currentTarget;
-    public Transform previousTarget;
+    private Transform DefaultTarget;
+    public Transform currentTarget { get; private set; }
+    private Transform previousTarget;
 
     BaseEnemyController enemyController;
 
-    public void Start()
+    public void Awake()
     {
+        DefaultTarget = GameObject.FindGameObjectWithTag("Player").transform;
         currentTarget = DefaultTarget;
         enemyController = GetComponent<BaseEnemyController>();
     }

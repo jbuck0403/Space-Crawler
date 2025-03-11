@@ -140,6 +140,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 3080204034210999966, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 3833714410248275113, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.75
@@ -218,10 +222,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementConfig: {fileID: 11400000, guid: 46a46fdebec8f0946bb209e0c59dd753, type: 2}
-  firePoint: {fileID: 8099089328420793622}
-  OnFireWeapon: {fileID: 11400000, guid: 223caf201c0b288429a112fd8f959e9b, type: 2}
---- !u!4 &8099089328420793622 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3833714410248275113, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
-  m_PrefabInstance: {fileID: 4994958338086709695}
-  m_PrefabAsset: {fileID: 0}

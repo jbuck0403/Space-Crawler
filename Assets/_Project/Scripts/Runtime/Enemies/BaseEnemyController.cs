@@ -1,17 +1,15 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(BaseMovementController))]
-[RequireComponent(typeof(BaseWeapon))]
-public abstract class BaseEnemyController : MonoBehaviour
+public abstract class BaseEnemyController : BaseCharacterController
 {
     [SerializeField]
-    protected MovementConfig movementConfig;
+    protected List<MovementStrategyPair> movementStrategies;
 
-    protected BaseWeapon weapon;
-
-    protected Dictionary<string, IMovementStrategy> availableMovementStrategies;
-
+    [SerializeField]
+    protected MovementStrategyPair defaultStrategy;
     protected BaseMovementController movementController;
 
     protected Transform target;
@@ -26,27 +24,69 @@ public abstract class BaseEnemyController : MonoBehaviour
         return target;
     }
 
-    protected virtual void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         movementController = GetComponent<BaseMovementController>();
-        target = movementController.currentTarget;
         InitializeStrategies();
     }
 
     protected virtual void Start()
     {
+        target = movementController.currentTarget;
         SetDefaultStrategy();
     }
 
-    // initialize and add desired strategies to availableStrategies
-    protected abstract void InitializeStrategies();
-    protected abstract void SetDefaultStrategy();
-
-    protected void ChangeMovementStrategy(string strategyKey)
+    protected virtual void InitializeStrategies()
     {
-        if (availableMovementStrategies.TryGetValue(strategyKey, out IMovementStrategy strategy))
+        if (movementStrategies == null || movementStrategies.Count == 0)
         {
-            movementController.SetStrategy(strategy);
+            Debug.LogWarning($"No movement strategies assigned to {gameObject.name}");
+            return;
+        }
+
+        movementStrategies.ForEach(pair =>
+        {
+            if (pair.strategy == null)
+            {
+                Debug.LogWarning($"Null strategy found in {gameObject.name}");
+                return;
+            }
+            pair.strategy.Initialize(movementConfig);
+        });
+    }
+
+    protected virtual void SetDefaultStrategy()
+    {
+        ChangeMovementStrategy(defaultStrategy.strategyType);
+    }
+
+    protected void ChangeMovementStrategy(MovementStrategyType strategyType)
+    {
+        foreach (MovementStrategyPair pair in movementStrategies)
+        {
+            if (pair.strategyType == strategyType)
+            {
+                movementController.SetStrategy(pair.strategy);
+                return;
+            }
         }
     }
+}
+
+[Serializable]
+public struct MovementStrategyPair
+{
+    public MovementStrategyType strategyType;
+    public BaseMovementStrategy strategy;
+}
+
+public enum MovementStrategyType
+{
+    Default,
+    Circle,
+    Charge,
+    Retreat,
+    HitAndRun
 }

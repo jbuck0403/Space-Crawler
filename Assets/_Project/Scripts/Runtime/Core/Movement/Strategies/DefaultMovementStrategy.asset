@@ -9,10 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf803d711180c6444a6e973d346a5c2f, type: 3}
-  m_Name: DefaultFireConfig
+  m_Script: {fileID: 11500000, guid: ac120b2fb255889449b15def92f5af73, type: 3}
+  m_Name: DefaultMovementStrategy
   m_EditorClassIdentifier: 
-  fireRate: 1
-  accuracy: 0.8
-  spread: 90
-  projectileSpeed: 15

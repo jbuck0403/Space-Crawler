@@ -2,28 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RetreatMovementStrategy : IMovementStrategy
+[CreateAssetMenu(
+    fileName = "RetreatMovementStrategy",
+    menuName = "SpaceShooter/Strategies/Movement Strategies/Retreat"
+)]
+public class RetreatMovementStrategy : BaseMovementStrategy
 {
-    private readonly MovementConfig config;
-    private readonly float retreatDistance = 15f;
-    private readonly MovementHandler movementHandler;
-    private bool isInitialized;
+    [SerializeField]
+    private float retreatDistance = 15f;
 
-    public RetreatMovementStrategy(MovementConfig config)
+    public override void OnUpdate(Transform self, Transform target)
     {
-        this.config = config;
-        movementHandler = new MovementHandler(config);
-    }
-
-    public void OnEnter(Transform self, Transform target)
-    {
-        isInitialized = true;
-    }
-
-    public void OnUpdate(Transform self, Transform target)
-    {
+        Debug.Log("RETREAT STRATEGY UPDATE");
         if (!isInitialized || target == null)
             return;
+        Debug.Log("RETREAT STRATEGY UPDATE : FIRST NULL CHECK");
 
         // get direction from target to self (opposite of direction to target)
         Vector2 directionFromTarget = MovementUtils.GetTargetDirection(
@@ -42,13 +35,4 @@ public class RetreatMovementStrategy : IMovementStrategy
 
         movementHandler.ApplyMovement(self, targetDirection, Time.deltaTime);
     }
-
-    public void OnExit()
-    {
-        isInitialized = false;
-    }
-
-    public void OnStrategyComplete() { }
-
-    public MovementConfig GetMovementConfig() => config;
 }

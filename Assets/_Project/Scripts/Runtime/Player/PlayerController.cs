@@ -2,26 +2,17 @@ using System;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : BaseCharacterController
 {
-    [Header("Movement")]
-    [SerializeField]
-    private MovementConfig movementConfig;
-
-    public Transform firePoint;
-
-    [SerializeField]
-    public VoidEvent OnFireWeapon;
-
     private MovementHandler movementHandler;
     private Vector2 moveInput;
     private Vector2 aimDirection;
     private Camera mainCamera;
 
-    private BaseWeapon weapon;
-
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         movementHandler = new MovementHandler(movementConfig);
         mainCamera = Camera.main;
         weapon = GetComponent<BaseWeapon>();
