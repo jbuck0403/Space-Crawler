@@ -11,7 +11,11 @@ public class DefaultEnemyController : BaseEnemyController
 
     [SerializeField]
     private float timeToStopRetreating = 5f;
+
+    [SerializeField]
+    private float maxFiringDistance = 15f;
     private bool canRetreat = true;
+    private bool retreating = false;
 
     private Coroutine retreatCoroutine;
 
@@ -27,17 +31,24 @@ public class DefaultEnemyController : BaseEnemyController
         if (movementController == null || target == null)
             return;
 
-        // StrategyTest();
-    }
-
-    protected override void SetDefaultStrategy()
-    {
-        ChangeMovementStrategy(MovementStrategyType.Default);
+        float distanceFromTarget = MovementUtils.GetDistanceToTarget(
+            transform.position,
+            target.position
+        );
+        if (distanceFromTarget <= maxFiringDistance && !retreating)
+        {
+            FireWeapon();
+        }
+        else
+        {
+            StopFiringWeapon();
+        }
     }
 
     public void HandleRetreat()
     {
         ChangeMovementStrategy(MovementStrategyType.Retreat);
+        retreating = true;
         canRetreat = false;
 
         retreatCoroutine = StartCoroutine(StopRetreatAfterTime());
@@ -51,13 +62,13 @@ public class DefaultEnemyController : BaseEnemyController
         }
     }
 
-    private IEnumerator StopRetreatAfterTime()
+    public IEnumerator StopRetreatAfterTime()
     {
         if (retreatCoroutine == null)
         {
             yield return new WaitForSeconds(timeToStopRetreating);
-
-            SetDefaultStrategy();
+            isComplete = true;
+            retreating = false;
         }
     }
 
@@ -71,7 +82,6 @@ public class DefaultEnemyController : BaseEnemyController
         print("DISTANCE TO TARGET " + distanceToTarget);
         if (distanceToTarget <= 7.5f)
         {
-            print("RETREAT");
             HandleRetreat();
         }
         else if (distanceToTarget >= 15f)

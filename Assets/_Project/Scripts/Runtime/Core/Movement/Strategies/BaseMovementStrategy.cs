@@ -7,10 +7,18 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
     protected MovementHandler movementHandler;
     protected bool isInitialized;
 
-    public virtual void Initialize(MovementConfig config)
+    protected BaseEnemyController enemyController;
+
+    public virtual void Initialize(MovementConfig config, BaseEnemyController enemyController)
     {
         this.config = config;
+        this.enemyController = enemyController;
         movementHandler = new MovementHandler(config);
+    }
+
+    public virtual bool IsComplete()
+    {
+        return enemyController.isComplete;
     }
 
     public virtual void OnEnter(Transform self, Transform target)
@@ -29,12 +37,16 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
         );
         float distanceToTarget = MovementUtils.GetDistanceToTarget(self.position, target.position);
 
-        // only move if we're further than follow distance
-        Vector2 targetDirection =
-            distanceToTarget > followDistance ? directionToTarget : Vector2.zero;
+        bool shouldFollow = distanceToTarget >= followDistance;
+
+        Vector2 targetDirection = shouldFollow ? directionToTarget : Vector2.zero;
 
         // Debug.Log($"DIRECTION: {directionToTarget} DISTANCE: {distanceToTarget}");
 
+        if (targetDirection == Vector2.zero)
+        {
+            movementHandler.ApplyRotation(self, directionToTarget, Time.deltaTime);
+        }
         movementHandler.ApplyMovement(self, targetDirection, Time.deltaTime);
     }
 
@@ -43,7 +55,10 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
         isInitialized = false;
     }
 
-    public virtual void OnStrategyComplete() { }
+    public virtual void OnStrategyComplete()
+    {
+        enemyController.isComplete = false;
+    }
 
     public MovementConfig GetMovementConfig() => config;
 }

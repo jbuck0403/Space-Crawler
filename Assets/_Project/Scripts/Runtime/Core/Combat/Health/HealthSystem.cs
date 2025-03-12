@@ -26,7 +26,7 @@ public class HealthSystem : MonoBehaviour
     public VoidEvent OnHealingReceived;
 
     [SerializeField]
-    public VoidEvent OnDeath;
+    public Vector2Event OnDeath;
 
     [SerializeField]
     public VoidEvent OnLowHealth;
@@ -68,9 +68,17 @@ public class HealthSystem : MonoBehaviour
         if (currentHealth <= 0)
         {
             isDead = true;
-            OnDeath.Raise();
+            Die();
         }
     }
+
+    public void Die()
+    {
+        OnDeath.Raise(transform.position);
+        Destroy(gameObject);
+    }
+
+    public void Onestroy() { }
 
     public void ModifyMaxHealth(float amount)
     {

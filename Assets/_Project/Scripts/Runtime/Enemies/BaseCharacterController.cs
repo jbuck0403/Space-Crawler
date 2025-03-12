@@ -29,4 +29,14 @@ public abstract class BaseCharacterController : MonoBehaviour
             weapon.SetStrategy(weapon.weaponConfig.firingStrategies[0]);
         }
     }
+
+    protected virtual void FireWeapon()
+    {
+        weapon.SetCanFire(true);
+    }
+
+    protected virtual void StopFiringWeapon()
+    {
+        weapon.SetCanFire(false);
+    }
 }

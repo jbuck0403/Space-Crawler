@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(
@@ -13,10 +11,8 @@ public class RetreatMovementStrategy : BaseMovementStrategy
 
     public override void OnUpdate(Transform self, Transform target)
     {
-        Debug.Log("RETREAT STRATEGY UPDATE");
         if (!isInitialized || target == null)
             return;
-        Debug.Log("RETREAT STRATEGY UPDATE : FIRST NULL CHECK");
 
         // get direction from target to self (opposite of direction to target)
         Vector2 directionFromTarget = MovementUtils.GetTargetDirection(
@@ -34,5 +30,13 @@ public class RetreatMovementStrategy : BaseMovementStrategy
             distanceFromTarget < retreatDistance ? directionFromTarget : Vector2.zero;
 
         movementHandler.ApplyMovement(self, targetDirection, Time.deltaTime);
+    }
+
+    public override void OnStrategyComplete()
+    {
+        // change strategy to default
+        enemyController.SetDefaultStrategy();
+
+        base.OnStrategyComplete();
     }
 }

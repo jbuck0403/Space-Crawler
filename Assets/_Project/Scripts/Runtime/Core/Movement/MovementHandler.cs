@@ -3,6 +3,7 @@ using UnityEngine;
 public class MovementHandler
 {
     private readonly float maxSpeed;
+    private readonly float rotationSpeed;
     private readonly float acceleration;
     private readonly float deceleration;
 
@@ -10,9 +11,10 @@ public class MovementHandler
 
     public MovementHandler(MovementConfig config)
     {
-        this.maxSpeed = config.maxSpeed;
-        this.acceleration = config.acceleration;
-        this.deceleration = config.deceleration;
+        maxSpeed = config.maxSpeed;
+        acceleration = config.acceleration;
+        deceleration = config.deceleration;
+        rotationSpeed = config.rotationSpeed;
     }
 
     public Vector2 CalculateMovement(
@@ -47,7 +49,26 @@ public class MovementHandler
     public void ApplyMovement(Transform transform, Vector2 targetDirection, float deltaTime)
     {
         Vector2 newPosition = CalculateMovement(targetDirection, transform.position, deltaTime);
-        transform.position = new Vector3(newPosition.x, newPosition.y, transform.position.z);
+        float newRotation = CalculateRotation(
+            targetDirection,
+            transform.eulerAngles.z,
+            rotationSpeed,
+            deltaTime
+        );
+
+        // transform.position = new Vector3(newPosition.x, newPosition.y, transform.position.z);
+        ApplyMovementAndRotation(transform, newPosition, newRotation);
+    }
+
+    public void ApplyRotation(Transform transform, Vector2 targetDirection, float deltaTime)
+    {
+        float rotation = CalculateRotation(
+            targetDirection,
+            transform.eulerAngles.z,
+            rotationSpeed,
+            deltaTime
+        );
+        transform.rotation = Quaternion.Euler(0, 0, rotation);
     }
 
     public void ApplyMovementAndRotation(

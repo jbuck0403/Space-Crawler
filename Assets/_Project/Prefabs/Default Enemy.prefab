@@ -142,7 +142,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3833714410248275113, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.605
+      value: 0.769
       objectReference: {fileID: 0}
     - target: {fileID: 3887703589186330965, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
       propertyPath: onCriticalHit
@@ -289,8 +289,10 @@ MonoBehaviour:
   defaultStrategy:
     strategyType: 0
     strategy: {fileID: 11400000, guid: f64f5b12df108164f8f206d432f56c17, type: 2}
+  isComplete: 0
   RetreatHealthThreshold: 10
   timeToStopRetreating: 5
+  maxFiringDistance: 15
 --- !u!4 &8699095912087521350 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7482415228626354879, guid: 4220b79cf5a840543b4a082e92706106, type: 3}

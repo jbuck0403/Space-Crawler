@@ -14,6 +14,7 @@ public abstract class BaseEnemyController : BaseCharacterController
     protected HealthSystem healthSystem;
 
     protected Transform target;
+    public bool isComplete = false;
 
     public void UpdateTarget(Transform target)
     {
@@ -55,11 +56,11 @@ public abstract class BaseEnemyController : BaseCharacterController
                 Debug.LogWarning($"Null strategy found in {gameObject.name}");
                 return;
             }
-            pair.strategy.Initialize(movementConfig);
+            pair.strategy.Initialize(movementConfig, this);
         });
     }
 
-    protected virtual void SetDefaultStrategy()
+    public virtual void SetDefaultStrategy()
     {
         ChangeMovementStrategy(defaultStrategy.strategyType);
     }
@@ -70,10 +71,24 @@ public abstract class BaseEnemyController : BaseCharacterController
         {
             if (pair.strategyType == strategyType)
             {
+                isComplete = false;
                 movementController.SetStrategy(pair.strategy);
                 return;
             }
         }
+    }
+
+    protected BaseMovementStrategy GetMovementStrategy(MovementStrategyType strategyType)
+    {
+        foreach (MovementStrategyPair pair in movementStrategies)
+        {
+            if (pair.strategyType == strategyType)
+            {
+                return pair.strategy;
+            }
+        }
+
+        return null;
     }
 }
 
