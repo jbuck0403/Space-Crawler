@@ -207,6 +207,18 @@ PrefabInstance:
       propertyPath: defaultStrategy.strategyType
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5529026550726558395, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
+      propertyPath: movementStrategies.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5529026550726558395, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
+      propertyPath: movementStrategies.Array.data[3].strategy
+      value: 
+      objectReference: {fileID: 11400000, guid: d7d5a5e4445eaa5408ea5f77b7eb5075, type: 2}
+    - target: {fileID: 5529026550726558395, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
+      propertyPath: movementStrategies.Array.data[3].strategyType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8699095912087521350, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.26
@@ -247,6 +259,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9085558246291644768, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
+      propertyPath: OnDeath
+      value: 
+      objectReference: {fileID: 11400000, guid: 4dd36339df0b86146adc52f662e8e0e2, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

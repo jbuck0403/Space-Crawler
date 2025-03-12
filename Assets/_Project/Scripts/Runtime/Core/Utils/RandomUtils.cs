@@ -16,4 +16,9 @@ public static class RandomUtils
     {
         return Random.Range(0f, 100f) <= percentage;
     }
+
+    public static bool RandomBool()
+    {
+        return Chance(50);
+    }
 }

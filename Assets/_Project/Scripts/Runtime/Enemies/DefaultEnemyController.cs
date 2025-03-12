@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(HealthSystem))]
@@ -19,11 +18,17 @@ public class DefaultEnemyController : BaseEnemyController
 
     private Coroutine retreatCoroutine;
 
+    [SerializeField]
+    private bool shooting = false;
+
     protected override void Start()
     {
         base.Start();
 
         healthSystem.OnLowHealth.AddListener(TriggerRetreat);
+
+        ChangeMovementStrategy(MovementStrategyType.Circle);
+        // StartCoroutine(StrategyTest());
     }
 
     private void Update()
@@ -35,7 +40,7 @@ public class DefaultEnemyController : BaseEnemyController
             transform.position,
             target.position
         );
-        if (distanceFromTarget <= maxFiringDistance && !retreating)
+        if (shooting && distanceFromTarget <= maxFiringDistance && !retreating)
         {
             FireWeapon();
         }
@@ -73,22 +78,36 @@ public class DefaultEnemyController : BaseEnemyController
     }
 
     // testing purposes only
-    private void StrategyTest()
-    {
-        float distanceToTarget = MovementUtils.GetDistanceToTarget(
-            transform.position,
-            target.position
-        );
-        print("DISTANCE TO TARGET " + distanceToTarget);
-        if (distanceToTarget <= 7.5f)
-        {
-            HandleRetreat();
-        }
-        else if (distanceToTarget >= 15f)
-        {
-            ChangeMovementStrategy(MovementStrategyType.Default);
-        }
-    }
+    // private void StrategyTest()
+    // {
+    //     float distanceToTarget = MovementUtils.GetDistanceToTarget(
+    //         transform.position,
+    //         target.position
+    //     );
+    //     print("DISTANCE TO TARGET " + distanceToTarget);
+    //     if (distanceToTarget <= 7.5f)
+    //     {
+    //         HandleRetreat();
+    //     }
+    //     else if (distanceToTarget >= 15f)
+    //     {
+    //         ChangeMovementStrategy(MovementStrategyType.Default);
+    //     }
+    // }
+    // private IEnumerator StrategyTest()
+    // {
+    //     print("SWAPPING TO DEFAULT");
+    //     ChangeMovementStrategy(MovementStrategyType.Default);
+
+    //     yield return new WaitForSeconds(5f);
+
+    //     print("SWAPPING TO CAUTIOUS");
+    //     ChangeMovementStrategy(MovementStrategyType.Cautious);
+
+    //     yield return new WaitForSeconds(5f);
+
+    //     StartCoroutine(StrategyTest());
+    // }
 
     private void OnDestroy()
     {

@@ -47,7 +47,7 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
         {
             movementHandler.ApplyRotation(self, directionToTarget, Time.deltaTime);
         }
-        movementHandler.ApplyMovement(self, targetDirection, Time.deltaTime);
+        movementHandler.Move(self, targetDirection, Time.deltaTime);
     }
 
     public virtual void OnExit()

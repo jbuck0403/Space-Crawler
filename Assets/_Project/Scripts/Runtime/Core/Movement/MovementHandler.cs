@@ -46,7 +46,7 @@ public class MovementHandler
         return currentPosition + (currentVelocity * deltaTime);
     }
 
-    public void ApplyMovement(Transform transform, Vector2 targetDirection, float deltaTime)
+    public void Move(Transform transform, Vector2 targetDirection, float deltaTime)
     {
         Vector2 newPosition = CalculateMovement(targetDirection, transform.position, deltaTime);
         float newRotation = CalculateRotation(
@@ -58,6 +58,13 @@ public class MovementHandler
 
         // transform.position = new Vector3(newPosition.x, newPosition.y, transform.position.z);
         ApplyMovementAndRotation(transform, newPosition, newRotation);
+    }
+
+    public void ApplyMovement(Transform transform, Vector2 targetDirection, float deltaTime)
+    {
+        Vector2 newPosition = CalculateMovement(targetDirection, transform.position, deltaTime);
+
+        transform.position = newPosition;
     }
 
     public void ApplyRotation(Transform transform, Vector2 targetDirection, float deltaTime)

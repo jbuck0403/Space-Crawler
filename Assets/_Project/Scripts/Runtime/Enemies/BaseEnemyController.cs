@@ -65,7 +65,7 @@ public abstract class BaseEnemyController : BaseCharacterController
         ChangeMovementStrategy(defaultStrategy.strategyType);
     }
 
-    protected void ChangeMovementStrategy(MovementStrategyType strategyType)
+    public void ChangeMovementStrategy(MovementStrategyType strategyType)
     {
         foreach (MovementStrategyPair pair in movementStrategies)
         {
@@ -90,6 +90,19 @@ public abstract class BaseEnemyController : BaseCharacterController
 
         return null;
     }
+
+    public bool HasMovementStrategy(MovementStrategyType strategyType)
+    {
+        foreach (MovementStrategyPair pair in movementStrategies)
+        {
+            if (pair.strategyType == strategyType)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
 
 [Serializable]
@@ -105,5 +118,6 @@ public enum MovementStrategyType
     Circle,
     Charge,
     Retreat,
-    HitAndRun
+    HitAndRun,
+    Cautious,
 }

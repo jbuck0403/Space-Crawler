@@ -5,4 +5,5 @@ public class MovementStrategies
     public const string Charge = "Charge";
     public const string Retreat = "Retreat";
     public const string HitAndRun = "HitAndRun";
+    public const string Cautious = "Cautious";
 }

@@ -29,13 +29,20 @@ public class RetreatMovementStrategy : BaseMovementStrategy
         Vector2 targetDirection =
             distanceFromTarget < retreatDistance ? directionFromTarget : Vector2.zero;
 
-        movementHandler.ApplyMovement(self, targetDirection, Time.deltaTime);
+        movementHandler.Move(self, targetDirection, Time.deltaTime);
     }
 
     public override void OnStrategyComplete()
     {
-        // change strategy to default
-        enemyController.SetDefaultStrategy();
+        MovementStrategyType type = MovementStrategyType.Cautious;
+        if (enemyController.HasMovementStrategy(type))
+        {
+            enemyController.ChangeMovementStrategy(type);
+        }
+        else
+        {
+            enemyController.SetDefaultStrategy();
+        }
 
         base.OnStrategyComplete();
     }

@@ -151,7 +151,7 @@ PrefabInstance:
     - target: {fileID: 7023899853594651545, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
       propertyPath: OnDeath
       value: 
-      objectReference: {fileID: 11400000, guid: 7f4c005e502676a47b66fd8574778eeb, type: 2}
+      objectReference: {fileID: 11400000, guid: 4dd36339df0b86146adc52f662e8e0e2, type: 2}
     - target: {fileID: 7023899853594651545, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
       propertyPath: OnLowHealth
       value: 
@@ -286,6 +286,8 @@ MonoBehaviour:
     strategy: {fileID: 11400000, guid: f64f5b12df108164f8f206d432f56c17, type: 2}
   - strategyType: 3
     strategy: {fileID: 11400000, guid: 0caa7228373b1aa4aa3bb5bc7ec1b388, type: 2}
+  - strategyType: 5
+    strategy: {fileID: 11400000, guid: 9a00141614b9ef04eb0e2d7da6ae0600, type: 2}
   defaultStrategy:
     strategyType: 0
     strategy: {fileID: 11400000, guid: f64f5b12df108164f8f206d432f56c17, type: 2}
