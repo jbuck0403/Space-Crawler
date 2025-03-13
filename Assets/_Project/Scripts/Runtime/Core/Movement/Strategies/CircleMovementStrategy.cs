@@ -10,6 +10,10 @@ public class CircleMovementStrategy : BaseMovementStrategy
     [Range(0.5f, 3.5f)]
     private float circlingSpeed = 1f;
 
+    [SerializeField]
+    [Range(0f, 1f)]
+    private float orbitTightness = 0.7f;
+
     private bool isClockwise;
     private Vector2 currentCirclingDirection;
 
@@ -20,15 +24,22 @@ public class CircleMovementStrategy : BaseMovementStrategy
         UpdateCirclingDirection(self, target);
     }
 
+    private Vector2 CalculateOrbitDirection(Vector2 directionToTarget, float tightness)
+    {
+        Vector2 perpendicular = isClockwise
+            ? new Vector2(-directionToTarget.y, directionToTarget.x)
+            : new Vector2(directionToTarget.y, -directionToTarget.x);
+
+        return Vector2.Lerp(directionToTarget, perpendicular, tightness).normalized;
+    }
+
     private void UpdateCirclingDirection(Transform self, Transform target)
     {
         Vector2 directionToTarget = MovementUtils.GetTargetDirection(
             self.position,
             target.position
         );
-        currentCirclingDirection = isClockwise
-            ? new Vector2(-directionToTarget.y, directionToTarget.x)
-            : new Vector2(directionToTarget.y, -directionToTarget.x);
+        currentCirclingDirection = CalculateOrbitDirection(directionToTarget, orbitTightness);
     }
 
     public override void OnUpdate(Transform self, Transform target)

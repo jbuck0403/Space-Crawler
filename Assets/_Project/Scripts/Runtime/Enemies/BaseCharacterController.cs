@@ -14,6 +14,10 @@ public abstract class BaseCharacterController : MonoBehaviour
     protected virtual void Awake()
     {
         weapon = GetComponent<BaseWeapon>();
+    }
+
+    protected virtual void Start()
+    {
         InitializeWeapon();
     }
 
@@ -38,5 +42,10 @@ public abstract class BaseCharacterController : MonoBehaviour
     protected virtual void StopFiringWeapon()
     {
         weapon.SetCanFire(false);
+    }
+
+    public MovementConfig GetMovementConfig()
+    {
+        return movementConfig;
     }
 }

@@ -59,6 +59,8 @@ public class HealthSystem : MonoBehaviour
 
         if (CurrentHealth / MaxHealth <= lowHealthPercent / 100)
         {
+            print("RAISING LOW HEALTH");
+            print(OnLowHealth);
             OnLowHealth.Raise();
         }
 
@@ -83,5 +85,15 @@ public class HealthSystem : MonoBehaviour
     public void ModifyMaxHealth(float amount)
     {
         maxHealth += amount;
+    }
+
+    public void SetLowHealthPercent(float newPercent)
+    {
+        lowHealthPercent = newPercent;
+    }
+
+    public void ModifyLowHealthPercent(float percentToAdd)
+    {
+        lowHealthPercent = Mathf.Clamp(lowHealthPercent + percentToAdd, 5, 100);
     }
 }

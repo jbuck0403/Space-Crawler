@@ -209,15 +209,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5529026550726558395, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
       propertyPath: movementStrategies.Array.size
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5529026550726558395, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
       propertyPath: movementStrategies.Array.data[3].strategy
       value: 
       objectReference: {fileID: 11400000, guid: d7d5a5e4445eaa5408ea5f77b7eb5075, type: 2}
     - target: {fileID: 5529026550726558395, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
+      propertyPath: movementStrategies.Array.data[4].strategy
+      value: 
+      objectReference: {fileID: 11400000, guid: d279c5d0ce2719f47bba5c5c78864da4, type: 2}
+    - target: {fileID: 5529026550726558395, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
       propertyPath: movementStrategies.Array.data[3].strategyType
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5529026550726558395, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
+      propertyPath: movementStrategies.Array.data[4].strategyType
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8699095912087521350, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
       propertyPath: m_LocalPosition.x

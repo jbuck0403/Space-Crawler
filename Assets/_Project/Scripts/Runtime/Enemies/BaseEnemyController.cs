@@ -6,15 +6,18 @@ using UnityEngine;
 public abstract class BaseEnemyController : BaseCharacterController
 {
     [SerializeField]
-    protected List<MovementStrategyPair> movementStrategies;
+    public List<MovementStrategyPair> movementStrategies;
 
     [SerializeField]
-    protected MovementStrategyPair defaultStrategy;
+    protected MovementStrategyType defaultStrategy;
+
+    // protected List<MovementStrategyPair> movementStrategyInstances;
     protected BaseMovementController movementController;
     protected HealthSystem healthSystem;
 
     protected Transform target;
-    public bool isComplete = false;
+
+    // public bool isComplete = false;
 
     public void UpdateTarget(Transform target)
     {
@@ -32,63 +35,95 @@ public abstract class BaseEnemyController : BaseCharacterController
 
         movementController = GetComponent<BaseMovementController>();
         healthSystem = GetComponent<HealthSystem>();
-        InitializeStrategies();
     }
 
-    protected virtual void Start()
+    protected override void Start()
     {
+        InitializeStrategies();
+        movementController.Initialize(this, movementConfig);
+
         target = movementController.currentTarget;
-        SetDefaultStrategy();
+        ChangeToDefaultStrategy();
+
+        base.Start();
     }
 
     protected virtual void InitializeStrategies()
     {
+        bool definesAvailableDefault = false;
+
         if (movementStrategies == null || movementStrategies.Count == 0)
         {
             Debug.LogWarning($"No movement strategies assigned to {gameObject.name}");
             return;
         }
 
+        Debug.Log($"[{gameObject.name}] Initializing {movementStrategies.Count} strategies");
+
         movementStrategies.ForEach(pair =>
         {
+            if (pair.strategyType == MovementStrategyType.Default)
+            {
+                definesAvailableDefault = true;
+            }
             if (pair.strategy == null)
             {
                 Debug.LogWarning($"Null strategy found in {gameObject.name}");
                 return;
             }
-            pair.strategy.Initialize(movementConfig, this);
+            pair.strategy = pair.strategy.Initialize(movementConfig, this);
+            // print(pair.strategy.IsInstance());
         });
+
+        if (!definesAvailableDefault)
+        {
+            defaultStrategy = movementStrategies[0].strategyType;
+        }
     }
 
-    public virtual void SetDefaultStrategy()
+    public virtual void ChangeToDefaultStrategy()
     {
-        ChangeMovementStrategy(defaultStrategy.strategyType);
+        ChangeMovementStrategy(defaultStrategy);
+    }
+
+    public T ChangeMovementStrategy<T>()
+        where T : BaseMovementStrategy
+    {
+        Debug.Log($"[BaseEnemyController] Changing to strategy type {typeof(T).Name}");
+        foreach (MovementStrategyPair pair in movementStrategies)
+        {
+            if (pair.strategy is T)
+            {
+                Debug.Log(
+                    $"[BaseEnemyController] Found matching strategy, isInstance: {pair.strategy.IsInstance()}"
+                );
+                IMovementStrategy strategy = movementController.SetStrategy(pair.strategy);
+                Debug.Log(
+                    $"[BaseEnemyController] Strategy set, returning instance status: {((BaseMovementStrategy)strategy).IsInstance()}"
+                );
+                return strategy as T;
+            }
+        }
+        return null;
     }
 
     public void ChangeMovementStrategy(MovementStrategyType strategyType)
     {
+        Debug.Log($"[BaseEnemyController] Changing to strategy type {strategyType}");
         foreach (MovementStrategyPair pair in movementStrategies)
         {
             if (pair.strategyType == strategyType)
             {
-                isComplete = false;
-                movementController.SetStrategy(pair.strategy);
+                Debug.Log(
+                    $"[BaseEnemyController] Found matching strategy, isInstance: {pair.strategy.IsInstance()}"
+                );
+                IMovementStrategy strategy = movementController.SetStrategy(pair.strategy);
+                Debug.Log(
+                    $"[BaseEnemyController] Strategy set, returning instance status: {((BaseMovementStrategy)strategy).IsInstance()}"
+                );
                 return;
             }
         }
-    }
-
-    protected BaseMovementStrategy GetMovementStrategy(MovementStrategyType strategyType)
-    {
-        foreach (MovementStrategyPair pair in movementStrategies)
-        {
-            if (pair.strategyType == strategyType)
-            {
-                return pair.strategy;
-            }
-        }
-
-        return null;
     }
 
     public bool HasMovementStrategy(MovementStrategyType strategyType)
@@ -102,6 +137,20 @@ public abstract class BaseEnemyController : BaseCharacterController
         }
 
         return false;
+    }
+
+    public T GetMovementStrategy<T>()
+        where T : BaseMovementStrategy
+    {
+        foreach (MovementStrategyPair pair in movementStrategies)
+        {
+            if (pair.strategy is T)
+            {
+                return pair.strategy as T;
+            }
+        }
+
+        return null;
     }
 }
 

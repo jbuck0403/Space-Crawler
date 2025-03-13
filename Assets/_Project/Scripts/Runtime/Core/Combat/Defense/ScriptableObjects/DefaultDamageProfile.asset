@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ba8f2198734e184da03d8c008b2b68d, type: 3}
   m_Name: DefaultDamageProfile
   m_EditorClassIdentifier: 
-  baseDamage: 10
+  baseDamage: 95
   critMultiplier: 1.5
-  critChance: 50
+  critChance: 0
   damageType: 0

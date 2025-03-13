@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f1c6e49fe7792f42aa5eda01ffaef39, type: 3}
-  m_Name: RetreatMovementStrategy
+  m_Script: {fileID: 11500000, guid: dced5bec62b23e546bdef210cfdae24d, type: 3}
+  m_Name: ChargeMovementStrategy
   m_EditorClassIdentifier: 
-  retreatDistance: 15
-  RetreatHealthThreshold: 20
-  timeToStopRetreating: 5
-  canRetreat: 1
-  retreating: 1
+  chargePauseTime: 1
+  chargeSpeedMultiplier: 1.3
+  destinationReachedThreshold: 0.5

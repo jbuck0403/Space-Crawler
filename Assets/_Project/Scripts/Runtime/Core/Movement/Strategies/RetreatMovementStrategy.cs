@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [CreateAssetMenu(
@@ -7,7 +8,26 @@ using UnityEngine;
 public class RetreatMovementStrategy : BaseMovementStrategy
 {
     [SerializeField]
-    private float retreatDistance = 15f;
+    public float retreatDistance = 15f;
+
+    [SerializeField]
+    public float RetreatHealthThreshold = 10f;
+
+    [SerializeField]
+    public float timeToStopRetreating = 5f;
+
+    public bool canRetreat = true;
+    public bool retreating = false;
+
+    // public Coroutine retreatCoroutine;
+
+    public override void OnEnter(Transform self, Transform target)
+    {
+        base.OnEnter(self, target);
+        retreating = true;
+
+        enemyController.StartCoroutine(StopRetreatAfterTime());
+    }
 
     public override void OnUpdate(Transform self, Transform target)
     {
@@ -41,9 +61,16 @@ public class RetreatMovementStrategy : BaseMovementStrategy
         }
         else
         {
-            enemyController.SetDefaultStrategy();
+            enemyController.ChangeToDefaultStrategy();
         }
 
         base.OnStrategyComplete();
+    }
+
+    public IEnumerator StopRetreatAfterTime()
+    {
+        yield return new WaitForSeconds(timeToStopRetreating);
+        isComplete = true;
+        retreating = false;
     }
 }

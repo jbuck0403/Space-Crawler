@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: CircleMovementStrategy
   m_EditorClassIdentifier: 
   circlingSpeed: 1
+  orbitTightness: 1

@@ -2,19 +2,30 @@ using UnityEngine;
 
 public class MovementHandler
 {
-    private readonly float maxSpeed;
-    private readonly float rotationSpeed;
-    private readonly float acceleration;
-    private readonly float deceleration;
+    public float maxSpeed;
+    public float rotationSpeed;
+    public float acceleration;
+    public float deceleration;
+
+    public MovementConfig config;
+    public MovementConfig prevConfig;
 
     private Vector2 currentVelocity;
 
-    public MovementHandler(MovementConfig config)
+    public void Initialize(MovementConfig config)
     {
         maxSpeed = config.maxSpeed;
         acceleration = config.acceleration;
         deceleration = config.deceleration;
         rotationSpeed = config.rotationSpeed;
+
+        prevConfig = this.config;
+        this.config = config;
+    }
+
+    public MovementHandler(MovementConfig config)
+    {
+        Initialize(config);
     }
 
     public Vector2 CalculateMovement(

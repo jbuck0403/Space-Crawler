@@ -14,9 +14,9 @@ public class CautiousMovementStrategy : BaseMovementStrategy
     private float distanceTolerance = 0.5f;
     private float minimumDistance;
 
-    public override void Initialize(MovementConfig config, BaseEnemyController enemyController)
+    public override void OnEnter(Transform self, Transform target)
     {
-        base.Initialize(config, enemyController);
+        base.OnEnter(self, target);
 
         minimumDistance = followDistance * caution;
     }

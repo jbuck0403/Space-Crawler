@@ -6,29 +6,26 @@ using UnityEngine;
 public class DefaultEnemyController : BaseEnemyController
 {
     [SerializeField]
-    private float RetreatHealthThreshold = 10f;
-
-    [SerializeField]
-    private float timeToStopRetreating = 5f;
-
-    [SerializeField]
     private float maxFiringDistance = 15f;
-    private bool canRetreat = true;
-    private bool retreating = false;
 
-    private Coroutine retreatCoroutine;
+    [SerializeField]
+    private float minFiringDistance = 0f;
 
     [SerializeField]
     private bool shooting = false;
+
+    protected RetreatMovementStrategy retreatStrategy;
 
     protected override void Start()
     {
         base.Start();
 
+        retreatStrategy = GetMovementStrategy<RetreatMovementStrategy>();
+
+        healthSystem.SetLowHealthPercent(retreatStrategy.RetreatHealthThreshold);
         healthSystem.OnLowHealth.AddListener(TriggerRetreat);
 
-        ChangeMovementStrategy(MovementStrategyType.Circle);
-        // StartCoroutine(StrategyTest());
+        // ChangeMovementStrategy(MovementStrategyType.Charge);
     }
 
     private void Update()
@@ -40,7 +37,11 @@ public class DefaultEnemyController : BaseEnemyController
             transform.position,
             target.position
         );
-        if (shooting && distanceFromTarget <= maxFiringDistance && !retreating)
+        if (
+            shooting
+            && distanceFromTarget <= maxFiringDistance
+            && distanceFromTarget >= minFiringDistance
+        )
         {
             FireWeapon();
         }
@@ -50,33 +51,27 @@ public class DefaultEnemyController : BaseEnemyController
         }
     }
 
-    public void HandleRetreat()
+    private void HandleRetreat()
     {
         ChangeMovementStrategy(MovementStrategyType.Retreat);
-        retreating = true;
-        canRetreat = false;
-
-        retreatCoroutine = StartCoroutine(StopRetreatAfterTime());
     }
 
-    private void TriggerRetreat()
+    public void TriggerRetreat()
     {
-        if (canRetreat)
+        print($"RETREATING: instance? {retreatStrategy.IsInstance()}");
+        if (retreatStrategy.canRetreat)
         {
             HandleRetreat();
         }
     }
 
-    public IEnumerator StopRetreatAfterTime()
+    private void OnDestroy()
     {
-        if (retreatCoroutine == null)
+        if (healthSystem != null)
         {
-            yield return new WaitForSeconds(timeToStopRetreating);
-            isComplete = true;
-            retreating = false;
+            healthSystem.OnLowHealth.RemoveListener(TriggerRetreat);
         }
     }
-
     // testing purposes only
     // private void StrategyTest()
     // {
@@ -108,12 +103,4 @@ public class DefaultEnemyController : BaseEnemyController
 
     //     StartCoroutine(StrategyTest());
     // }
-
-    private void OnDestroy()
-    {
-        if (healthSystem != null)
-        {
-            healthSystem.OnLowHealth.RemoveListener(TriggerRetreat);
-        }
-    }
 }
