@@ -123,4 +123,9 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
     }
 
     public MovementConfig GetMovementConfig() => config;
+
+    public IStrategy CreateInstance()
+    {
+        return Initialize(config, enemyController);
+    }
 }

@@ -23,7 +23,7 @@ public class DefaultEnemyController : BaseEnemyController
         retreatStrategy = GetMovementStrategy<RetreatMovementStrategy>();
 
         healthSystem.SetLowHealthPercent(retreatStrategy.RetreatHealthThreshold);
-        healthSystem.OnLowHealth.AddListener(TriggerRetreat);
+        healthSystem.OnLowHealth.AddListener(gameObject, TriggerRetreat);
 
         // ChangeMovementStrategy(MovementStrategyType.Charge);
     }
@@ -69,7 +69,7 @@ public class DefaultEnemyController : BaseEnemyController
     {
         if (healthSystem != null)
         {
-            healthSystem.OnLowHealth.RemoveListener(TriggerRetreat);
+            healthSystem.OnLowHealth.RemoveListener(gameObject, TriggerRetreat);
         }
     }
     // testing purposes only

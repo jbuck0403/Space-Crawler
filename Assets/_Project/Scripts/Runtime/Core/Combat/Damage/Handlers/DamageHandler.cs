@@ -73,7 +73,7 @@ public class DamageHandler : MonoBehaviour
 
         if (isCrit)
         {
-            onCriticalHit.Raise();
+            onCriticalHit.Raise(gameObject);
         }
 
         return finalDamage * (isCrit ? critMultiplier : 1);

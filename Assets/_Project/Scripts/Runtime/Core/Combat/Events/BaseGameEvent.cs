@@ -1,23 +1,37 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public abstract class BaseGameEvent<T> : ScriptableObject
 {
-    private readonly UnityEvent<T> onEventRaised = new();
-    public UnityEvent<T> OnEventRaised => onEventRaised;
+    private readonly Dictionary<GameObject, UnityEvent<T>> eventsByGameObject = new();
 
-    public void Raise(T value = default)
+    public void Raise(GameObject sender, T value = default)
     {
-        onEventRaised.Invoke(value);
+        if (eventsByGameObject.TryGetValue(sender, out var gameObjectEvent))
+        {
+            gameObjectEvent.Invoke(value);
+        }
     }
 
-    public virtual void AddListener(UnityAction<T> subscriber)
+    public virtual void AddListener(GameObject gameObject, UnityAction<T> subscriber)
     {
-        OnEventRaised.AddListener(subscriber);
+        if (!eventsByGameObject.ContainsKey(gameObject))
+        {
+            eventsByGameObject[gameObject] = new UnityEvent<T>();
+        }
+        eventsByGameObject[gameObject].AddListener(subscriber);
     }
 
-    public virtual void RemoveListener(UnityAction<T> action)
+    public virtual void RemoveListener(GameObject gameObject, UnityAction<T> action)
     {
-        OnEventRaised.RemoveListener(action);
+        if (eventsByGameObject.TryGetValue(gameObject, out var gameObjectEvent))
+        {
+            gameObjectEvent.RemoveListener(action);
+            if (gameObjectEvent.GetPersistentEventCount() == 0)
+            {
+                eventsByGameObject.Remove(gameObject);
+            }
+        }
     }
 }

@@ -4,4 +4,7 @@ public interface IStrategy
     bool CanExit() => true;
     bool IsComplete() => false;
     void OnStrategyComplete(); // called when strategy reads IsComplete() == true
+
+    bool IsInstance();
+    IStrategy CreateInstance();
 }

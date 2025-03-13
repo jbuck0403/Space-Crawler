@@ -22,7 +22,7 @@ public class StatusEffectHandler : MonoBehaviour, IStatusEffectReceiver
         foreach (var effect in activeEffects.Values)
         {
             effect.Update(Time.deltaTime);
-            onStatusEffectTick.Raise(effect.Data.EffectType);
+            onStatusEffectTick.Raise(gameObject, effect.Data.EffectType);
 
             if (effect.IsExpired)
             {
@@ -49,7 +49,7 @@ public class StatusEffectHandler : MonoBehaviour, IStatusEffectReceiver
             {
                 activeEffects[effectData.EffectName] = newEffect;
                 newEffect.OnApply();
-                onStatusEffectApplied.Raise(effectData.EffectType);
+                onStatusEffectApplied.Raise(gameObject, effectData.EffectType);
             }
         }
     }
@@ -60,7 +60,7 @@ public class StatusEffectHandler : MonoBehaviour, IStatusEffectReceiver
         {
             effect.OnRemove();
             activeEffects.Remove(effectName);
-            onStatusEffectRemoved.Raise(effect.Data.EffectType);
+            onStatusEffectRemoved.Raise(gameObject, effect.Data.EffectType);
         }
     }
 
@@ -76,6 +76,6 @@ public class StatusEffectHandler : MonoBehaviour, IStatusEffectReceiver
             effect.OnRemove();
         }
         activeEffects.Clear();
-        onStatusEffectRemoved.Raise();
+        onStatusEffectRemoved.Raise(gameObject);
     }
 }

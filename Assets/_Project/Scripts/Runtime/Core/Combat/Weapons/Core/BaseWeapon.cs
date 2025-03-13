@@ -40,7 +40,7 @@ public abstract class BaseWeapon : StrategyController<IFireStrategy>, IFireWeapo
             transform
         );
 
-        OnFireWeapon.Raise(); // trigger OnFire subscribers
+        OnFireWeapon.Raise(gameObject); // trigger OnFire subscribers
 
         return projectile != null;
     }
@@ -97,32 +97,4 @@ public abstract class BaseWeapon : StrategyController<IFireStrategy>, IFireWeapo
         // 180 degrees = PI radians
         return spreadDegrees * Mathf.PI / 180f;
     }
-
-    // for when adding multiple strategies to weapons requires adding instancing
-    // public override IMovementStrategy SetStrategy(IMovementStrategy newStrategy)
-    // {
-    //     // If the strategy is a BaseMovementStrategy but not an instance
-    //     if (newStrategy is BaseFiringStrategy baseStrategy)
-    //     {
-    //         Debug.Log(
-    //             $"[BaseMovementController] Setting strategy of type {baseStrategy.GetType().Name}"
-    //         );
-    //         Debug.Log(
-    //             $"[BaseMovementController] Strategy isInstance before check: {baseStrategy.IsInstance()}"
-    //         );
-
-    //         if (!baseStrategy.IsInstance())
-    //         {
-    //             Debug.Log(
-    //                 $"[BaseMovementController] Strategy is not an instance, creating new instance"
-    //             );
-    //             newStrategy = baseStrategy.Initialize(config, enemyController);
-    //             Debug.Log(
-    //                 $"[BaseMovementController] New instance created, isInstance: {((BaseMovementStrategy)newStrategy).IsInstance()}"
-    //             );
-    //         }
-    //     }
-
-    //     return base.SetStrategy(newStrategy);
-    // }
 }

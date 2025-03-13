@@ -48,11 +48,11 @@ public class HealthSystem : MonoBehaviour
 
         if (amount > 0)
         {
-            OnHealingReceived.Raise();
+            OnHealingReceived.Raise(gameObject);
         }
         else if (amount < 0)
         {
-            OnDamageTaken.Raise();
+            OnDamageTaken.Raise(gameObject);
         }
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
@@ -61,11 +61,11 @@ public class HealthSystem : MonoBehaviour
         {
             print("RAISING LOW HEALTH");
             print(OnLowHealth);
-            OnLowHealth.Raise();
+            OnLowHealth.Raise(gameObject);
         }
 
-        OnHealthChanged.Raise(currentHealth);
-        OnHealthPercentChanged.Raise(currentHealth / maxHealth);
+        OnHealthChanged.Raise(gameObject, currentHealth);
+        OnHealthPercentChanged.Raise(gameObject, currentHealth / maxHealth);
 
         if (currentHealth <= 0)
         {
@@ -76,7 +76,7 @@ public class HealthSystem : MonoBehaviour
 
     public void Die()
     {
-        OnDeath.Raise(transform.position);
+        OnDeath.Raise(gameObject, transform.position);
         Destroy(gameObject);
     }
 

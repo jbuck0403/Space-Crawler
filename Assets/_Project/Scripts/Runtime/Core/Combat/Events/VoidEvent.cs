@@ -3,30 +3,36 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "VoidEvent", menuName = "Game/Events/Void Event")]
-public class VoidEvent : BaseGameEvent<Void>
+public class VoidEvent : ScriptableObject
 {
-    private readonly Dictionary<UnityAction, UnityAction<Void>> wrapperDictionary =
-        new Dictionary<UnityAction, UnityAction<Void>>();
+    private readonly Dictionary<GameObject, UnityEvent> eventsByGameObject = new();
 
-    public virtual void AddListener(UnityAction action)
+    public void Raise(GameObject sender)
     {
-        if (wrapperDictionary.ContainsKey(action))
+        if (eventsByGameObject.TryGetValue(sender, out var gameObjectEvent))
         {
-            RemoveListener(action);
+            gameObjectEvent.Invoke();
         }
-
-        UnityAction<Void> wrapper = _ => action();
-        wrapperDictionary[action] = wrapper;
-
-        OnEventRaised.AddListener(wrapper);
     }
 
-    public virtual void RemoveListener(UnityAction action)
+    public virtual void AddListener(GameObject gameObject, UnityAction subscriber)
     {
-        if (wrapperDictionary.TryGetValue(action, out UnityAction<Void> wrapper))
+        if (!eventsByGameObject.ContainsKey(gameObject))
         {
-            OnEventRaised.RemoveListener(wrapper);
-            wrapperDictionary.Remove(action);
+            eventsByGameObject[gameObject] = new UnityEvent();
+        }
+        eventsByGameObject[gameObject].AddListener(subscriber);
+    }
+
+    public virtual void RemoveListener(GameObject gameObject, UnityAction action)
+    {
+        if (eventsByGameObject.TryGetValue(gameObject, out var gameObjectEvent))
+        {
+            gameObjectEvent.RemoveListener(action);
+            if (gameObjectEvent.GetPersistentEventCount() == 0)
+            {
+                eventsByGameObject.Remove(gameObject);
+            }
         }
     }
 }

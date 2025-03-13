@@ -27,7 +27,7 @@ public class DamageAOEZone : BaseAOEZone
     {
         if (target.CanTriggerEffect(this))
         {
-            onDamageOverTimeTick.Raise(damageType);
+            onDamageOverTimeTick.Raise(gameObject, damageType);
 
             target.ReceiveDamage(damageData);
         }

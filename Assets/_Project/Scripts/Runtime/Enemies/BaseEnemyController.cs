@@ -155,7 +155,7 @@ public abstract class BaseEnemyController : BaseCharacterController
 }
 
 [Serializable]
-public struct MovementStrategyPair
+public class MovementStrategyPair
 {
     public MovementStrategyType strategyType;
     public BaseMovementStrategy strategy;

@@ -10,9 +10,28 @@ public class BaseFiringStrategy : ScriptableObject, IFireStrategy
     [SerializeField]
     private bool initialDelay = true;
     private bool isInitialized;
+    private bool isInstance;
     private float nextFireTime;
+    private BaseEnemyController enemyController;
 
     private FireConfig config;
+
+    public virtual BaseFiringStrategy Initialize(
+        FireConfig config,
+        BaseEnemyController enemyController
+    )
+    {
+        Debug.Log($"[{GetType().Name}] Initializing new instance");
+        BaseFiringStrategy instance = Instantiate(this);
+        instance.isInstance = true;
+        instance.config = config;
+        instance.enemyController = enemyController;
+
+        Debug.Log(
+            $"[{GetType().Name}] New instance created with isInstance: {instance.isInstance}"
+        );
+        return instance;
+    }
 
     public virtual void OnEnter(BaseWeapon weapon, FireConfig config)
     {
@@ -65,5 +84,15 @@ public class BaseFiringStrategy : ScriptableObject, IFireStrategy
             nextFireTime = config.fireRate;
         }
         return ready;
+    }
+
+    public bool IsInstance()
+    {
+        return isInstance;
+    }
+
+    public IStrategy CreateInstance()
+    {
+        return Initialize(config, enemyController);
     }
 }
