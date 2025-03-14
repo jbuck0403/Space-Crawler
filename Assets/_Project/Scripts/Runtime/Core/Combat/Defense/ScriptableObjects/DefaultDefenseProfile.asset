@@ -12,18 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f672052a0574e1246a60b0ea0d481ebc, type: 3}
   m_Name: DefaultDefenseProfile
   m_EditorClassIdentifier: 
-  physicalResistance: 0
+  physicalResistance: 0.15
   critResistance: 0
-  defaultElementalResistance: 0
+  defaultElementalResistance: 0.15
   elementalResistanceData:
     resistances:
     - Type: 2
-      Value: 0
+      Value: 0.15
     - Type: 3
-      Value: 0
+      Value: 0.15
     - Type: 4
-      Value: 0
+      Value: 0.15
     - Type: 5
-      Value: 0
+      Value: 0.15
     - Type: 6
-      Value: 0
+      Value: 0.15

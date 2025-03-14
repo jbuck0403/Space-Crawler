@@ -17,6 +17,9 @@ public abstract class BaseEnemyController : BaseCharacterController
 
     protected Transform target;
 
+    // [SerializeField]
+    // private bool shooting = true;
+
     // public bool isComplete = false;
 
     public void UpdateTarget(Transform target)
@@ -167,6 +170,5 @@ public enum MovementStrategyType
     Circle,
     Charge,
     Retreat,
-    HitAndRun,
     Cautious,
 }

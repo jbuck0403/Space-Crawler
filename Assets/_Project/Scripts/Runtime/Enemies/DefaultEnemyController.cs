@@ -11,9 +11,6 @@ public class DefaultEnemyController : BaseEnemyController
     [SerializeField]
     private float minFiringDistance = 0f;
 
-    [SerializeField]
-    private bool shooting = false;
-
     protected RetreatMovementStrategy retreatStrategy;
 
     protected override void Start()
@@ -25,7 +22,7 @@ public class DefaultEnemyController : BaseEnemyController
         healthSystem.SetLowHealthPercent(retreatStrategy.RetreatHealthThreshold);
         healthSystem.OnLowHealth.AddListener(gameObject, TriggerRetreat);
 
-        // ChangeMovementStrategy(MovementStrategyType.Charge);
+        ChangeMovementStrategy(MovementStrategyType.Charge);
     }
 
     private void Update()
@@ -37,18 +34,17 @@ public class DefaultEnemyController : BaseEnemyController
             transform.position,
             target.position
         );
+        print($"Retreating: {retreatStrategy.retreating}");
         if (
-            shooting
-            && distanceFromTarget <= maxFiringDistance
+            distanceFromTarget <= maxFiringDistance
             && distanceFromTarget >= minFiringDistance
+            && !retreatStrategy.retreating
         )
         {
-            FireWeapon();
+            EnableShooting(true);
         }
-        else
-        {
-            StopFiringWeapon();
-        }
+
+        HandleShooting();
     }
 
     private void HandleRetreat()

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RetreatMovementStrategy
   m_EditorClassIdentifier: 
   retreatDistance: 15
-  RetreatHealthThreshold: 20
+  RetreatHealthThreshold: 50
   timeToStopRetreating: 5
   canRetreat: 1
   retreating: 1

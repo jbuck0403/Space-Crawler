@@ -50,6 +50,11 @@ public abstract class BaseWeapon : StrategyController<IFireStrategy>, IFireWeapo
         this.canFire = canFire;
     }
 
+    public virtual bool GetFiring()
+    {
+        return canFire;
+    }
+
     protected override void OnStrategyExit(IFireStrategy strategy)
     {
         strategy.OnExit();

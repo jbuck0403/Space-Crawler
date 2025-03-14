@@ -170,6 +170,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2605419895447732774, guid: 460338ceeaba0fb4ca9d6afedfe14186, type: 3}
+      propertyPath: OnDeath
+      value: 
+      objectReference: {fileID: 11400000, guid: 4dd36339df0b86146adc52f662e8e0e2, type: 2}
     - target: {fileID: 5992613035888308186, guid: 460338ceeaba0fb4ca9d6afedfe14186, type: 3}
       propertyPath: m_Constraints
       value: 4
@@ -181,7 +185,7 @@ PrefabInstance:
     - target: {fileID: 8938752104757340378, guid: 460338ceeaba0fb4ca9d6afedfe14186, type: 3}
       propertyPath: weaponConfig
       value: 
-      objectReference: {fileID: 11400000, guid: b1a83a032de778b4499999aa8ef5fcb0, type: 2}
+      objectReference: {fileID: 11400000, guid: 89eead6ecc830a24785ae85b4e9fe59a, type: 2}
     - target: {fileID: 8938752104757340378, guid: 460338ceeaba0fb4ca9d6afedfe14186, type: 3}
       propertyPath: projectilePool
       value: 
@@ -204,12 +208,20 @@ PrefabInstance:
       value: Default Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 5529026550726558395, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
+      propertyPath: shooting
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5529026550726558395, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
+      propertyPath: defaultStrategy
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5529026550726558395, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
       propertyPath: defaultStrategy.strategyType
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5529026550726558395, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
       propertyPath: movementStrategies.Array.size
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5529026550726558395, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
       propertyPath: movementStrategies.Array.data[3].strategy
@@ -218,14 +230,18 @@ PrefabInstance:
     - target: {fileID: 5529026550726558395, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
       propertyPath: movementStrategies.Array.data[4].strategy
       value: 
-      objectReference: {fileID: 11400000, guid: d279c5d0ce2719f47bba5c5c78864da4, type: 2}
+      objectReference: {fileID: 0}
+    - target: {fileID: 5529026550726558395, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
+      propertyPath: movementStrategies.Array.data[2].strategyType
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5529026550726558395, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
       propertyPath: movementStrategies.Array.data[3].strategyType
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5529026550726558395, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
       propertyPath: movementStrategies.Array.data[4].strategyType
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8699095912087521350, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
       propertyPath: m_LocalPosition.x
@@ -271,6 +287,10 @@ PrefabInstance:
       propertyPath: OnDeath
       value: 
       objectReference: {fileID: 11400000, guid: 4dd36339df0b86146adc52f662e8e0e2, type: 2}
+    - target: {fileID: 9085558246291644768, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
+      propertyPath: lowHealthPercent
+      value: 90
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

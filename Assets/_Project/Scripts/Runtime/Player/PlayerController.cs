@@ -39,11 +39,11 @@ public class PlayerController : BaseCharacterController
 
         if (Input.GetMouseButton(0))
         {
-            weapon.SetCanFire(true);
+            FireWeapon();
         }
         else
         {
-            weapon.SetCanFire(false);
+            StopFiringWeapon();
         }
     }
 

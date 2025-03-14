@@ -11,6 +11,8 @@ public abstract class BaseCharacterController : MonoBehaviour
 
     protected BaseWeapon weapon;
 
+    protected bool shooting = false;
+
     protected virtual void Awake()
     {
         weapon = GetComponent<BaseWeapon>();
@@ -31,6 +33,29 @@ public abstract class BaseCharacterController : MonoBehaviour
         )
         {
             weapon.SetStrategy(weapon.weaponConfig.firingStrategies[0]);
+        }
+    }
+
+    public void EnableShooting(bool shooting)
+    {
+        this.shooting = shooting;
+    }
+
+    protected virtual void HandleShooting()
+    {
+        if (shooting)
+        {
+            if (!weapon.GetFiring())
+            {
+                FireWeapon();
+            }
+        }
+        else
+        {
+            if (weapon.GetFiring())
+            {
+                StopFiringWeapon();
+            }
         }
     }
 

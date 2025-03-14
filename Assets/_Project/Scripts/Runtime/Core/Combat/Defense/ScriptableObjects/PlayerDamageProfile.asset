@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4ba8f2198734e184da03d8c008b2b68d, type: 3}
-  m_Name: DefaultDamageProfile
+  m_Name: PlayerDamageProfile
   m_EditorClassIdentifier: 
-  baseDamage: 7.5
-  critMultiplier: 1.5
-  critChance: 30
-  damageType: 0
+  baseDamage: 26
+  critMultiplier: 1
+  critChance: 0
+  damageType: 1

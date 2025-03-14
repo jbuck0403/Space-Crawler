@@ -19,14 +19,26 @@ public class RetreatMovementStrategy : BaseMovementStrategy
     public bool canRetreat = true;
     public bool retreating = false;
 
-    // public Coroutine retreatCoroutine;
+    public override BaseMovementStrategy Initialize(
+        MovementConfig config,
+        BaseEnemyController enemyController
+    )
+    {
+        retreating = false;
+        return base.Initialize(config, enemyController);
+    }
 
     public override void OnEnter(Transform self, Transform target)
     {
+        enemyController.EnableShooting(false);
         base.OnEnter(self, target);
         retreating = true;
 
-        enemyController.StartCoroutine(StopRetreatAfterTime());
+        if (canRetreat)
+        {
+            canRetreat = false;
+            enemyController.StartCoroutine(StopRetreatAfterTime());
+        }
     }
 
     public override void OnUpdate(Transform self, Transform target)
@@ -72,5 +84,6 @@ public class RetreatMovementStrategy : BaseMovementStrategy
         yield return new WaitForSeconds(timeToStopRetreating);
         isComplete = true;
         retreating = false;
+        enemyController.EnableShooting(true);
     }
 }
