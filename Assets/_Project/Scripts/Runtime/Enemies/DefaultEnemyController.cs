@@ -22,7 +22,7 @@ public class DefaultEnemyController : BaseEnemyController
         healthSystem.SetLowHealthPercent(retreatStrategy.RetreatHealthThreshold);
         healthSystem.OnLowHealth.AddListener(gameObject, TriggerRetreat);
 
-        ChangeMovementStrategy(MovementStrategyType.Charge);
+        // ChangeMovementStrategy(MovementStrategyType.Charge);
     }
 
     private void Update()
@@ -34,11 +34,11 @@ public class DefaultEnemyController : BaseEnemyController
             transform.position,
             target.position
         );
-        print($"Retreating: {retreatStrategy.retreating}");
+
         if (
             distanceFromTarget <= maxFiringDistance
             && distanceFromTarget >= minFiringDistance
-            && !retreatStrategy.retreating
+            && !shootingDisabledExternally
         )
         {
             EnableShooting(true);
@@ -54,7 +54,6 @@ public class DefaultEnemyController : BaseEnemyController
 
     public void TriggerRetreat()
     {
-        print($"RETREATING: instance? {retreatStrategy.IsInstance()}");
         if (retreatStrategy.canRetreat)
         {
             HandleRetreat();

@@ -37,4 +37,23 @@ public static class MovementUtils
 
         return directionToTarget;
     }
+
+    public static bool IsFacingTarget(
+        Transform self,
+        Vector2 targetPosition,
+        float angleThreshold = 10f
+    )
+    {
+        Vector2 directionToTarget = GetTargetDirection(self.position, targetPosition);
+
+        // calculate the angle the entity should be facing (same calculation as in MovementHandler)
+        float targetAngle =
+            Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg - 90f;
+
+        float currentAngle = self.eulerAngles.z;
+
+        float angleDifference = Mathf.Abs(Mathf.DeltaAngle(currentAngle, targetAngle));
+
+        return angleDifference <= angleThreshold;
+    }
 }

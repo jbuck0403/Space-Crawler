@@ -73,6 +73,7 @@ public class MovementHandler
 
     public void ApplyMovement(Transform transform, Vector2 targetDirection, float deltaTime)
     {
+        Debug.Log("APPLYMOVEMENT");
         Vector2 newPosition = CalculateMovement(targetDirection, transform.position, deltaTime);
 
         transform.position = newPosition;
@@ -115,5 +116,10 @@ public class MovementHandler
             return Mathf.LerpAngle(currentRotation, targetAngle, rotationSpeed * deltaTime);
         }
         return currentRotation;
+    }
+
+    public void ResetVelocity()
+    {
+        currentVelocity = Vector2.zero;
     }
 }

@@ -30,7 +30,7 @@ public class RetreatMovementStrategy : BaseMovementStrategy
 
     public override void OnEnter(Transform self, Transform target)
     {
-        enemyController.EnableShooting(false);
+        enemyController.EnableShooting(false, true);
         base.OnEnter(self, target);
         retreating = true;
 

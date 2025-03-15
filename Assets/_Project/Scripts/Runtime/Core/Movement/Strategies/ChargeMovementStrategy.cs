@@ -12,37 +12,43 @@ public class ChargeMovementStrategy : BaseMovementStrategy
     private float chargePauseTime = 1f;
 
     [SerializeField]
-    [Range(1f, 2f)]
+    [Range(0.1f, 4f)]
     private float chargeSpeedMultiplier = 1.3f;
 
     [SerializeField]
     [Range(0.1f, 1f)]
     private float destinationReachedThreshold = 0.5f;
 
+    [SerializeField]
+    [Range(0f, 10f)]
+    private float stunSelfDuraton = 2f;
+
     private Vector2 chargeDestination;
+    private bool isPositioning = false;
     private bool isCharging = false;
     private bool isPausing = false;
-    private float pauseStartTime;
+    private bool isStunned = false;
+    private float timePaused = 0f;
+    private float timeStunned = 0f;
     private float originalMaxSpeed;
 
     public override void OnEnter(Transform self, Transform target)
     {
+        Debug.Log("ONENTER CMS");
         base.OnEnter(self, target);
 
-        // Store original speed for later restoration
+        enemyController.EnableShooting(false, true);
+        // store original speed for later restoration
         originalMaxSpeed = movementHandler.maxSpeed;
 
-        // Start in pausing state
-        isPausing = true;
+        // start in positioning state
+        isPositioning = true;
         isCharging = false;
-        pauseStartTime = Time.time;
+        isPausing = false;
+        isStunned = false;
 
-        // Face the target immediately
-        Vector2 directionToTarget = MovementUtils.GetTargetDirection(
-            self.position,
-            target.position
-        );
-        movementHandler.ApplyRotation(self, directionToTarget, 1f);
+        timePaused = 0f;
+        timeStunned = 0f;
     }
 
     public override void OnUpdate(Transform self, Transform target)
@@ -50,39 +56,48 @@ public class ChargeMovementStrategy : BaseMovementStrategy
         if (!isInitialized || target == null)
             return;
 
+        if (isPositioning)
+        {
+            Debug.Log("Positioning");
+            if (MovementUtils.IsFacingTarget(self, target.position))
+            {
+                isPausing = true;
+                isPositioning = false;
+
+                return;
+            }
+
+            FaceTarget(self, target);
+        }
+
         // Handle pause state
         if (isPausing)
         {
-            // Wait for pause time to complete
-            if (Time.time - pauseStartTime >= chargePauseTime)
+            Debug.Log("Pausing");
+            timePaused += Time.deltaTime;
+
+            if (timePaused >= chargePauseTime)
             {
-                // Transition to charging state
                 isPausing = false;
                 isCharging = true;
 
-                // Set charge destination to current target position
                 chargeDestination = target.position;
-
-                // Apply speed boost for charging
+                movementHandler.ResetVelocity();
 
                 movementHandler.maxSpeed = originalMaxSpeed * chargeSpeedMultiplier;
+
+                return;
             }
             else
             {
-                // While pausing, just face the target
-                Vector2 directionToTarget = MovementUtils.GetTargetDirection(
-                    self.position,
-                    target.position
-                );
-                movementHandler.ApplyRotation(self, directionToTarget, Time.deltaTime);
+                FaceTarget(self, target);
                 return;
             }
         }
 
-        // Handle charging state
         if (isCharging)
         {
-            // Check if we've reached the destination
+            Debug.Log("Charging");
             float distanceToDestination = MovementUtils.GetDistanceToTarget(
                 self.position,
                 chargeDestination
@@ -90,19 +105,18 @@ public class ChargeMovementStrategy : BaseMovementStrategy
 
             if (distanceToDestination <= destinationReachedThreshold)
             {
-                // Charge complete
                 isCharging = false;
+                isStunned = true;
 
-                // Restore original speed
+                // restore original speed
                 MovementConfig config = GetMovementConfig();
                 config.maxSpeed = originalMaxSpeed;
+                movementHandler.Initialize(config);
 
-                // Signal completion
-                isComplete = true;
                 return;
             }
 
-            // Continue charging toward destination
+            // continue charging toward destination
             Vector2 directionToDestination = MovementUtils.GetTargetDirection(
                 self.position,
                 chargeDestination
@@ -110,19 +124,56 @@ public class ChargeMovementStrategy : BaseMovementStrategy
             movementHandler.ApplyMovement(self, directionToDestination, Time.deltaTime);
             movementHandler.ApplyRotation(self, directionToDestination, Time.deltaTime);
         }
+
+        if (isStunned)
+        {
+            Debug.Log("Stunned");
+            timeStunned += Time.deltaTime;
+
+            if (timeStunned >= stunSelfDuraton)
+            {
+                isComplete = true;
+                isStunned = false;
+
+                return;
+            }
+        }
     }
 
     public override void OnExit()
     {
-        // Ensure speed is restored when exiting
+        Debug.Log("ONEXIT CMS");
+        // ensure speed is restored when exiting
         if (movementHandler != null)
         {
             MovementConfig config = GetMovementConfig();
             config.maxSpeed = originalMaxSpeed;
+
+            movementHandler.Initialize(config);
         }
 
-        base.OnExit();
+        enemyController.EnableShooting(false);
 
-        enemyController.ChangeMovementStrategy(MovementStrategyType.Default);
+        base.OnExit();
+    }
+
+    public override void OnStrategyComplete()
+    {
+        base.OnStrategyComplete();
+
+        enemyController.ChangeToDefaultStrategy();
+    }
+
+    private void FaceTarget(Transform self, Transform target)
+    {
+        if (!MovementUtils.IsFacingTarget(self, target.position))
+        {
+            Vector2 directionToTarget = MovementUtils.GetTargetDirection(
+                self.position,
+                target.position
+            );
+
+            movementHandler.ApplyRotation(self, directionToTarget, Time.deltaTime);
+        }
     }
 }

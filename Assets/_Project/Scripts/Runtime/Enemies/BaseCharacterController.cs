@@ -13,6 +13,8 @@ public abstract class BaseCharacterController : MonoBehaviour
 
     protected bool shooting = false;
 
+    protected bool shootingDisabledExternally = false;
+
     protected virtual void Awake()
     {
         weapon = GetComponent<BaseWeapon>();
@@ -36,9 +38,10 @@ public abstract class BaseCharacterController : MonoBehaviour
         }
     }
 
-    public void EnableShooting(bool shooting)
+    public void EnableShooting(bool shooting, bool external = false)
     {
         this.shooting = shooting;
+        shootingDisabledExternally = external;
     }
 
     protected virtual void HandleShooting()
