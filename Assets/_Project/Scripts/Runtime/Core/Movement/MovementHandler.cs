@@ -122,4 +122,14 @@ public class MovementHandler
     {
         currentVelocity = Vector2.zero;
     }
+
+    public Vector2 GetCurrentVelocity()
+    {
+        return currentVelocity;
+    }
+
+    public void ApplyVelocity(Vector2 velocity)
+    {
+        currentVelocity = velocity;
+    }
 }
