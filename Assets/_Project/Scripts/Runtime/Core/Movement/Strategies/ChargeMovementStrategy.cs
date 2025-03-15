@@ -49,17 +49,6 @@ public class ChargeMovementStrategy : BaseMovementStrategy
         ResetState();
     }
 
-    private void ResetState()
-    {
-        isPositioning = true;
-        isPausing = false;
-        isCharging = false;
-        isDecelerating = false;
-        isStunned = false;
-        timePaused = 0f;
-        timeStunned = 0f;
-    }
-
     public override void OnUpdate(Transform self, Transform target)
     {
         if (!isInitialized || target == null)
@@ -79,6 +68,34 @@ public class ChargeMovementStrategy : BaseMovementStrategy
 
         if (isStunned)
             HandleStunned();
+    }
+
+    public override void OnExit()
+    {
+        if (movementHandler != null)
+        {
+            RestoreOriginalSpeed();
+        }
+
+        enemyController.EnableShooting(false);
+        base.OnExit();
+    }
+
+    public override void OnStrategyComplete()
+    {
+        base.OnStrategyComplete();
+        enemyController.ChangeToDefaultStrategy();
+    }
+
+    private void ResetState()
+    {
+        isPositioning = true;
+        isPausing = false;
+        isCharging = false;
+        isDecelerating = false;
+        isStunned = false;
+        timePaused = 0f;
+        timeStunned = 0f;
     }
 
     private void HandlePositioning(Transform self, Transform target)
@@ -185,23 +202,6 @@ public class ChargeMovementStrategy : BaseMovementStrategy
         MovementConfig config = GetMovementConfig();
         config.maxSpeed = originalMaxSpeed;
         movementHandler.Initialize(config);
-    }
-
-    public override void OnExit()
-    {
-        if (movementHandler != null)
-        {
-            RestoreOriginalSpeed();
-        }
-
-        enemyController.EnableShooting(false);
-        base.OnExit();
-    }
-
-    public override void OnStrategyComplete()
-    {
-        base.OnStrategyComplete();
-        enemyController.ChangeToDefaultStrategy();
     }
 
     private void FaceTarget(Transform self, Transform target)
