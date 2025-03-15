@@ -23,7 +23,7 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
         instance.config = config;
         instance.enemyController = enemyController;
 
-        // Create movement handler immediately after setting config
+        // create movement handler immediately after setting config
         if (config != null)
         {
             instance.movementHandler = new MovementHandler(config);
@@ -127,5 +127,10 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
     public IStrategy CreateInstance()
     {
         return Initialize(config, enemyController);
+    }
+
+    public MovementHandler GetMovementHandler()
+    {
+        return movementHandler;
     }
 }

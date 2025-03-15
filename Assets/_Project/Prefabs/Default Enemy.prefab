@@ -165,6 +165,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 8af369b4ac10cc94f9ae09e0498607ac, type: 2}
     - target: {fileID: 7023899853594651545, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
+      propertyPath: lowHealthPercent
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 7023899853594651545, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
       propertyPath: OnHealingReceived
       value: 
       objectReference: {fileID: 11400000, guid: ec269003a615ca747871ee2133c0341b, type: 2}
@@ -174,15 +178,15 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: e1429aa32901cee44a1b4d4d62b06f7e, type: 2}
     - target: {fileID: 7482415228626354879, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.6081096
+      value: -6.26
       objectReference: {fileID: 0}
     - target: {fileID: 7482415228626354879, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.09102702
+      value: 3.19
       objectReference: {fileID: 0}
     - target: {fileID: 7482415228626354879, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.0673238
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7482415228626354879, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
       propertyPath: m_LocalRotation.w
@@ -286,15 +290,15 @@ MonoBehaviour:
     strategy: {fileID: 11400000, guid: f64f5b12df108164f8f206d432f56c17, type: 2}
   - strategyType: 3
     strategy: {fileID: 11400000, guid: 0caa7228373b1aa4aa3bb5bc7ec1b388, type: 2}
-  - strategyType: 5
+  - strategyType: 4
     strategy: {fileID: 11400000, guid: 9a00141614b9ef04eb0e2d7da6ae0600, type: 2}
-  defaultStrategy:
-    strategyType: 0
-    strategy: {fileID: 11400000, guid: f64f5b12df108164f8f206d432f56c17, type: 2}
-  isComplete: 0
-  RetreatHealthThreshold: 10
-  timeToStopRetreating: 5
+  - strategyType: 1
+    strategy: {fileID: 11400000, guid: d7d5a5e4445eaa5408ea5f77b7eb5075, type: 2}
+  - strategyType: 2
+    strategy: {fileID: 11400000, guid: d279c5d0ce2719f47bba5c5c78864da4, type: 2}
+  defaultStrategy: 0
   maxFiringDistance: 15
+  minFiringDistance: 0
 --- !u!4 &8699095912087521350 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7482415228626354879, guid: 4220b79cf5a840543b4a082e92706106, type: 3}

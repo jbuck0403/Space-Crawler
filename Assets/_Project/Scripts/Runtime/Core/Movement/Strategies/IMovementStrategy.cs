@@ -4,6 +4,7 @@ public interface IMovementStrategy : IStrategy
 {
     // configuration
     MovementConfig GetMovementConfig();
+    MovementHandler GetMovementHandler();
 
     // state pattern methods
     void OnEnter(Transform self, Transform target);

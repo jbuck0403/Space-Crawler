@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(Rigidbody2D))]
@@ -9,7 +8,10 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     float selfDestructTime = 0f;
 
+    [SerializeField]
     public DamageData damageData;
+
+    public bool hasDealtDamage;
 
     private PoolBase pool;
 
@@ -24,22 +26,24 @@ public class Projectile : MonoBehaviour
             StartCoroutine(SelfDestruct());
     }
 
-    private IEnumerator SelfDestruct()
+    protected virtual IEnumerator SelfDestruct()
     {
         yield return new WaitForSeconds(selfDestructTime);
 
         DestroyProjectile();
     }
 
-    public void Initialize(PoolBase bulletPool)
+    public virtual void Initialize(PoolBase bulletPool)
     {
         pool = bulletPool;
+        hasDealtDamage = false;
     }
 
-    public void DestroyProjectile()
+    public virtual void DestroyProjectile()
     {
         if (pool != null)
         {
+            hasDealtDamage = false;
             damageData = new DamageData();
             pool.ReturnToPool(gameObject);
         }
@@ -47,5 +51,10 @@ public class Projectile : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public virtual void OnHit(Collider2D other)
+    {
+        hasDealtDamage = true;
     }
 }

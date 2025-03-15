@@ -12,21 +12,35 @@ public class DefaultEnemyController : BaseEnemyController
     private float minFiringDistance = 0f;
 
     protected RetreatMovementStrategy retreatStrategy;
+    private bool retreatInitialized;
 
     protected override void Start()
     {
         base.Start();
 
-        retreatStrategy = GetMovementStrategy<RetreatMovementStrategy>();
-
-        healthSystem.SetLowHealthPercent(retreatStrategy.RetreatHealthThreshold);
-        healthSystem.OnLowHealth.AddListener(gameObject, TriggerRetreat);
+        InitializeRetreat();
 
         // ChangeMovementStrategy(MovementStrategyType.Charge);
     }
 
+    private void InitializeRetreat()
+    {
+        retreatStrategy = GetMovementStrategy<RetreatMovementStrategy>();
+        if (retreatStrategy != null)
+        {
+            retreatInitialized = true;
+            healthSystem.SetLowHealthPercent(retreatStrategy.RetreatHealthThreshold);
+            healthSystem.OnLowHealth.AddListener(gameObject, TriggerRetreat);
+        }
+    }
+
     private void Update()
     {
+        if (!retreatInitialized)
+        {
+            InitializeRetreat();
+        }
+
         if (movementController == null || target == null)
             return;
 
@@ -67,6 +81,7 @@ public class DefaultEnemyController : BaseEnemyController
             healthSystem.OnLowHealth.RemoveListener(gameObject, TriggerRetreat);
         }
     }
+
     // testing purposes only
     // private void StrategyTest()
     // {

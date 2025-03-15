@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 [CreateAssetMenu(
     fileName = "ChargeMovementStrategy",
@@ -30,6 +32,9 @@ public class ChargeMovementStrategy : BaseMovementStrategy
     [Min(0f)]
     private float decelerationFlex = 1f;
 
+    [SerializeField]
+    private DamageProfile damageProfile;
+
     private Vector2 chargeDestination;
     private bool isPositioning = false;
     private bool isPausing = false;
@@ -41,12 +46,22 @@ public class ChargeMovementStrategy : BaseMovementStrategy
     private float originalMaxSpeed;
     private Vector2 chargeVelocity;
 
+    CharacterProjectile characterProjectile;
+
     public override void OnEnter(Transform self, Transform target)
     {
         base.OnEnter(self, target);
         enemyController.EnableShooting(false, true);
+        InitializeCharacterProjectile();
         originalMaxSpeed = movementHandler.maxSpeed;
         ResetState();
+    }
+
+    private void InitializeCharacterProjectile()
+    {
+        characterProjectile = enemyController.GetComponent<CharacterProjectile>();
+        DamageData newDamageData = damageProfile.CreateDamageData(enemyController.transform);
+        characterProjectile.Initialize(newDamageData);
     }
 
     public override void OnUpdate(Transform self, Transform target)

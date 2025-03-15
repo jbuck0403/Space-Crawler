@@ -23,7 +23,7 @@ public class DamageAOEZone : BaseAOEZone
             AOEDamage(target);
     }
 
-    private void AOEDamage(AOEReceiver target)
+    protected virtual void AOEDamage(AOEReceiver target)
     {
         if (target.CanTriggerEffect(this))
         {

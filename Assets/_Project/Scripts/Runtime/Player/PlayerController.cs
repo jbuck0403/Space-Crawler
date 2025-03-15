@@ -86,4 +86,9 @@ public class PlayerController : BaseCharacterController
 
         movementHandler.ApplyMovementAndRotation(transform, newPosition, newRotation);
     }
+
+    public override MovementHandler GetMovementHandler()
+    {
+        return movementHandler;
+    }
 }

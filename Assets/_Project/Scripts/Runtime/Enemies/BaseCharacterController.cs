@@ -76,4 +76,6 @@ public abstract class BaseCharacterController : MonoBehaviour
     {
         return movementConfig;
     }
+
+    public abstract MovementHandler GetMovementHandler();
 }

@@ -67,13 +67,11 @@ public class MovementHandler
             deltaTime
         );
 
-        // transform.position = new Vector3(newPosition.x, newPosition.y, transform.position.z);
         ApplyMovementAndRotation(transform, newPosition, newRotation);
     }
 
     public void ApplyMovement(Transform transform, Vector2 targetDirection, float deltaTime)
     {
-        Debug.Log("APPLYMOVEMENT");
         Vector2 newPosition = CalculateMovement(targetDirection, transform.position, deltaTime);
 
         transform.position = newPosition;
@@ -131,5 +129,10 @@ public class MovementHandler
     public void ApplyVelocity(Vector2 velocity)
     {
         currentVelocity = velocity;
+    }
+
+    public void AddToVelocity(Vector2 velocity)
+    {
+        currentVelocity += velocity;
     }
 }

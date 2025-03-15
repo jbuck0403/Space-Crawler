@@ -150,6 +150,11 @@ public abstract class BaseEnemyController : BaseCharacterController
 
         return null;
     }
+
+    public override MovementHandler GetMovementHandler()
+    {
+        return movementController.GetMovementHandler();
+    }
 }
 
 [Serializable]

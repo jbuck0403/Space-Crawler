@@ -60,30 +60,8 @@ public class BaseMovementController : StrategyController<IMovementStrategy>
         strategy.OnUpdate(transform, currentTarget);
     }
 
-    // public override IMovementStrategy SetStrategy(IMovementStrategy newStrategy)
-    // {
-    //     // If the strategy is a BaseMovementStrategy but not an instance
-    //     if (newStrategy is BaseMovementStrategy baseStrategy)
-    //     {
-    //         Debug.Log(
-    //             $"[BaseMovementController] Setting strategy of type {baseStrategy.GetType().Name}"
-    //         );
-    //         Debug.Log(
-    //             $"[BaseMovementController] Strategy isInstance before check: {baseStrategy.IsInstance()}"
-    //         );
-
-    //         if (!baseStrategy.IsInstance())
-    //         {
-    //             Debug.Log(
-    //                 $"[BaseMovementController] Strategy is not an instance, creating new instance"
-    //             );
-    //             newStrategy = baseStrategy.Initialize(config, enemyController);
-    //             Debug.Log(
-    //                 $"[BaseMovementController] New instance created, isInstance: {((BaseMovementStrategy)newStrategy).IsInstance()}"
-    //             );
-    //         }
-    //     }
-
-    //     return base.SetStrategy(newStrategy);
-    // }
+    public MovementHandler GetMovementHandler()
+    {
+        return currentStrategy.GetMovementHandler();
+    }
 }

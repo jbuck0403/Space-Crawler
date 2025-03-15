@@ -5,9 +5,10 @@ public class ProjectileDamageReceiver : BaseDamageReceiver
 {
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.TryGetComponent<Projectile>(out var projectile))
+        if (other.TryGetComponent<Projectile>(out var projectile) && !projectile.hasDealtDamage)
         {
             ReceiveDamage(projectile.damageData);
+            projectile.OnHit(other);
             projectile.DestroyProjectile();
         }
     }
