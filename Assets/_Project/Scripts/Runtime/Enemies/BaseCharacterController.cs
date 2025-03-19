@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(BaseWeapon))]
+// [RequireComponent(typeof(BaseWeapon))]
 public abstract class BaseCharacterController : MonoBehaviour
 {
     [Header("Movement")]
@@ -40,36 +40,44 @@ public abstract class BaseCharacterController : MonoBehaviour
 
     public void EnableShooting(bool shooting, bool external = false)
     {
-        this.shooting = shooting;
-        shootingDisabledExternally = external;
+        if (weapon != null)
+        {
+            this.shooting = shooting;
+            shootingDisabledExternally = external;
+        }
     }
 
     protected virtual void HandleShooting()
     {
-        if (shooting)
+        if (weapon != null)
         {
-            if (!weapon.GetFiring())
+            if (shooting)
             {
-                FireWeapon();
+                if (!weapon.GetFiring())
+                {
+                    FireWeapon();
+                }
             }
-        }
-        else
-        {
-            if (weapon.GetFiring())
+            else
             {
-                StopFiringWeapon();
+                if (weapon.GetFiring())
+                {
+                    StopFiringWeapon();
+                }
             }
         }
     }
 
     protected virtual void FireWeapon()
     {
-        weapon.SetCanFire(true);
+        if (weapon != null)
+            weapon.SetCanFire(true);
     }
 
     protected virtual void StopFiringWeapon()
     {
-        weapon.SetCanFire(false);
+        if (weapon != null)
+            weapon.SetCanFire(false);
     }
 
     public MovementConfig GetMovementConfig()

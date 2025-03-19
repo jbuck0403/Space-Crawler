@@ -1,0 +1,161 @@
+using UnityEngine;
+
+/// <summary>
+/// Handles the visual representation of AOE zones
+/// </summary>
+[RequireComponent(typeof(CircleCollider2D))]
+public class AOEVisualizer : MonoBehaviour
+{
+    private SpriteRenderer spriteRenderer;
+    private CircleCollider2D circleCollider;
+
+    private void Awake()
+    {
+        circleCollider = GetComponent<CircleCollider2D>();
+
+        // Create or get sprite renderer for visualization
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null)
+        {
+            spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
+        }
+
+        // Create the circle sprite
+        spriteRenderer.sprite = CreateCircleSprite();
+
+        // Set default color (red)
+        spriteRenderer.color = new Color(1f, 0f, 0f, 0.3f);
+
+        // Set the sprite below other game elements
+        spriteRenderer.sortingOrder = -1;
+
+        // Update the size to match the collider
+        UpdateSize(circleCollider.radius);
+    }
+
+    private Sprite CreateCircleSprite()
+    {
+        // Create a simple circle texture
+        int resolution = 256;
+        Texture2D texture = new Texture2D(resolution, resolution);
+
+        Color transparent = new Color(1, 1, 1, 0);
+        Color white = Color.white;
+
+        float centerX = resolution / 2f;
+        float centerY = resolution / 2f;
+        float radius = resolution / 2f;
+
+        for (int y = 0; y < resolution; y++)
+        {
+            for (int x = 0; x < resolution; x++)
+            {
+                float distance = Mathf.Sqrt(
+                    (x - centerX) * (x - centerX) + (y - centerY) * (y - centerY)
+                );
+
+                if (distance < radius)
+                {
+                    texture.SetPixel(x, y, white);
+                }
+                else
+                {
+                    texture.SetPixel(x, y, transparent);
+                }
+            }
+        }
+
+        texture.Apply();
+
+        return Sprite.Create(
+            texture,
+            new Rect(0, 0, resolution, resolution),
+            new Vector2(0.5f, 0.5f)
+        );
+    }
+
+    /// <summary>
+    /// Updates the visual size to match the specified radius
+    /// </summary>
+    public void UpdateSize(float radius)
+    {
+        if (spriteRenderer == null)
+            return;
+
+        float diameter = radius * 2;
+        transform.localScale = new Vector3(diameter, diameter, 1);
+    }
+
+    /// <summary>
+    /// Sets the color of the AOE visualization
+    /// </summary>
+    public void SetColor(Color color)
+    {
+        if (spriteRenderer == null)
+            return;
+
+        spriteRenderer.color = new Color(color.r, color.g, color.b, 0.3f);
+    }
+
+    /// <summary>
+    /// Sets the alpha transparency of the AOE visualization
+    /// </summary>
+    public void SetAlpha(float alpha)
+    {
+        if (spriteRenderer == null)
+            return;
+
+        Color currentColor = spriteRenderer.color;
+        spriteRenderer.color = new Color(
+            currentColor.r,
+            currentColor.g,
+            currentColor.b,
+            Mathf.Clamp01(alpha)
+        );
+    }
+
+    /// <summary>
+    /// Pulses the AOE visualization by fading in and out
+    /// </summary>
+    public void StartPulsing(float minAlpha = 0.1f, float maxAlpha = 0.4f, float pulseSpeed = 1f)
+    {
+        StartCoroutine(PulseCoroutine(minAlpha, maxAlpha, pulseSpeed));
+    }
+
+    private System.Collections.IEnumerator PulseCoroutine(
+        float minAlpha,
+        float maxAlpha,
+        float pulseSpeed
+    )
+    {
+        float t = 0f;
+        bool increasing = true;
+
+        while (gameObject != null && enabled)
+        {
+            if (increasing)
+            {
+                t += Time.deltaTime * pulseSpeed;
+                if (t >= 1f)
+                {
+                    t = 1f;
+                    increasing = false;
+                }
+            }
+            else
+            {
+                t -= Time.deltaTime * pulseSpeed;
+                if (t <= 0f)
+                {
+                    t = 0f;
+                    increasing = true;
+                }
+            }
+
+            float alpha = Mathf.Lerp(minAlpha, maxAlpha, t);
+            SetAlpha(alpha);
+
+            yield return null;
+        }
+    }
+}

@@ -9,16 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1208722ea15f2324993ce2b9bd5d7264, type: 3}
-  m_Name: DefaultAOEData
+  m_Script: {fileID: 11500000, guid: 74a70d73f2ddecf48a6b2a9f7278e542, type: 3}
+  m_Name: AOEMovementConfig
   m_EditorClassIdentifier: 
-  radius: 1
-  triggerOnEnter: 1
-  triggerOnExit: 0
-  triggerOverTime: 1
-  tickRate: 1
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 64
-  duration: 10
-  destroyOnEnd: 1
+  maxSpeed: 3
+  acceleration: 50
+  deceleration: 5
+  rotationSpeed: 10

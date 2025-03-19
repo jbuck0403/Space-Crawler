@@ -16,3 +16,6 @@ MonoBehaviour:
   chargeSpeedMultiplier: 4
   destinationReachedThreshold: 0.5
   stunSelfDuraton: 2
+  decelerationForce: 20
+  decelerationFlex: 1
+  damageProfile: {fileID: 11400000, guid: 05366b0b909e663409cdd4c531b7c3ad, type: 2}

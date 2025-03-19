@@ -9,16 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1208722ea15f2324993ce2b9bd5d7264, type: 3}
-  m_Name: DefaultAOEData
+  m_Script: {fileID: 11500000, guid: 9eba6ec4707ad034abee81572d735c77, type: 3}
+  m_Name: DamageTypeEvent
   m_EditorClassIdentifier: 
-  radius: 1
-  triggerOnEnter: 1
-  triggerOnExit: 0
-  triggerOverTime: 1
-  tickRate: 1
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 64
-  duration: 10
-  destroyOnEnd: 1

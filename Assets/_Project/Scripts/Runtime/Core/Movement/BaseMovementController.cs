@@ -4,8 +4,8 @@ using UnityEngine.AI;
 [RequireComponent(typeof(BaseEnemyController))]
 public class BaseMovementController : StrategyController<IMovementStrategy>
 {
-    private Transform DefaultTarget;
-    public Transform currentTarget { get; private set; }
+    private Transform defaultTarget;
+    public Transform CurrentTarget { get; private set; }
     private Transform previousTarget;
 
     protected BaseEnemyController enemyController;
@@ -13,8 +13,8 @@ public class BaseMovementController : StrategyController<IMovementStrategy>
 
     public void Awake()
     {
-        DefaultTarget = GameObject.FindGameObjectWithTag("Player").transform;
-        currentTarget = DefaultTarget;
+        defaultTarget = GameObject.FindGameObjectWithTag("Player").transform;
+        CurrentTarget = defaultTarget;
         enemyController = GetComponent<BaseEnemyController>();
     }
 
@@ -24,15 +24,30 @@ public class BaseMovementController : StrategyController<IMovementStrategy>
         this.config = config;
     }
 
+    public Transform GetCurrentTarget()
+    {
+        return CurrentTarget.transform;
+    }
+
     public void ChangeTarget(Transform target)
     {
-        previousTarget = currentTarget;
-        currentTarget = target;
-
-        if (enemyController != null)
+        if (target == null)
         {
-            enemyController.UpdateTarget(currentTarget);
+            currentStrategy = null;
+            target.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         }
+        previousTarget = CurrentTarget;
+        CurrentTarget = target;
+    }
+
+    public Transform GetDefaultTarget()
+    {
+        return defaultTarget;
+    }
+
+    public void ChangeDefaultTarget(Transform target)
+    {
+        defaultTarget = target;
     }
 
     public void TargetPreviousTarget()
@@ -42,7 +57,7 @@ public class BaseMovementController : StrategyController<IMovementStrategy>
 
     public void TargetDefaultTarget()
     {
-        ChangeTarget(DefaultTarget);
+        ChangeTarget(defaultTarget);
     }
 
     protected override void OnStrategyExit(IMovementStrategy strategy)
@@ -52,12 +67,12 @@ public class BaseMovementController : StrategyController<IMovementStrategy>
 
     protected override void OnStrategyEnter(IMovementStrategy strategy)
     {
-        strategy.OnEnter(transform, currentTarget);
+        strategy.OnEnter(transform, CurrentTarget);
     }
 
     protected override void OnStrategyUpdate(IMovementStrategy strategy)
     {
-        strategy.OnUpdate(transform, currentTarget);
+        strategy.OnUpdate(transform, CurrentTarget);
     }
 
     public MovementHandler GetMovementHandler()

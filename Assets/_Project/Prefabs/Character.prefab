@@ -131,11 +131,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   lowHealthPercent: 20
+  currentHealth: 0
   OnHealthChanged: {fileID: 11400000, guid: 8af369b4ac10cc94f9ae09e0498607ac, type: 2}
   OnHealthPercentChanged: {fileID: 11400000, guid: e1429aa32901cee44a1b4d4d62b06f7e, type: 2}
   OnDamageTaken: {fileID: 11400000, guid: 84635edb17010c84eb66cca8c8bdad52, type: 2}
   OnHealingReceived: {fileID: 11400000, guid: ec269003a615ca747871ee2133c0341b, type: 2}
-  OnDeath: {fileID: 11400000, guid: 7f4c005e502676a47b66fd8574778eeb, type: 2}
+  OnDeath: {fileID: 11400000, guid: 4dd36339df0b86146adc52f662e8e0e2, type: 2}
   OnLowHealth: {fileID: 11400000, guid: 76957933d9e76a04587408cd48fdd473, type: 2}
 --- !u!114 &1464502688549555566
 MonoBehaviour:

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(BaseMovementController))]
@@ -10,21 +11,30 @@ public abstract class BaseEnemyController : BaseCharacterController
 
     [SerializeField]
     protected MovementStrategyType defaultStrategy;
-
-    // protected List<MovementStrategyPair> movementStrategyInstances;
     protected BaseMovementController movementController;
     protected HealthSystem healthSystem;
 
-    protected Transform target;
-
-    public void UpdateTarget(Transform target)
+    public void UpdateTarget(Transform target, bool setDefault = false)
     {
-        this.target = target;
+        if (movementController != null)
+        {
+            movementController.ChangeTarget(target);
+
+            if (setDefault || movementController.GetDefaultTarget() == null)
+            {
+                movementController.ChangeDefaultTarget(target);
+            }
+        }
     }
 
     public Transform GetTarget()
     {
-        return target;
+        if (movementController != null)
+        {
+            return movementController.GetCurrentTarget();
+        }
+
+        return null;
     }
 
     protected override void Awake()
@@ -32,15 +42,19 @@ public abstract class BaseEnemyController : BaseCharacterController
         base.Awake();
 
         movementController = GetComponent<BaseMovementController>();
+        if (movementController != null)
+        {
+            movementController.Initialize(this, movementConfig);
+            // target = movementController.currentTarget;
+        }
+
         healthSystem = GetComponent<HealthSystem>();
     }
 
     protected override void Start()
     {
         InitializeStrategies();
-        movementController.Initialize(this, movementConfig);
 
-        target = movementController.currentTarget;
         base.Start();
 
         ChangeToDefaultStrategy();
@@ -70,7 +84,6 @@ public abstract class BaseEnemyController : BaseCharacterController
                 return;
             }
             pair.strategy = pair.strategy.Initialize(movementConfig, this);
-            // print(pair.strategy.IsInstance());
         });
 
         if (!definesAvailableDefault)

@@ -19,8 +19,6 @@ public class DefaultEnemyController : BaseEnemyController
         base.Start();
 
         InitializeRetreat();
-
-        // ChangeMovementStrategy(MovementStrategyType.Charge);
     }
 
     private void InitializeRetreat()
@@ -41,12 +39,12 @@ public class DefaultEnemyController : BaseEnemyController
             InitializeRetreat();
         }
 
-        if (movementController == null || target == null)
+        if (movementController == null || movementController.CurrentTarget == null)
             return;
 
         float distanceFromTarget = MovementUtils.GetDistanceToTarget(
             transform.position,
-            target.position
+            movementController.CurrentTarget.position
         );
 
         if (
@@ -81,36 +79,4 @@ public class DefaultEnemyController : BaseEnemyController
             healthSystem.OnLowHealth.RemoveListener(gameObject, TriggerRetreat);
         }
     }
-
-    // testing purposes only
-    // private void StrategyTest()
-    // {
-    //     float distanceToTarget = MovementUtils.GetDistanceToTarget(
-    //         transform.position,
-    //         target.position
-    //     );
-    //     print("DISTANCE TO TARGET " + distanceToTarget);
-    //     if (distanceToTarget <= 7.5f)
-    //     {
-    //         HandleRetreat();
-    //     }
-    //     else if (distanceToTarget >= 15f)
-    //     {
-    //         ChangeMovementStrategy(MovementStrategyType.Default);
-    //     }
-    // }
-    // private IEnumerator StrategyTest()
-    // {
-    //     print("SWAPPING TO DEFAULT");
-    //     ChangeMovementStrategy(MovementStrategyType.Default);
-
-    //     yield return new WaitForSeconds(5f);
-
-    //     print("SWAPPING TO CAUTIOUS");
-    //     ChangeMovementStrategy(MovementStrategyType.Cautious);
-
-    //     yield return new WaitForSeconds(5f);
-
-    //     StartCoroutine(StrategyTest());
-    // }
 }
