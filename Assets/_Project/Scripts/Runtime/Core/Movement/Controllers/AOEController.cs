@@ -2,13 +2,10 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
-/// Controller for managing AOE prefabs - handles positioning, sizing, parenting, and target following
+/// Controller for managing AOE prefabs - handles strategy-based movement, positioning, sizing, parenting, and target following
 /// </summary>
 public class AOEController : BaseEnemyController
 {
-    // [SerializeField]
-    // private bool followOnStart = false;
-
     [SerializeField]
     private Transform defaultFollowTarget;
 
@@ -16,23 +13,36 @@ public class AOEController : BaseEnemyController
 
     private bool isFollowing;
 
-    private float temp = 0f;
-
     protected override void Awake()
     {
         base.Awake();
-        currentAOE = GetComponent<BaseAOEZone>();
 
+        currentAOE = GetComponent<BaseAOEZone>();
         isFollowing = currentAOE.aoeProfile.followTarget;
     }
 
     protected override void Start()
     {
         base.Start();
+    }
 
-        if (isFollowing && defaultFollowTarget != null)
+    public void Initialize(Transform target = null)
+    {
+        // Only set a follow target if one was explicitly provided
+        if (target != null)
         {
+            UpdateTarget(target, true);
+            if (isFollowing)
+            {
+                ChangeToDefaultStrategy();
+            }
+        }
+        // If no target was provided but isFollowing is true and defaultFollowTarget exists
+        else if (isFollowing && defaultFollowTarget != null)
+        {
+            // Only follow the default target if this AOE is configured to follow targets
             UpdateTarget(defaultFollowTarget, true);
+            ChangeToDefaultStrategy();
         }
     }
 

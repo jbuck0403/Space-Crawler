@@ -61,11 +61,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04a47a988632c354897ab8806a9d8445, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementConfig: {fileID: 11400000, guid: c564bd8396d385347a6f3fb00ce28522, type: 2}
+  movementConfig: {fileID: 11400000, guid: ecb7d8862e831ed4291ce6b0a42d2969, type: 2}
   movementStrategies:
   - strategyType: 0
-    strategy: {fileID: 11400000, guid: f64f5b12df108164f8f206d432f56c17, type: 2}
+    strategy: {fileID: 11400000, guid: 43688dc6b5f6e0a438f38a6d15fb894a, type: 2}
   defaultStrategy: 0
+  defaultFollowTarget: {fileID: 0}
 --- !u!114 &8907275227958231823
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -22,7 +22,7 @@ public abstract class BaseAOEZone : MonoBehaviour
     protected virtual void Start()
     {
         Initialize(transform, transform.position, aoeProfile);
-        InitCollider();
+        // InitCollider();
 
         CheckExistingTargetsInZone();
     }
@@ -49,22 +49,6 @@ public abstract class BaseAOEZone : MonoBehaviour
 
         return zone;
     }
-
-    // private void AddAOEComponents(GameObject aoeZoneObject)
-    // {
-    //     aoeZoneObject.AddComponent<AOEVisualizer>();
-
-    //     if (aoeProfile.followTarget)
-    //     {
-    //         AOEController controller = aoeZoneObject.AddComponent<AOEController>();
-
-    //         if (controller != null)
-    //         {
-    //             // add basemovement controller
-    //             // init controller with target, etc.
-    //         }
-    //     }
-    // }
 
     public void Initialize(
         Transform owner,
@@ -155,7 +139,7 @@ public abstract class BaseAOEZone : MonoBehaviour
             {
                 if (!activeReceivers.Contains(receiver))
                 {
-                    // Process the target as if it just entered the zone
+                    // process the target as if it just entered the zone
                     if (AOEData.triggerOnEnter)
                     {
                         receiver.OnZoneSpawnedOnTarget(this);

@@ -2,8 +2,9 @@ using UnityEngine;
 
 public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
 {
-    protected MovementConfig config;
+    [SerializeField]
     protected float followDistance = 5f;
+    protected MovementConfig config;
     protected MovementHandler movementHandler;
     protected bool isInitialized;
     private bool isInstance;

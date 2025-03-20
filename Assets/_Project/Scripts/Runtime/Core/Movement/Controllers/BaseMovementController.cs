@@ -31,13 +31,14 @@ public class BaseMovementController : StrategyController<IMovementStrategy>
 
     public void ChangeTarget(Transform target)
     {
+        previousTarget = CurrentTarget;
+        CurrentTarget = target;
+
         if (target == null)
         {
             currentStrategy = null;
-            target.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            // Don't try to access target when it's null
         }
-        previousTarget = CurrentTarget;
-        CurrentTarget = target;
     }
 
     public Transform GetDefaultTarget()
