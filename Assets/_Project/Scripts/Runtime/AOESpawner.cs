@@ -1,29 +1,5 @@
 using UnityEngine;
 
-// public class AOESpawnTester : MonoBehaviour
-// {
-//     [SerializeField]
-//     private Transform target;
-
-//     [SerializeField]
-//     private Transform aoeSpawn;
-
-//     [SerializeField]
-//     private GameObject aoePrefab;
-
-//     private void SpawnAOE()
-//     {
-//         GameObject aoe = Instantiate(aoePrefab);
-//         AOEController controller = aoe.GetComponent<AOEController>();
-//         controller.Initialize(target);
-//     }
-
-//     private void Start()
-//     {
-//         SpawnAOE();
-//     }
-// }
-
 public static class AOESpawner
 {
     /// <summary>
@@ -38,7 +14,18 @@ public static class AOESpawner
     {
         GameObject aoe = Object.Instantiate(aoePrefab, position, Quaternion.identity, parent);
         AOEController controller = aoe.GetComponent<AOEController>();
-        controller.Initialize(target);
+
+        // Make sure the controller has been properly initialized before setting the target
+        if (controller != null)
+        {
+            // This will ensure that Awake and base class initialization happens before we set the target
+            // which should properly set up the movement controller with config
+            controller.Initialize(target);
+        }
+        else
+        {
+            Debug.LogError("AOE prefab does not have an AOEController component!");
+        }
 
         return controller;
     }
@@ -82,13 +69,10 @@ public static class AOESpawner
 
         AOEController controller = SpawnAOE(
             aoePrefab,
-            target, // Target to follow
+            target, // target to follow
             startPosition,
-            null // No parent
+            null // no parent
         );
-
-        // Explicitly set target to follow
-        controller.SetFollowTarget(target);
 
         return controller;
     }

@@ -42,13 +42,13 @@ public abstract class BaseEnemyController : BaseCharacterController
         base.Awake();
 
         movementController = GetComponent<BaseMovementController>();
+
+        healthSystem = GetComponent<HealthSystem>();
         if (movementController != null)
         {
             movementController.Initialize(this, movementConfig);
             // target = movementController.currentTarget;
         }
-
-        healthSystem = GetComponent<HealthSystem>();
     }
 
     protected override void Start()

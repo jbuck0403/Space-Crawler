@@ -28,21 +28,31 @@ public class AOEController : BaseEnemyController
 
     public void Initialize(Transform target = null)
     {
-        // Only set a follow target if one was explicitly provided
-        if (target != null)
+        // make sure we have a movement config before trying to use it
+        if (movementConfig == null)
+        {
+            Debug.LogWarning(
+                $"AOEController on {gameObject.name} has no movement config assigned!"
+            );
+
+            return;
+        }
+
+        if (movementController != null && movementConfig != null)
+        {
+            movementController.Initialize(this, movementConfig);
+        }
+
+        // only set a follow target if one was explicitly provided
+        if (isFollowing && target != null)
         {
             UpdateTarget(target, true);
-            if (isFollowing)
-            {
-                ChangeToDefaultStrategy();
-            }
         }
-        // If no target was provided but isFollowing is true and defaultFollowTarget exists
+        // if no target was provided but isFollowing is true and defaultFollowTarget exists
         else if (isFollowing && defaultFollowTarget != null)
         {
-            // Only follow the default target if this AOE is configured to follow targets
+            // only follow the default target if this AOE is configured to follow targets
             UpdateTarget(defaultFollowTarget, true);
-            ChangeToDefaultStrategy();
         }
     }
 

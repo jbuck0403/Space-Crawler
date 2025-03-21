@@ -13,8 +13,8 @@ public class BaseMovementController : StrategyController<IMovementStrategy>
 
     public void Awake()
     {
-        defaultTarget = GameObject.FindGameObjectWithTag("Player").transform;
-        CurrentTarget = defaultTarget;
+        // defaultTarget = GameObject.FindGameObjectWithTag("Player").transform;
+        // CurrentTarget = defaultTarget;
         enemyController = GetComponent<BaseEnemyController>();
     }
 

@@ -37,12 +37,12 @@ public class AOETest : MonoBehaviour
 
         if (hit.collider != null)
         {
-            // Use the hit position if we hit something on the ground layer
+            // use the hit position if we hit something on the ground layer
             spawnPosition = hit.point;
         }
         else
         {
-            // Fallback to converting screen point to world point at z=0
+            // fallback to converting screen point to world point at z=0
             spawnPosition = mainCamera.ScreenToWorldPoint(
                 new Vector3(
                     Input.mousePosition.x,
