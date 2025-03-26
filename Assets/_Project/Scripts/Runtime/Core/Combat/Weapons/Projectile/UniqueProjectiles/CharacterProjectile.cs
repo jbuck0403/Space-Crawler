@@ -3,12 +3,6 @@ using UnityEngine;
 
 public class CharacterProjectile : Projectile
 {
-    public CharacterProjectile(DamageData damageData)
-        : base(damageData)
-    {
-        this.damageData = damageData;
-    }
-
     public override void DestroyProjectile() { }
 
     public void Initialize(DamageData damageData)

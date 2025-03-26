@@ -6,9 +6,6 @@ using UnityEngine;
 /// </summary>
 public class AOEController : BaseEnemyController
 {
-    [SerializeField]
-    private Transform defaultFollowTarget;
-
     private BaseAOEZone currentAOE;
 
     private bool isFollowing;
@@ -38,21 +35,9 @@ public class AOEController : BaseEnemyController
             return;
         }
 
-        if (movementController != null && movementConfig != null)
+        if (movementController != null)
         {
-            movementController.Initialize(this, movementConfig);
-        }
-
-        // only set a follow target if one was explicitly provided
-        if (isFollowing && target != null)
-        {
-            UpdateTarget(target, true);
-        }
-        // if no target was provided but isFollowing is true and defaultFollowTarget exists
-        else if (isFollowing && defaultFollowTarget != null)
-        {
-            // only follow the default target if this AOE is configured to follow targets
-            UpdateTarget(defaultFollowTarget, true);
+            movementController.Initialize(this, movementConfig, isFollowing ? target : null);
         }
     }
 

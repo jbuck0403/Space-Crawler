@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
@@ -15,11 +16,6 @@ public class Projectile : MonoBehaviour
 
     private PoolBase pool;
 
-    public Projectile(DamageData damageData)
-    {
-        this.damageData = damageData;
-    }
-
     void Start()
     {
         if (selfDestructTime != 0f)
@@ -33,14 +29,25 @@ public class Projectile : MonoBehaviour
         DestroyProjectile();
     }
 
-    public virtual void Initialize(PoolBase bulletPool)
+    public virtual void Initialize(PoolBase pool, DamageData damageData = default)
     {
-        pool = bulletPool;
-        hasDealtDamage = false;
+        this.pool = pool;
+        this.damageData = damageData;
     }
 
     public virtual void DestroyProjectile()
     {
+        // clean up any behaviors attached to this projectile
+        foreach (var behavior in GetComponents<IProjectileBehavior>())
+        {
+            behavior.Cleanup();
+
+            if (behavior is MonoBehaviour monoBehavior)
+            {
+                Destroy(monoBehavior);
+            }
+        }
+
         if (pool != null)
         {
             hasDealtDamage = false;

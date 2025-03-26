@@ -1,7 +1,10 @@
 using System;
 using UnityEngine;
 
-public abstract class BaseWeapon : StrategyController<IFireStrategy>, IFireWeapon
+public abstract class BaseWeapon
+    : StrategyController<IFireStrategy>,
+        IFireWeapon,
+        IProjectileDataProvider
 {
     [SerializeField]
     public WeaponConfig weaponConfig;
@@ -15,6 +18,7 @@ public abstract class BaseWeapon : StrategyController<IFireStrategy>, IFireWeapo
     public ProjectilePool projectilePool { private set; get; }
 
     private bool canFire = false;
+    private Transform currentTarget;
 
     protected virtual void Start()
     {
@@ -24,20 +28,18 @@ public abstract class BaseWeapon : StrategyController<IFireStrategy>, IFireWeapo
     public virtual bool FireWeapon(Vector2? direction = null)
     {
         // get the fire direction
-        Vector2 finalDirection = direction ?? Vector2.up; // assuming the weapon points along its right axis
+        Vector2 finalDirection = direction ?? Vector2.up;
         Vector2 directionAfterAccuracy = ApplyAccuracySpread(
             finalDirection,
             weaponConfig.fireConfig.spread
         );
 
-        // fire the projectile
-        Projectile projectile = FireProjectile.Fire(
-            projectilePool,
-            weaponConfig.damageProfile,
-            firePoint != null ? firePoint : transform,
+        // Fire the projectile using this weapon as the data provider
+        Projectile projectile = weaponConfig.FireProjectile(
+            firePoint,
             directionAfterAccuracy,
-            weaponConfig.fireConfig.projectileSpeed,
-            transform
+            transform,
+            this
         );
 
         OnFireWeapon.Raise(gameObject); // trigger OnFire subscribers
@@ -55,6 +57,23 @@ public abstract class BaseWeapon : StrategyController<IFireStrategy>, IFireWeapo
         return canFire;
     }
 
+    #region IProjectileDataProvider Implementation
+    public Transform GetTarget()
+    {
+        return currentTarget;
+    }
+
+    public float GetDistanceToTarget()
+    {
+        if (currentTarget == null)
+            return 0f;
+
+        return Vector2.Distance(transform.position, currentTarget.position);
+    }
+
+    #endregion
+
+    #region Strategy Controller Implementation
     protected override void OnStrategyExit(IFireStrategy strategy)
     {
         strategy.OnExit();
@@ -70,6 +89,7 @@ public abstract class BaseWeapon : StrategyController<IFireStrategy>, IFireWeapo
         if (canFire)
             strategy.OnUpdate(this, weaponConfig.fireConfig);
     }
+    #endregion
 
     private Vector2 ApplyAccuracySpread(Vector2 baseDirection, float spreadDegrees)
     {

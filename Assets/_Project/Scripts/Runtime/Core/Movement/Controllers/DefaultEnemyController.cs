@@ -3,6 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(HealthSystem))]
 [RequireComponent(typeof(BaseMovementController))]
+[RequireComponent(typeof(BaseWeapon))]
 public class DefaultEnemyController : BaseEnemyController
 {
     [SerializeField]
@@ -56,7 +57,7 @@ public class DefaultEnemyController : BaseEnemyController
             EnableShooting(true);
         }
 
-        HandleShooting();
+        HandleShooting(movementController.CurrentTarget);
     }
 
     private void HandleRetreat()

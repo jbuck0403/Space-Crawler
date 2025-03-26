@@ -9,8 +9,44 @@ public class WeaponConfig : ScriptableObject
     public FireConfig fireConfig;
 
     [SerializeField]
-    public DamageProfile damageProfile;
+    public List<BaseFiringStrategy> firingStrategies;
 
     [SerializeField]
-    public List<BaseFiringStrategy> firingStrategies;
+    public ProjectileTypeSO projectileType;
+
+    private void OnValidate()
+    {
+        // Ensure we always have a projectile type
+        if (projectileType == null)
+        {
+            Debug.LogWarning(
+                $"No projectile type assigned to {name}. Please assign a BasicProjectileTypeSO."
+            );
+        }
+    }
+
+    // Method that handles firing the appropriate projectile type
+    public Projectile FireProjectile(
+        Transform firePoint,
+        Vector2 direction,
+        Transform source,
+        IProjectileDataProvider dataProvider
+    )
+    {
+        if (projectileType != null)
+        {
+            return projectileType.SpawnProjectile(
+                firePoint,
+                direction,
+                fireConfig.projectileSpeed,
+                source,
+                dataProvider
+            );
+        }
+
+        Debug.LogError(
+            $"No projectile type assigned to {name}. Please assign a BasicProjectileTypeSO."
+        );
+        return null;
+    }
 }

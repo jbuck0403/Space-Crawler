@@ -47,7 +47,7 @@ public abstract class BaseCharacterController : MonoBehaviour
         }
     }
 
-    protected virtual void HandleShooting()
+    protected virtual void HandleShooting(Transform target = null)
     {
         if (weapon != null)
         {
@@ -55,7 +55,7 @@ public abstract class BaseCharacterController : MonoBehaviour
             {
                 if (!weapon.GetFiring())
                 {
-                    FireWeapon();
+                    FireWeapon(target);
                 }
             }
             else
@@ -68,10 +68,12 @@ public abstract class BaseCharacterController : MonoBehaviour
         }
     }
 
-    protected virtual void FireWeapon()
+    protected virtual void FireWeapon(Transform target = null)
     {
         if (weapon != null)
+        {
             weapon.SetCanFire(true);
+        }
     }
 
     protected virtual void StopFiringWeapon()

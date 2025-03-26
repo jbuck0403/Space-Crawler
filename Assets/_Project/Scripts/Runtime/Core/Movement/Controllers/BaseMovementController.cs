@@ -18,8 +18,15 @@ public class BaseMovementController : StrategyController<IMovementStrategy>
         enemyController = GetComponent<BaseEnemyController>();
     }
 
-    public void Initialize(BaseEnemyController enemyController, MovementConfig config)
+    public void Initialize(
+        BaseEnemyController enemyController,
+        MovementConfig config,
+        Transform defaultTarget
+    )
     {
+        this.defaultTarget = defaultTarget;
+        CurrentTarget = this.defaultTarget;
+
         this.enemyController = enemyController;
         this.config = config;
     }
@@ -37,7 +44,6 @@ public class BaseMovementController : StrategyController<IMovementStrategy>
         if (target == null)
         {
             currentStrategy = null;
-            // Don't try to access target when it's null
         }
     }
 

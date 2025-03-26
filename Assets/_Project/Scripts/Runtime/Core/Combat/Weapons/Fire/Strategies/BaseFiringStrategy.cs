@@ -1,4 +1,5 @@
 // DefaultFiringStrategy.cs
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(
@@ -39,7 +40,7 @@ public class BaseFiringStrategy : ScriptableObject, IFireStrategy
         this.config = config;
 
         if (initialDelay)
-            nextFireTime = Time.time + Random.Range(0f, config.fireRate); // random initial delay
+            nextFireTime = Time.time + RandomUtils.Range(0f, config.fireRate); // random initial delay
     }
 
     public virtual void OnUpdate(BaseWeapon weapon, FireConfig config)
@@ -51,7 +52,6 @@ public class BaseFiringStrategy : ScriptableObject, IFireStrategy
 
         if (CanFire(config))
         {
-            // Use the weapon's forward direction (right in 2D space)
             Vector2 direction = weapon.transform.up;
             FireWeapon(weapon, direction);
         }

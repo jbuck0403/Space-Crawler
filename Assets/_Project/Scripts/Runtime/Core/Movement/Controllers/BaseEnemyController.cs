@@ -1,18 +1,41 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(BaseMovementController))]
-public abstract class BaseEnemyController : BaseCharacterController
+public class BaseEnemyController : BaseCharacterController
 {
-    [SerializeField]
     public List<MovementStrategyPair> movementStrategies;
+
+    [SerializeField]
+    public Transform defaultTarget;
 
     [SerializeField]
     protected MovementStrategyType defaultStrategy;
     protected BaseMovementController movementController;
     protected HealthSystem healthSystem;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        movementController = GetComponent<BaseMovementController>();
+
+        healthSystem = GetComponent<HealthSystem>();
+        if (movementController != null)
+        {
+            movementController.Initialize(this, movementConfig, defaultTarget);
+        }
+    }
+
+    protected override void Start()
+    {
+        InitializeStrategies();
+
+        base.Start();
+
+        ChangeToDefaultStrategy();
+    }
 
     public void UpdateTarget(Transform target, bool setDefault = false)
     {
@@ -35,29 +58,6 @@ public abstract class BaseEnemyController : BaseCharacterController
         }
 
         return null;
-    }
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        movementController = GetComponent<BaseMovementController>();
-
-        healthSystem = GetComponent<HealthSystem>();
-        if (movementController != null)
-        {
-            movementController.Initialize(this, movementConfig);
-            // target = movementController.currentTarget;
-        }
-    }
-
-    protected override void Start()
-    {
-        InitializeStrategies();
-
-        base.Start();
-
-        ChangeToDefaultStrategy();
     }
 
     protected virtual void InitializeStrategies()
