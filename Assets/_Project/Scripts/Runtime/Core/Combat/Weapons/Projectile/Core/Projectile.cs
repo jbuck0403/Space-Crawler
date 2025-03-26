@@ -16,11 +16,8 @@ public class Projectile : MonoBehaviour
 
     private PoolBase pool;
 
-    void Start()
-    {
-        if (selfDestructTime != 0f)
-            StartCoroutine(SelfDestruct());
-    }
+    private int behaviorsCleanedUp = 0;
+    private int totalBehaviors = 0;
 
     protected virtual IEnumerator SelfDestruct()
     {
@@ -35,14 +32,55 @@ public class Projectile : MonoBehaviour
         this.damageData = damageData;
     }
 
+    private void OnEnable()
+    {
+        if (selfDestructTime != 0f)
+        {
+            StartCoroutine(SelfDestruct());
+        }
+    }
+
     public virtual void DestroyProjectile()
     {
-        // // clean up any behaviors attached to this projectile
-        // foreach (var behavior in GetComponents<IProjectileBehavior>())
-        // {
-        //     behavior.Cleanup();
-        // }
+        gameObject.SetActive(false);
+        behaviorsCleanedUp = 0;
 
+        var behaviors = GetComponents<IProjectileBehavior>();
+        totalBehaviors = behaviors.Length;
+
+        // if no behaviors to clean up, destroy immediately
+        if (totalBehaviors == 0)
+        {
+            HandleDestroyProjectile();
+            return;
+        }
+
+        // clean up all behaviors
+        foreach (var behavior in behaviors)
+        {
+            behavior.OnCleanupComplete += OnBehaviorCleanupComplete;
+            behavior.Cleanup();
+        }
+    }
+
+    private void OnBehaviorCleanupComplete()
+    {
+        behaviorsCleanedUp++;
+
+        // only destroy when all behaviors are cleaned up
+        if (behaviorsCleanedUp == totalBehaviors)
+        {
+            HandleDestroyProjectile();
+        }
+    }
+
+    public virtual void OnHit(Collider2D other)
+    {
+        hasDealtDamage = true;
+    }
+
+    private void HandleDestroyProjectile()
+    {
         if (pool != null)
         {
             hasDealtDamage = false;
@@ -53,10 +91,5 @@ public class Projectile : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-
-    public virtual void OnHit(Collider2D other)
-    {
-        hasDealtDamage = true;
     }
 }
