@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: DefaultWeaponConfig
   m_EditorClassIdentifier: 
   fireConfig: {fileID: 11400000, guid: cf8f47ba36317ea4980d82639ffcc77c, type: 2}
-  damageProfile: {fileID: 11400000, guid: 05366b0b909e663409cdd4c531b7c3ad, type: 2}
   firingStrategies:
-  - {fileID: 11400000, guid: 923f2f53ae668cb4f8646948b916fbf1, type: 2}
-  projectileType: 1
+  - {fileID: 11400000, guid: dac6c6569c0e6ef45b8ad965cf952739, type: 2}
+  projectileType: {fileID: 11400000, guid: dc67f40e03b5fa64c9c33f2eb385f460, type: 2}

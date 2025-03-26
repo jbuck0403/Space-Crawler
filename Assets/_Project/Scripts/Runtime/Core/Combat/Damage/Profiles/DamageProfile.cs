@@ -16,8 +16,18 @@ public class DamageProfile : ScriptableObject
     [SerializeField]
     private DamageType damageType;
 
+    [SerializeField]
+    private StatusEffectData[] statusEffectsToApply;
+
     public DamageData CreateDamageData(Transform source)
     {
-        return new DamageData(baseDamage, source, critMultiplier, critChance, damageType);
+        return new DamageData(
+            baseDamage,
+            source,
+            critMultiplier,
+            critChance,
+            damageType,
+            statusEffectsToApply
+        );
     }
 }

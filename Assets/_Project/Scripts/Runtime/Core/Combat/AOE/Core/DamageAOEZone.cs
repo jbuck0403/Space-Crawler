@@ -20,7 +20,7 @@ public class DamageAOEZone : BaseAOEZone
         {
             try
             {
-                aoeProfile.onDamageOverTimeTick.Raise(gameObject, damageData.Type);
+                aoeProfile.onAOETick.Raise(gameObject, damageData.Type);
             }
             catch (System.Exception)
             {
@@ -29,7 +29,11 @@ public class DamageAOEZone : BaseAOEZone
 
             try
             {
-                target.ReceiveDamage(damageData);
+                if (aoeData.applyDamage)
+                    target.ReceiveDamage(damageData);
+
+                if (aoeData.applyEffects)
+                    damageData.ApplyAllStatusEffects(target.gameObject);
             }
             catch (System.Exception)
             {

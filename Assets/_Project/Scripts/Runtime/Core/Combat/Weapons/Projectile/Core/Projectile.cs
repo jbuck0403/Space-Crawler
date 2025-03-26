@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
@@ -76,6 +75,7 @@ public class Projectile : MonoBehaviour
 
     public virtual void OnHit(Collider2D other)
     {
+        damageData.ApplyAllStatusEffects(other.gameObject);
         hasDealtDamage = true;
     }
 

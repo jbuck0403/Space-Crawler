@@ -10,6 +10,7 @@ public class BurningEffect : BaseDoTEffect
     protected override void ApplyTickEffect()
     {
         float tickDamage = damageData.Amount * CurrentStacks;
+
         DamageData data = new DamageData(
             tickDamage,
             damageData.Source,
@@ -18,6 +19,7 @@ public class BurningEffect : BaseDoTEffect
             damageData.Type
         );
 
+        Debug.Log($"Burning for {data.Amount} damage");
         damageHandler.HandleDamage(data);
     }
 

@@ -6,7 +6,7 @@ public class AOEProfile : ScriptableObject
     public AOEData aoeData;
     public DamageProfile damageProfile;
 
-    public DamageTypeEvent onDamageOverTimeTick;
+    public DamageTypeEvent onAOETick;
 
     public bool followTarget = false;
 }

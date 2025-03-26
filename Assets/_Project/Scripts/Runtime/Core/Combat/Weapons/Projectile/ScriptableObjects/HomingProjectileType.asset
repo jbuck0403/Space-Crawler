@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8198ffa1cd8bd8d4fa61a7faa2af0c29, type: 3}
   m_Name: HomingProjectileType
   m_EditorClassIdentifier: 
-  damageProfile: {fileID: 0}
-  movementConfig: {fileID: 0}
+  damageProfile: {fileID: 11400000, guid: 05366b0b909e663409cdd4c531b7c3ad, type: 2}
+  movementConfig: {fileID: 11400000, guid: c564bd8396d385347a6f3fb00ce28522, type: 2}

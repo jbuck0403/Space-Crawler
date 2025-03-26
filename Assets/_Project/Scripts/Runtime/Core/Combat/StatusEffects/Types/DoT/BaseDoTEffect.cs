@@ -37,7 +37,12 @@ public abstract class BaseDoTEffect : BaseStatusEffect
         ApplyFinalEffect();
     }
 
-    // Template methods for derived classes to implement
+    public override string GetEffectID()
+    {
+        return new string($"{damageData.Type}{data.EffectType}");
+    }
+
+    // template methods for derived classes to implement
     protected abstract void ApplyInitialEffect();
     protected abstract void ApplyTickEffect();
     protected abstract void ApplyFinalEffect();

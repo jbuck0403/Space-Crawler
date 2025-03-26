@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEngine;
 
 public class CharacterProjectile : Projectile
 {
@@ -13,11 +12,6 @@ public class CharacterProjectile : Projectile
 
     protected override IEnumerator SelfDestruct()
     {
-        yield return new WaitForSeconds(0f);
-    }
-
-    public override void OnHit(Collider2D other)
-    {
-        hasDealtDamage = true;
+        yield return null;
     }
 }

@@ -3,34 +3,35 @@ using UnityEngine;
 public class StatusEffectFactory
 {
     private static BaseStatusEffect CreateDoTEffect(
-        DoTEffectData dotData,
+        StatusEffectData data,
         GameObject target,
         DamageData damageData
     )
     {
-        return dotData.EffectType switch
+        return data.EffectType switch
         {
-            StatusEffect.Burning => new BurningEffect(dotData, target, damageData),
-            // StatusEffect.Poisoned => new PoisonEffect(dotData, target, damageData),
+            StatusEffect.Burning => new BurningEffect(data, target, damageData),
             _ => null
         };
     }
 
-    public static BaseStatusEffect CreateStatusEffect(StatusEffectData data, GameObject target)
+    public static BaseStatusEffect CreateStatusEffect(
+        StatusEffectData data,
+        GameObject target,
+        DamageData? damageData = null
+    )
     {
-        if (data is DoTEffectData dotData)
+        if (damageData.HasValue)
         {
-            var damageData = new DamageData(
-                dotData.BaseDamage,
-                target.transform,
-                dotData.CritMultiplier,
-                dotData.CritChance,
-                dotData.DamageType
-            );
-            return CreateDoTEffect(dotData, target, damageData);
+            return CreateDoTEffect(data, target, damageData.Value);
         }
 
-        // handle non-DoT effects here when we add them
-        return null;
+        // otherwise create a regular effect based on type
+        switch (data.EffectType)
+        {
+            // stun, etc. TBD
+            default:
+                return null;
+        }
     }
 }

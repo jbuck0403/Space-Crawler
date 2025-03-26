@@ -16,9 +16,14 @@ public abstract class BaseStatusEffect
     {
         this.data = data;
         this.target = target;
-        this.remainingDuration = data.Duration;
-        this.tickTimer = data.TickRate;
-        this.currentStacks = 1;
+        remainingDuration = data.Duration;
+        tickTimer = data.TickRate;
+        currentStacks = 1;
+    }
+
+    public virtual string GetEffectID()
+    {
+        return new string($"{data.EffectType}");
     }
 
     public virtual void OnStack()

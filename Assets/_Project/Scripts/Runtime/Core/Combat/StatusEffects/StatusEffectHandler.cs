@@ -10,6 +10,9 @@ public class StatusEffectHandler : MonoBehaviour, IStatusEffectReceiver
     private StatusEffectEvent onStatusEffectRemoved;
 
     [SerializeField]
+    private StatusEffectEvent onAllStatusEffectsRemoved;
+
+    [SerializeField]
     private StatusEffectEvent onStatusEffectTick;
 
     private Dictionary<string, BaseStatusEffect> activeEffects =
@@ -26,47 +29,77 @@ public class StatusEffectHandler : MonoBehaviour, IStatusEffectReceiver
 
             if (effect.IsExpired)
             {
-                effectsToRemove.Add(effect.Data.EffectName);
+                effectsToRemove.Add(effect.GetEffectID());
             }
         }
 
-        foreach (var effectName in effectsToRemove)
+        foreach (var effectID in effectsToRemove)
         {
-            RemoveStatusEffect(effectName);
+            RemoveStatusEffect(effectID);
         }
     }
 
-    public void ApplyStatusEffect(StatusEffectData effectData)
+    public void ApplyStatusEffect(StatusEffectData effectData, DamageData? damageData = null)
     {
-        if (activeEffects.TryGetValue(effectData.EffectName, out var existingEffect))
+        var newEffect = StatusEffectFactory.CreateStatusEffect(effectData, gameObject, damageData);
+        if (newEffect == null)
+            return;
+
+        string effectID = newEffect.GetEffectID();
+
+        if (activeEffects.TryGetValue(effectID, out var existingEffect))
         {
             existingEffect.OnStack();
         }
         else
         {
-            var newEffect = StatusEffectFactory.CreateStatusEffect(effectData, gameObject);
-            if (newEffect != null)
+            activeEffects[effectID] = newEffect;
+            newEffect.OnApply();
+            onStatusEffectApplied.Raise(gameObject, effectData.EffectType);
+        }
+    }
+
+    public void RemoveStatusEffect(StatusEffect effectType)
+    {
+        foreach (var effect in activeEffects.Values)
+        {
+            if (effect.Data.EffectType == effectType)
             {
-                activeEffects[effectData.EffectName] = newEffect;
-                newEffect.OnApply();
-                onStatusEffectApplied.Raise(gameObject, effectData.EffectType);
+                RemoveStatusEffect(effect.GetEffectID());
+                break;
             }
         }
     }
 
-    public void RemoveStatusEffect(string effectName)
+    public void RemoveStatusEffect(string effectID)
     {
-        if (activeEffects.TryGetValue(effectName, out var effect))
+        if (activeEffects.TryGetValue(effectID, out var effect))
         {
             effect.OnRemove();
-            activeEffects.Remove(effectName);
+            activeEffects.Remove(effectID);
             onStatusEffectRemoved.Raise(gameObject, effect.Data.EffectType);
         }
     }
 
-    public bool HasStatusEffect(string effectName)
+    public int HasStatusEffect(StatusEffect effectType)
     {
-        return activeEffects.ContainsKey(effectName);
+        foreach (var effect in activeEffects.Values)
+        {
+            if (effect.Data.EffectType == effectType)
+            {
+                return effect.CurrentStacks;
+            }
+        }
+        return 0;
+    }
+
+    public int HasStatusEffect(string effectID)
+    {
+        if (activeEffects.TryGetValue(effectID, out var effect))
+        {
+            return effect.CurrentStacks;
+        }
+        return 0;
     }
 
     public void ClearAllStatusEffects()
@@ -76,6 +109,6 @@ public class StatusEffectHandler : MonoBehaviour, IStatusEffectReceiver
             effect.OnRemove();
         }
         activeEffects.Clear();
-        onStatusEffectRemoved.Raise(gameObject);
+        onAllStatusEffectsRemoved.Raise(gameObject);
     }
 }

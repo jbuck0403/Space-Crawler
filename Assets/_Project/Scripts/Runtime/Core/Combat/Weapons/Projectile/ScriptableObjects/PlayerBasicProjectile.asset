@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 402f29634647c184a8184b4a7c43aeec, type: 3}
   m_Name: PlayerBasicProjectile
   m_EditorClassIdentifier: 
-  damageProfile: {fileID: 11400000, guid: 05366b0b909e663409cdd4c531b7c3ad, type: 2}
+  damageProfile: {fileID: 11400000, guid: dd031c7fc87e285409574368d7eea2aa, type: 2}

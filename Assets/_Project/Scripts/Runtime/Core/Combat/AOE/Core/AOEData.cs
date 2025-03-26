@@ -8,6 +8,8 @@ public class AOEData : ScriptableObject
     public bool triggerOnEnter = true;
     public bool triggerOnExit = false;
     public bool triggerOverTime = false;
+    public bool applyDamage = false;
+    public bool applyEffects = false;
     public float tickRate = 1f;
     public LayerMask targetLayers;
     public float duration = 2f;
