@@ -2,7 +2,7 @@ using System;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class PlayerController : BaseCharacterController
+public class PlayerController : BaseCharacterController, IProjectileDataProvider
 {
     private MovementHandler movementHandler;
     private Vector2 moveInput;
@@ -90,5 +90,10 @@ public class PlayerController : BaseCharacterController
     public override MovementHandler GetMovementHandler()
     {
         return movementHandler;
+    }
+
+    public Transform GetTarget()
+    {
+        throw new NotImplementedException();
     }
 }

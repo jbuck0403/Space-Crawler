@@ -1,48 +1,17 @@
+using System;
 using UnityEngine;
+using UnityEngine.Pool;
 
 /// <summary>
 /// Projectile behavior that homes in on a target using the provided movement configuration.
 /// </summary>
-public class HomingProjectileBehavior : MonoBehaviour, IProjectileBehavior
+public class HomingProjectileBehavior : BaseProjectileBehavior
 {
-    protected Projectile projectile;
     protected Transform target;
     protected MovementConfig movementConfig;
     protected MovementHandler movementHandler;
     protected float currentSpeed;
-
     protected Rigidbody2D projectileRB;
-
-    public void Initialize(Projectile projectile, object[] behaviorParams)
-    {
-        this.projectile = projectile;
-
-        // Extract parameters
-        if (behaviorParams.Length >= 2)
-        {
-            target = behaviorParams[0] as Transform;
-            movementConfig = behaviorParams[1] as MovementConfig;
-            projectileRB = projectile.gameObject.GetComponent<Rigidbody2D>();
-            currentSpeed = projectileRB.velocity.magnitude; // Maintain initial speed
-
-            if (movementConfig != null)
-            {
-                movementHandler = new MovementHandler(movementConfig);
-                // Initialize movement handler with current velocity
-                movementHandler.ApplyVelocity(projectileRB.velocity);
-            }
-        }
-        else
-        {
-            Debug.LogError("HomingProjectileBehavior initialized without required parameters");
-        }
-    }
-
-    public void Cleanup()
-    {
-        target = null;
-        Destroy(this);
-    }
 
     protected void FixedUpdate()
     {
@@ -68,10 +37,53 @@ public class HomingProjectileBehavior : MonoBehaviour, IProjectileBehavior
             projectileRB.velocity = movementHandler.GetCurrentVelocity();
         }
     }
-}
 
-public class HomingProjectileMovementConfig
-{
-    public MovementConfig config;
-    public Transform target;
+    /// <summary>
+    /// Type-safe initialization method that can be called directly
+    /// </summary>
+    public void Initialize(Projectile projectile, Transform target, MovementConfig movementConfig)
+    {
+        this.projectile = projectile;
+        this.target = target;
+        this.movementConfig = movementConfig;
+        InitializeComponents();
+    }
+
+    protected override void InitializeFromParams(object[] parameters)
+    {
+        if (
+            parameters.Length >= 2
+            && parameters[0] is Transform target
+            && parameters[1] is MovementConfig movementConfig
+        )
+        {
+            this.target = target;
+            this.movementConfig = movementConfig;
+            InitializeComponents();
+        }
+        else
+        {
+            Debug.LogError("HomingProjectileBehavior initialized with incorrect parameters");
+        }
+    }
+
+    private void InitializeComponents()
+    {
+        projectileRB = projectile.gameObject.GetComponent<Rigidbody2D>();
+        currentSpeed = projectileRB.velocity.magnitude; // Maintain initial speed
+
+        if (movementConfig != null)
+        {
+            movementHandler = new MovementHandler(movementConfig);
+
+            // initialize movement handler with current velocity
+            movementHandler.ApplyVelocity(projectileRB.velocity);
+        }
+    }
+
+    public override void Cleanup()
+    {
+        target = null;
+        base.Cleanup();
+    }
 }

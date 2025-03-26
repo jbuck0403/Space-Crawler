@@ -20,7 +20,7 @@ public class WeaponConfig : ScriptableObject
         if (projectileType == null)
         {
             Debug.LogWarning(
-                $"No projectile type assigned to {name}. Please assign a BasicProjectileTypeSO."
+                $"No projectile type assigned to {name}. Please assign a ProjectileTypeSO."
             );
         }
     }
@@ -44,9 +44,7 @@ public class WeaponConfig : ScriptableObject
             );
         }
 
-        Debug.LogError(
-            $"No projectile type assigned to {name}. Please assign a BasicProjectileTypeSO."
-        );
+        Debug.LogError($"No projectile type assigned to {name}. Please assign a ProjectileTypeSO.");
         return null;
     }
 }

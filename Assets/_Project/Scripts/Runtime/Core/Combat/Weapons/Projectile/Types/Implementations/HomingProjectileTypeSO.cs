@@ -19,14 +19,14 @@ public class HomingProjectileTypeSO : ProjectileTypeSO
         IProjectileDataProvider dataProvider
     )
     {
-        // Get target from data provider
         Transform target = dataProvider.GetTarget();
 
         if (target != null)
         {
-            // Add homing behavior with target and our movement config
-            var behavior = projectile.gameObject.AddComponent<HomingProjectileBehavior>();
-            behavior.Initialize(projectile, new object[] { target, movementConfig });
+            // add homing behavior with target and our movement config
+            HomingProjectileBehavior behavior =
+                projectile.gameObject.AddComponent<HomingProjectileBehavior>();
+            behavior.Initialize(projectile, target, movementConfig);
         }
         else
         {

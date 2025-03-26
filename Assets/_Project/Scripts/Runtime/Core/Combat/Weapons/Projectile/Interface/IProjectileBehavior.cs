@@ -1,5 +1,8 @@
+using System;
+
 public interface IProjectileBehavior
 {
-    void Initialize(Projectile projectile, object[] behaviorParams);
+    event Action OnCleanupComplete;
+    void Initialize(Projectile projectile, params object[] parameters);
     void Cleanup();
 }

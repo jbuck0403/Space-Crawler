@@ -1,10 +1,7 @@
 using System;
 using UnityEngine;
 
-public abstract class BaseWeapon
-    : StrategyController<IFireStrategy>,
-        IFireWeapon,
-        IProjectileDataProvider
+public abstract class BaseWeapon : StrategyController<IFireStrategy>, IFireWeapon
 {
     [SerializeField]
     public WeaponConfig weaponConfig;
@@ -20,9 +17,12 @@ public abstract class BaseWeapon
     private bool canFire = false;
     private Transform currentTarget;
 
+    IProjectileDataProvider provider;
+
     protected virtual void Start()
     {
         projectilePool = FindAnyObjectByType<ProjectilePool>();
+        provider = GetComponent<IProjectileDataProvider>();
     }
 
     public virtual bool FireWeapon(Vector2? direction = null)
@@ -39,7 +39,7 @@ public abstract class BaseWeapon
             firePoint,
             directionAfterAccuracy,
             transform,
-            this
+            provider
         );
 
         OnFireWeapon.Raise(gameObject); // trigger OnFire subscribers

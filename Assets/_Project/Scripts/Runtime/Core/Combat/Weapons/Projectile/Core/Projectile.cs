@@ -37,16 +37,11 @@ public class Projectile : MonoBehaviour
 
     public virtual void DestroyProjectile()
     {
-        // clean up any behaviors attached to this projectile
-        foreach (var behavior in GetComponents<IProjectileBehavior>())
-        {
-            behavior.Cleanup();
-
-            if (behavior is MonoBehaviour monoBehavior)
-            {
-                Destroy(monoBehavior);
-            }
-        }
+        // // clean up any behaviors attached to this projectile
+        // foreach (var behavior in GetComponents<IProjectileBehavior>())
+        // {
+        //     behavior.Cleanup();
+        // }
 
         if (pool != null)
         {
