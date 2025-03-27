@@ -73,10 +73,10 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    public virtual void OnHit(Collider2D other)
+    public virtual void OnHit(GameObject hitGameObject)
     {
         print("#StatusEffect# OnHit");
-        damageData.ApplyAllStatusEffects(other.gameObject);
+        damageData.ApplyAllStatusEffects(hitGameObject);
         hasDealtDamage = true;
     }
 

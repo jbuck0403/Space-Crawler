@@ -25,7 +25,7 @@ public class StatusEffectHandler : MonoBehaviour, IStatusEffectReceiver
         foreach (var effect in activeEffects.Values)
         {
             effect.Update(Time.deltaTime);
-            onStatusEffectTick.Raise(gameObject, effect.Data.EffectType);
+            onStatusEffectTick.Raise(gameObject, effect.GetEventData());
 
             if (effect.IsExpired)
             {
@@ -59,13 +59,14 @@ public class StatusEffectHandler : MonoBehaviour, IStatusEffectReceiver
         {
             print($"#StatusEffect# {effectID} Stacking...");
             existingEffect.OnStack();
+            onStatusEffectApplied.Raise(gameObject, existingEffect.GetEventData());
         }
         else
         {
             print($"#StatusEffect# {effectID} Applying New...");
             activeEffects[effectID] = newEffect;
             newEffect.OnApply();
-            onStatusEffectApplied.Raise(gameObject, effectData.EffectType);
+            onStatusEffectApplied.Raise(gameObject, newEffect.GetEventData());
         }
     }
 
@@ -85,9 +86,10 @@ public class StatusEffectHandler : MonoBehaviour, IStatusEffectReceiver
     {
         if (activeEffects.TryGetValue(effectID, out var effect))
         {
+            var eventData = effect.GetEventData();
             effect.OnRemove();
             activeEffects.Remove(effectID);
-            onStatusEffectRemoved.Raise(gameObject, effect.Data.EffectType);
+            onStatusEffectRemoved.Raise(gameObject, eventData);
         }
     }
 
@@ -116,7 +118,9 @@ public class StatusEffectHandler : MonoBehaviour, IStatusEffectReceiver
     {
         foreach (var effect in activeEffects.Values)
         {
+            var eventData = effect.GetEventData();
             effect.OnRemove();
+            onStatusEffectRemoved.Raise(gameObject, eventData);
         }
         activeEffects.Clear();
         onAllStatusEffectsRemoved.Raise(gameObject);

@@ -58,6 +58,15 @@ public abstract class BaseStatusEffect
         }
     }
 
+    /// <summary>
+    /// Creates a StatusEffectEventData object containing all information needed for UI and other subscribers.
+    /// </summary>
+    /// <returns>A complete StatusEffectEventData object</returns>
+    public StatusEffectEventData GetEventData()
+    {
+        return new StatusEffectEventData(data, currentStacks, remainingDuration, target, source);
+    }
+
     public abstract void OnApply();
     public abstract void OnRemove();
     protected abstract void OnTick();
