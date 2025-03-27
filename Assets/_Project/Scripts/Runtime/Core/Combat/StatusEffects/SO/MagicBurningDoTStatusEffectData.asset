@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a0b561b69c3d824aa174a861d3acc26, type: 3}
-  m_Name: BurningDoTStatusEffectData
+  m_Name: MagicBurningDoTStatusEffectData
   m_EditorClassIdentifier: 
   effectType: 0
-  duration: 5
-  tickRate: 1
+  duration: 15
+  tickRate: 3
   isStackable: 1
   maxStacks: 5
   description: 
@@ -22,4 +22,4 @@ MonoBehaviour:
   baseDamage: 1
   critMultiplier: 1.5
   critChance: 0.1
-  damageType: 2
+  damageType: 6

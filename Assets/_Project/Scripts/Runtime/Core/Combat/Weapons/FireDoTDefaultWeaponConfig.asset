@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3720a4e51722eb24ba0ee14d3e64ab96, type: 3}
-  m_Name: DefaultWeaponConfig
+  m_Name: FireDoTDefaultWeaponConfig
   m_EditorClassIdentifier: 
   fireConfig: {fileID: 11400000, guid: cf8f47ba36317ea4980d82639ffcc77c, type: 2}
   firingStrategies:
   - {fileID: 11400000, guid: dac6c6569c0e6ef45b8ad965cf952739, type: 2}
-  projectileType: {fileID: 11400000, guid: dc67f40e03b5fa64c9c33f2eb385f460, type: 2}
+  projectileType: {fileID: 11400000, guid: 0cdfe0fc6be1bd043b257a386c7ca703, type: 2}

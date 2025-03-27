@@ -9,12 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ba8f2198734e184da03d8c008b2b68d, type: 3}
-  m_Name: DOTDamageProfile
+  m_Script: {fileID: 11500000, guid: 402f29634647c184a8184b4a7c43aeec, type: 3}
+  m_Name: MagicBurningBasicProjectileType 1
   m_EditorClassIdentifier: 
-  baseDamage: 10
-  critMultiplier: 1.5
-  critChance: 20
-  damageType: 2
-  statusEffectsToApply:
-  - {fileID: 11400000, guid: 2b92e62cead0974498fe066a6ba5b116, type: 2}
+  damageProfile: {fileID: 11400000, guid: 93ef08539627df54fbf7c049bdc9d633, type: 2}
