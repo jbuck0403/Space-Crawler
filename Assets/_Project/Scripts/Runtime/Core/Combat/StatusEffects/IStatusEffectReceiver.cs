@@ -1,6 +1,6 @@
 public interface IStatusEffectReceiver
 {
-    void ApplyStatusEffect(StatusEffectData effectData, DamageData? damageData = null);
+    void ApplyStatusEffect(StatusEffectData effectData);
     void RemoveStatusEffect(StatusEffect effect);
 
     /// <summary>

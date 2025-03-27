@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Status Effect", menuName = "Combat/Status Effect")]
+[CreateAssetMenu(fileName = "New Status Effect Data", menuName = "Combat/Status Effect Data")]
 public class StatusEffectData : ScriptableObject
 {
     [Header("Basic Properties")]
@@ -27,6 +27,8 @@ public class StatusEffectData : ScriptableObject
     [SerializeField]
     private Sprite icon;
 
+    private Transform source;
+
     // Properties
 
     public StatusEffect EffectType => effectType;
@@ -36,14 +38,27 @@ public class StatusEffectData : ScriptableObject
     public float TickRate => tickRate;
     public bool IsStackable => isStackable;
     public int MaxStacks => maxStacks;
+    public Transform Source => source;
+
+    public void SetSource(Transform source)
+    {
+        this.source = source;
+    }
 
     public void ApplyStatusEffect(GameObject target)
     {
+        Debug.Log($"#StatusEffect# Attempting to apply effect to {target.name}");
         var receiver = target.GetComponent<IStatusEffectReceiver>();
 
-        if (receiver != null)
+        if (receiver == null)
         {
-            receiver.ApplyStatusEffect(this);
+            Debug.LogError(
+                $"#StatusEffect# Target {target.name} does not have an IStatusEffectReceiver component!"
+            );
+            return;
         }
+
+        Debug.Log($"#StatusEffect# Found receiver on {target.name}");
+        receiver.ApplyStatusEffect(this);
     }
 }

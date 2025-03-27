@@ -3,14 +3,15 @@ using UnityEngine;
 public class StatusEffectFactory
 {
     private static BaseStatusEffect CreateDoTEffect(
-        StatusEffectData data,
+        DoTEffectData data,
         GameObject target,
-        DamageData damageData
+        Transform source
     )
     {
+        Debug.Log($"#StatusEffect# Creating DoT Effect of type {data.EffectType}");
         return data.EffectType switch
         {
-            StatusEffect.Burning => new BurningEffect(data, target, damageData),
+            StatusEffect.Burning => new BurningEffect(data, target, source),
             _ => null
         };
     }
@@ -18,20 +19,25 @@ public class StatusEffectFactory
     public static BaseStatusEffect CreateStatusEffect(
         StatusEffectData data,
         GameObject target,
-        DamageData? damageData = null
+        Transform source
     )
     {
-        if (damageData.HasValue)
+        Debug.Log($"#StatusEffect# Creating Status Effect of type {data.GetType().Name}");
+        if (data is DoTEffectData dotData)
         {
-            return CreateDoTEffect(data, target, damageData.Value);
+            Debug.Log("#StatusEffect# Data is DoTEffectData");
+            return CreateDoTEffect(dotData, target, source);
         }
-
-        // otherwise create a regular effect based on type
-        switch (data.EffectType)
+        else
         {
-            // stun, etc. TBD
-            default:
-                return null;
+            Debug.Log("#StatusEffect# Data is not DoTEffectData");
+            // create regular effect based on type
+            switch (data.EffectType)
+            {
+                // stun, etc. TBD
+                default:
+                    return null;
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ public abstract class BaseStatusEffect
 {
     protected readonly StatusEffectData data;
     protected readonly GameObject target;
+    protected readonly Transform source;
     protected float remainingDuration;
     protected float tickTimer;
     protected int currentStacks;
@@ -12,8 +13,11 @@ public abstract class BaseStatusEffect
     public int CurrentStacks => currentStacks;
     public StatusEffectData Data => data;
 
-    protected BaseStatusEffect(StatusEffectData data, GameObject target)
+    protected BaseStatusEffect(StatusEffectData data, GameObject target, Transform source)
     {
+        data.SetSource(source);
+        this.source = source;
+
         this.data = data;
         this.target = target;
         remainingDuration = data.Duration;

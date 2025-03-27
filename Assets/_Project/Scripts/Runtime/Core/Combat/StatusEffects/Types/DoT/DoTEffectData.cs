@@ -5,7 +5,7 @@ public class DoTEffectData : StatusEffectData
 {
     [Header("Damage Settings")]
     [SerializeField]
-    private float baseDamage = 10f;
+    private float baseDamage = 1f;
 
     [SerializeField]
     private float critMultiplier = 1.5f;

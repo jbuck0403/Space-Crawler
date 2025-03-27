@@ -39,20 +39,30 @@ public class StatusEffectHandler : MonoBehaviour, IStatusEffectReceiver
         }
     }
 
-    public void ApplyStatusEffect(StatusEffectData effectData, DamageData? damageData = null)
+    public void ApplyStatusEffect(StatusEffectData effectData)
     {
-        var newEffect = StatusEffectFactory.CreateStatusEffect(effectData, gameObject, damageData);
+        print("#StatusEffect# Applying Status Effect");
+        var newEffect = StatusEffectFactory.CreateStatusEffect(
+            effectData,
+            gameObject,
+            effectData.Source
+        );
         if (newEffect == null)
             return;
+        print("#StatusEffect# Applying Status Effect Null Check #1");
 
         string effectID = newEffect.GetEffectID();
 
+        print($"#StatusEffect# EffectID: {effectID}");
+
         if (activeEffects.TryGetValue(effectID, out var existingEffect))
         {
+            print($"#StatusEffect# {effectID} Stacking...");
             existingEffect.OnStack();
         }
         else
         {
+            print($"#StatusEffect# {effectID} Applying New...");
             activeEffects[effectID] = newEffect;
             newEffect.OnApply();
             onStatusEffectApplied.Raise(gameObject, effectData.EffectType);

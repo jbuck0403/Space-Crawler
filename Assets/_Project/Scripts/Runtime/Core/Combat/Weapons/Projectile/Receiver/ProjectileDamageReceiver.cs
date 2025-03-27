@@ -8,7 +8,7 @@ public class ProjectileDamageReceiver : BaseDamageReceiver
         if (other.TryGetComponent<Projectile>(out var projectile) && !projectile.hasDealtDamage)
         {
             ReceiveDamage(projectile.damageData);
-            projectile.OnHit(other);
+            projectile.OnHit(GetComponent<Collider2D>());
             projectile.DestroyProjectile();
         }
     }

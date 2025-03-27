@@ -9,11 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ba8f2198734e184da03d8c008b2b68d, type: 3}
-  m_Name: DefaultDamageProfile
+  m_Script: {fileID: 11500000, guid: 2a0b561b69c3d824aa174a861d3acc26, type: 3}
+  m_Name: BurningDoTStatusEffectData
   m_EditorClassIdentifier: 
-  baseDamage: 7.5
+  effectType: 0
+  duration: 5
+  tickRate: 1
+  isStackable: 0
+  maxStacks: 1
+  description: 
+  icon: {fileID: 0}
+  baseDamage: 10
   critMultiplier: 1.5
-  critChance: 30
-  damageType: 0
-  statusEffectsToApply: []
+  critChance: 0.1
+  damageType: 2

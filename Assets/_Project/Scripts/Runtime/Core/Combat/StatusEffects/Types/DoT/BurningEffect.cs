@@ -2,24 +2,17 @@ using UnityEngine;
 
 public class BurningEffect : BaseDoTEffect
 {
-    public BurningEffect(StatusEffectData data, GameObject target, DamageData damageData)
-        : base(data, target, damageData) { }
+    public BurningEffect(DoTEffectData data, GameObject target, Transform source)
+        : base(data, target, source) { }
 
     protected override void ApplyInitialEffect() { }
 
     protected override void ApplyTickEffect()
     {
-        float tickDamage = damageData.Amount * CurrentStacks;
+        float tickDamage = dotData.BaseDamage * CurrentStacks;
+        var data = CreateDamageData(tickDamage);
 
-        DamageData data = new DamageData(
-            tickDamage,
-            damageData.Source,
-            damageData.CritMultiplier,
-            damageData.CritChance,
-            damageData.Type
-        );
-
-        Debug.Log($"Burning for {data.Amount} damage");
+        Debug.Log($"#StatusEffect# Burning for {data.Amount} damage pre-mitigation");
         damageHandler.HandleDamage(data);
     }
 

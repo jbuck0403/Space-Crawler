@@ -3,21 +3,24 @@ using UnityEngine;
 public abstract class BaseDoTEffect : BaseStatusEffect
 {
     protected readonly DamageHandler damageHandler;
-    protected readonly DamageData damageData;
+    protected readonly DoTEffectData dotData;
 
-    protected BaseDoTEffect(StatusEffectData data, GameObject target, DamageData damageData)
-        : base(data, target)
+    protected BaseDoTEffect(DoTEffectData data, GameObject target, Transform source)
+        : base(data, target, source)
     {
+        dotData = data;
         damageHandler = target.GetComponent<DamageHandler>();
         if (damageHandler == null)
         {
-            Debug.LogError($"Target {target.name} does not have a DamageHandler component!");
+            Debug.LogError(
+                $"#StatusEffect# Target {target.name} does not have a DamageHandler component!"
+            );
         }
-        this.damageData = damageData;
     }
 
     public override void OnApply()
     {
+        Debug.Log("#StatusEffect# DoT Applied");
         if (damageHandler == null)
             return;
         ApplyInitialEffect();
@@ -39,7 +42,18 @@ public abstract class BaseDoTEffect : BaseStatusEffect
 
     public override string GetEffectID()
     {
-        return new string($"{damageData.Type}{data.EffectType}");
+        return new string($"{dotData.DamageType}{data.EffectType}");
+    }
+
+    protected DamageData CreateDamageData(float amount)
+    {
+        return new DamageData(
+            amount,
+            source,
+            dotData.CritMultiplier,
+            dotData.CritChance,
+            dotData.DamageType
+        );
     }
 
     // template methods for derived classes to implement

@@ -28,13 +28,17 @@ public struct DamageData
 
     public void ApplyAllStatusEffects(GameObject target)
     {
+        Debug.Log("#StatusEffect# Applying All Status Effects");
         if (StatusEffectsToApply == null || StatusEffectsToApply.Length == 0)
             return;
 
+        Debug.Log("#StatusEffect# Status Effects to Apply Null Check Passed");
         foreach (var effect in StatusEffectsToApply)
         {
             if (effect != null)
             {
+                Debug.Log("#StatusEffect# Applying Effect");
+                effect.SetSource(Source);
                 effect.ApplyStatusEffect(target);
             }
         }
