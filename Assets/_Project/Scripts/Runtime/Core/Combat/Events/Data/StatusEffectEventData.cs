@@ -7,6 +7,7 @@ using UnityEngine;
 public class StatusEffectEventData
 {
     public StatusEffectData EffectData { get; private set; }
+    public string EffectID { get; private set; }
 
     public int CurrentStacks { get; private set; }
 
@@ -18,6 +19,7 @@ public class StatusEffectEventData
 
     public StatusEffectEventData(
         StatusEffectData effectData,
+        string effectID,
         int currentStacks,
         float remainingDuration,
         GameObject target,
@@ -25,6 +27,7 @@ public class StatusEffectEventData
     )
     {
         EffectData = effectData;
+        EffectID = effectID;
         CurrentStacks = currentStacks;
         RemainingDuration = remainingDuration;
         Target = target;

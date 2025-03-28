@@ -64,7 +64,14 @@ public abstract class BaseStatusEffect
     /// <returns>A complete StatusEffectEventData object</returns>
     public StatusEffectEventData GetEventData()
     {
-        return new StatusEffectEventData(data, currentStacks, remainingDuration, target, source);
+        return new StatusEffectEventData(
+            data,
+            GetEffectID(),
+            currentStacks,
+            remainingDuration,
+            target,
+            source
+        );
     }
 
     public abstract void OnApply();

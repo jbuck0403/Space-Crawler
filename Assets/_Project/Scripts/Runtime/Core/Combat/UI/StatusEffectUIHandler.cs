@@ -13,7 +13,7 @@ public class StatusEffectUIHandler : MonoBehaviour
     private GameObject statusEffectIconPrefab;
 
     [SerializeField]
-    private Transform statusEffectContainer;
+    private RectTransform debuffAnchor;
 
     [SerializeField]
     private StatusEffectEvent onStatusEffectApplied;
@@ -26,6 +26,17 @@ public class StatusEffectUIHandler : MonoBehaviour
 
     [SerializeField]
     private GameObject targetEntity;
+
+    [SerializeField]
+    private StatusEffectIconRegistry iconRegistry;
+
+    [Tooltip("The spacing between status effect icons")]
+    [SerializeField]
+    private float spacing = 5f;
+
+    [Tooltip("The size of each status effect icon")]
+    [SerializeField]
+    private Vector2 iconSize = new Vector2(40f, 40f);
 
     // Dictionary to keep track of active status effect UI elements
     private Dictionary<string, StatusEffectUIElement> activeUIElements =
@@ -49,120 +60,102 @@ public class StatusEffectUIHandler : MonoBehaviour
 
     private void OnStatusEffectApplied(StatusEffectEventData eventData)
     {
-        string effectID = eventData.EffectData.EffectType.ToString();
+        // Use the effect ID directly from the event data
+        string effectID = eventData.EffectID;
+        Debug.Log($"StatusEffectUIHandler: Received effect with ID {effectID}");
 
         // Check if we already have a UI element for this effect
         if (activeUIElements.TryGetValue(effectID, out var uiElement))
         {
             // Update existing UI element
             uiElement.UpdateStackCount(eventData.CurrentStacks);
-            uiElement.UpdateDuration(eventData.RemainingDuration);
+            // uiElement.UpdateDuration(eventData.RemainingDuration);
         }
         else
         {
             // Create new UI element
-            GameObject newUIElement = Instantiate(statusEffectIconPrefab, statusEffectContainer);
+            GameObject newUIElement = Instantiate(statusEffectIconPrefab, debuffAnchor);
             StatusEffectUIElement newElement = newUIElement.GetComponent<StatusEffectUIElement>();
 
             if (newElement != null)
             {
-                // Initialize with data from the event
+                var (configuredIcon, tint) = iconRegistry.GetConfiguredIcon(effectID);
+                Debug.Log(
+                    $"StatusEffectUIHandler: Got icon {configuredIcon != null} and tint {tint} for effect {effectID}"
+                );
+
+                if (configuredIcon == null)
+                {
+                    Debug.LogError($"StatusEffectUIHandler: No icon found for effect {effectID}");
+                    return;
+                }
+
                 newElement.Initialize(
-                    eventData.EffectData.Icon,
+                    configuredIcon,
+                    tint,
                     eventData.EffectData.EffectType.ToString(),
                     eventData.EffectData.Description,
                     eventData.CurrentStacks,
                     eventData.RemainingDuration
                 );
 
-                // Add to our tracking dictionary
                 activeUIElements.Add(effectID, newElement);
+                RearrangeIcons();
             }
         }
     }
 
     private void OnStatusEffectRemoved(StatusEffectEventData eventData)
     {
-        string effectID = eventData.EffectData.EffectType.ToString();
+        // Use the effect ID directly from the event data
+        string effectID = eventData.EffectID;
 
         // Remove the UI element if it exists
         if (activeUIElements.TryGetValue(effectID, out var uiElement))
         {
             Destroy(uiElement.gameObject);
             activeUIElements.Remove(effectID);
+
+            // Rearrange remaining icons
+            RearrangeIcons();
         }
     }
 
     private void OnStatusEffectTick(StatusEffectEventData eventData)
     {
-        string effectID = eventData.EffectData.EffectType.ToString();
+        // Use the effect ID directly from the event data
+        string effectID = eventData.EffectID;
 
         // Update the UI element if it exists
-        if (activeUIElements.TryGetValue(effectID, out var uiElement))
-        {
-            uiElement.UpdateDuration(eventData.RemainingDuration);
-        }
-    }
-}
-
-/// <summary>
-/// Component for individual status effect UI elements.
-/// Handles displaying a single status effect's icon, stack count, and duration.
-/// </summary>
-public class StatusEffectUIElement : MonoBehaviour
-{
-    [SerializeField]
-    private Image iconImage;
-
-    [SerializeField]
-    private Text stackCountText;
-
-    [SerializeField]
-    private Text durationText;
-
-    [SerializeField]
-    private Text nameText;
-
-    private string effectDescription;
-
-    public void Initialize(
-        Sprite icon,
-        string name,
-        string description,
-        int stackCount,
-        float duration
-    )
-    {
-        iconImage.sprite = icon;
-        nameText.text = name;
-        effectDescription = description;
-        UpdateStackCount(stackCount);
-        UpdateDuration(duration);
+        // if (activeUIElements.TryGetValue(effectID, out var uiElement))
+        // {
+        //     uiElement.UpdateDuration(eventData.RemainingDuration);
+        // }
     }
 
-    public void UpdateStackCount(int stackCount)
+    /// <summary>
+    /// Rearranges all active status effect icons from right to left
+    /// </summary>
+    private void RearrangeIcons()
     {
-        if (stackCount > 1)
-        {
-            stackCountText.text = stackCount.ToString();
-            stackCountText.gameObject.SetActive(true);
-        }
-        else
-        {
-            stackCountText.gameObject.SetActive(false);
-        }
-    }
+        float currentX = 0;
 
-    public void UpdateDuration(float duration)
-    {
-        if (duration > 0)
+        // Sort the effects if needed (can be alphabetically, by duration, etc.)
+        // For now, we'll just use the dictionary order
+        foreach (var element in activeUIElements.Values)
         {
-            durationText.text = Mathf.Ceil(duration).ToString();
-            durationText.gameObject.SetActive(true);
-        }
-        else
-        {
-            durationText.gameObject.SetActive(false);
+            RectTransform rectTransform = element.GetComponent<RectTransform>();
+            if (rectTransform != null)
+            {
+                // Set icon size
+                rectTransform.sizeDelta = iconSize;
+
+                // Position from right to left (negative X moves left from anchor)
+                rectTransform.anchoredPosition = new Vector2(-currentX, 0);
+
+                // Update for next icon
+                currentX += iconSize.x + spacing;
+            }
         }
     }
 }

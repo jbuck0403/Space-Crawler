@@ -9,12 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ba8f2198734e184da03d8c008b2b68d, type: 3}
-  m_Name: DOTDamageProfile
+  m_Script: {fileID: 11500000, guid: 5befd89e8c42b2744b104766a27dd1e1, type: 3}
+  m_Name: DefaultStatusEffectIconRegistry
   m_EditorClassIdentifier: 
-  baseDamage: 10
-  critMultiplier: 1.5
-  critChance: 20
-  damageType: 0
-  statusEffectsToApply:
-  - {fileID: 11400000, guid: 2b92e62cead0974498fe066a6ba5b116, type: 2}
+  effectIcons:
+  - effectType: 0
+    baseIcon: {fileID: 21300000, guid: 0599866e4a8a9f34ea2d3419d36973ed, type: 3}
+    defaultTint: {r: 0, g: 0, b: 0, a: 0}
