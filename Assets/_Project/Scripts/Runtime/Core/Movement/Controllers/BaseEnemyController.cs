@@ -12,6 +12,9 @@ public class BaseEnemyController : BaseCharacterController, IProjectileDataProvi
 
     [SerializeField]
     protected MovementStrategyType defaultStrategy;
+
+    [SerializeField]
+    protected LayerMask obstacleLayer;
     protected BaseMovementController movementController;
     protected HealthSystem healthSystem;
 
@@ -25,6 +28,24 @@ public class BaseEnemyController : BaseCharacterController, IProjectileDataProvi
         if (movementController != null)
         {
             movementController.Initialize(this, movementConfig, defaultTarget);
+        }
+    }
+
+    protected override void HandleShooting(Transform target = null)
+    {
+        if (
+            !MovementUtils.TargetViewObstructed(
+                weapon.firePoint,
+                movementController.CurrentTarget.gameObject,
+                obstacleLayer
+            )
+        )
+        {
+            base.HandleShooting(target);
+        }
+        else
+        {
+            StopFiringWeapon();
         }
     }
 

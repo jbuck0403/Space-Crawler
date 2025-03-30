@@ -12,8 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f1c6e49fe7792f42aa5eda01ffaef39, type: 3}
   m_Name: RetreatMovementStrategy
   m_EditorClassIdentifier: 
+  followDistance: 5
+  avoidanceRadius: 2
+  avoidanceStrength: 2
+  rotationAvoidanceStrength: 0.2
+  avoidanceLayers:
+    serializedVersion: 2
+    m_Bits: 64
   retreatDistance: 15
   RetreatHealthThreshold: 50
   timeToStopRetreating: 5
   canRetreat: 1
-  retreating: 1
+  retreating: 0

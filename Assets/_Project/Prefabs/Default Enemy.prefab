@@ -296,7 +296,11 @@ MonoBehaviour:
     strategy: {fileID: 11400000, guid: d7d5a5e4445eaa5408ea5f77b7eb5075, type: 2}
   - strategyType: 2
     strategy: {fileID: 11400000, guid: d279c5d0ce2719f47bba5c5c78864da4, type: 2}
+  defaultTarget: {fileID: 0}
   defaultStrategy: 0
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 64
   maxFiringDistance: 15
   minFiringDistance: 0
 --- !u!4 &8699095912087521350 stripped

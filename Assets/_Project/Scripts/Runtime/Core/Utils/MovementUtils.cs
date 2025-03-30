@@ -56,4 +56,42 @@ public static class MovementUtils
 
         return angleDifference <= angleThreshold;
     }
+
+    public static bool TargetViewObstructed(
+        Transform self,
+        GameObject targetObject,
+        LayerMask obstacleLayer
+    )
+    {
+        if (targetObject == null)
+            return true;
+
+        Vector2 targetPosition = targetObject.transform.position;
+
+        if (IsFacingTarget(self, targetPosition, 30f))
+        {
+            Vector2 direction = GetTargetDirection(self.position, targetPosition);
+            float distance = GetDistanceToTarget(self.position, targetPosition);
+
+            // Cast a ray in the target's direction
+            RaycastHit2D hit = Physics2D.Raycast(self.position, direction, distance, obstacleLayer);
+            Debug.Log($"HIT: {hit.collider.name}");
+
+            // If nothing was hit, view is not obstructed
+            if (hit.collider == null)
+            {
+                Debug.Log("RAYCAST HIT: " + hit.collider.name);
+                return false;
+            }
+
+            // Check if the hit object is the target
+            if (hit.collider.gameObject == targetObject)
+            {
+                return false;
+            }
+        }
+
+        Debug.Log("XXX");
+        return true;
+    }
 }
