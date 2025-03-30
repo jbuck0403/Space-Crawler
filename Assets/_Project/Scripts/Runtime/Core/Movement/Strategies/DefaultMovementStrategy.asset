@@ -12,3 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac120b2fb255889449b15def92f5af73, type: 3}
   m_Name: DefaultMovementStrategy
   m_EditorClassIdentifier: 
+  followDistance: 5
+  avoidanceRadius: 2
+  avoidanceStrength: 2
+  rotationAvoidanceStrength: 0.2
+  avoidanceLayers:
+    serializedVersion: 2
+    m_Bits: 64

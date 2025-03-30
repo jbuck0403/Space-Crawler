@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7362802082214834627}
   - component: {fileID: 6609505034112310236}
   - component: {fileID: 6495566151194207633}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,6 +110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selfDestructTime: 5
+  hasDealtDamage: 0
 --- !u!1 &8519257524896050164
 GameObject:
   m_ObjectHideFlags: 0
@@ -120,7 +121,7 @@ GameObject:
   m_Component:
   - component: {fileID: 346386989620312004}
   - component: {fileID: 1937002416536967884}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ProjectileSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
