@@ -132,6 +132,7 @@ MonoBehaviour:
   onStatusEffectTick: {fileID: 11400000, guid: 9034f57cede95814bb862c4362cbecd2, type: 2}
   targetEntity: {fileID: 0}
   iconRegistry: {fileID: 0}
+  onDeath: {fileID: 11400000, guid: 4dd36339df0b86146adc52f662e8e0e2, type: 2}
   spacing: 5
   iconSize: {x: 128, y: 128}
 --- !u!1 &4793354664297631267

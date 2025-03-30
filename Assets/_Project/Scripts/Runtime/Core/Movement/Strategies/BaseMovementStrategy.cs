@@ -2,8 +2,23 @@ using UnityEngine;
 
 public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
 {
+    [Header("Follow Settings")]
     [SerializeField]
     protected float followDistance = 5f;
+
+    [Header("Avoidance Settings")]
+    [SerializeField]
+    protected float avoidanceRadius = 2.0f;
+
+    [SerializeField]
+    protected float avoidanceStrength = 2.0f;
+
+    [SerializeField]
+    [Tooltip("How much avoidance affects rotation (0 = not at all, 1 = fully)")]
+    protected float rotationAvoidanceStrength = 0.2f;
+
+    [SerializeField]
+    protected LayerMask avoidanceLayers;
     protected MovementConfig config;
     protected MovementHandler movementHandler;
     protected bool isInitialized;
@@ -24,7 +39,6 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
         instance.config = config;
         instance.enemyController = enemyController;
 
-        // create movement handler immediately after setting config
         if (config != null)
         {
             instance.movementHandler = new MovementHandler(config);
@@ -64,6 +78,12 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
 
     public virtual void OnUpdate(Transform self, Transform target)
     {
+        NullCheck(target);
+        MoveCharacter(self, target);
+    }
+
+    private void NullCheck(Transform target)
+    {
         if (!isInitialized || target == null)
         {
             Debug.Log(
@@ -72,14 +92,12 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
             return;
         }
 
-        // Debug check for null movementHandler
         if (movementHandler == null)
         {
             Debug.LogError(
                 $"[{GetType().Name}] movementHandler is NULL! isInstance: {isInstance}, isInitialized: {isInitialized}, config: {(config == null ? "null" : "not null")}"
             );
 
-            // Try to recover by creating a new handler if config is available
             if (config != null)
             {
                 Debug.Log(
@@ -89,10 +107,13 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
             }
             else
             {
-                return; // Can't proceed without config
+                return;
             }
         }
+    }
 
+    protected virtual void MoveCharacter(Transform self, Transform target)
+    {
         Vector2 directionToTarget = MovementUtils.GetTargetDirection(
             self.position,
             target.position
@@ -103,13 +124,50 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
 
         Vector2 targetDirection = shouldFollow ? directionToTarget : Vector2.zero;
 
-        // Debug.Log($"DIRECTION: {directionToTarget} DISTANCE: {distanceToTarget}");
+        Vector2 avoidanceVector = AvoidOtherCharacters(self);
 
-        if (targetDirection == Vector2.zero)
+        Vector2 adjustedMoveDirection = (targetDirection + avoidanceVector).normalized;
+
+        movementHandler.ApplyRotation(self, directionToTarget, Time.deltaTime);
+
+        movementHandler.ApplyMovement(self, adjustedMoveDirection, Time.deltaTime);
+    }
+
+    protected virtual Vector2 AvoidOtherCharacters(Transform self)
+    {
+        Vector2 avoidanceVector = Vector2.zero;
+
+        Collider2D[] nearbyColliders = Physics2D.OverlapCircleAll(
+            self.position,
+            avoidanceRadius,
+            avoidanceLayers
+        );
+
+        if (nearbyColliders.Length == 0)
+            return avoidanceVector;
+
+        foreach (Collider2D other in nearbyColliders)
         {
-            movementHandler.ApplyRotation(self, directionToTarget, Time.deltaTime);
+            if (other.transform == self)
+                continue;
+
+            Vector2 directionToOther = MovementUtils.GetTargetDirection(
+                self.position,
+                other.transform.position
+            );
+            float distance = MovementUtils.GetDistanceToTarget(
+                self.position,
+                other.transform.position
+            );
+
+            if (distance > avoidanceRadius || distance < 0.001f)
+                continue;
+
+            float weight = 1.0f - (distance / avoidanceRadius);
+            avoidanceVector -= avoidanceStrength * weight * directionToOther;
         }
-        movementHandler.Move(self, targetDirection, Time.deltaTime);
+
+        return avoidanceVector;
     }
 
     public virtual void OnExit()

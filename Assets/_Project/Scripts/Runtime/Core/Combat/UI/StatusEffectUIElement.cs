@@ -8,9 +8,14 @@ using UnityEngine.UI;
 /// </summary>
 public class StatusEffectUIElement : MonoBehaviour
 {
+    [SerializeField]
+    private Image durationFill;
     private Image iconImage;
     private TextMeshProUGUI stackCountText;
     private Text nameText;
+
+    private float maxDuration;
+    private float currentDuration;
 
     private string effectDescription;
 
@@ -18,6 +23,50 @@ public class StatusEffectUIElement : MonoBehaviour
     {
         iconImage = GetComponent<Image>();
         stackCountText = GetComponentInChildren<TextMeshProUGUI>();
+    }
+
+    private void InitOverlay(float duration, bool activate = true)
+    {
+        maxDuration = duration;
+        currentDuration = duration;
+
+        if (durationFill != null)
+        {
+            durationFill.type = Image.Type.Filled;
+            durationFill.fillMethod = Image.FillMethod.Radial360;
+            durationFill.fillOrigin = (int)Image.Origin360.Top;
+            durationFill.fillClockwise = false;
+
+            durationFill.fillAmount = 1.0f;
+            durationFill.gameObject.SetActive(activate);
+        }
+    }
+
+    private void Update()
+    {
+        if (
+            durationFill != null
+            && durationFill.gameObject.activeInHierarchy
+            && currentDuration > 0
+        )
+        {
+            UpdateDurationVisual();
+        }
+    }
+
+    private void UpdateDurationVisual()
+    {
+        currentDuration -= Time.deltaTime;
+
+        if (currentDuration <= 0)
+        {
+            currentDuration = 0;
+            durationFill.gameObject.SetActive(false);
+            return;
+        }
+
+        float fillPercentage = currentDuration / maxDuration;
+        durationFill.fillAmount = fillPercentage;
     }
 
     public void Initialize(
@@ -45,7 +94,8 @@ public class StatusEffectUIElement : MonoBehaviour
 
         effectDescription = description;
         UpdateStackCount(stackCount);
-        // UpdateDuration(duration);
+
+        InitOverlay(duration);
     }
 
     public void UpdateStackCount(int stackCount)
@@ -61,16 +111,13 @@ public class StatusEffectUIElement : MonoBehaviour
         }
     }
 
-    // public void UpdateDuration(float duration)
-    // {
-    //     if (duration > 0 && durationText != null)
-    //     {
-    //         durationText.text = Mathf.Ceil(duration).ToString();
-    //         durationText.gameObject.SetActive(true);
-    //     }
-    //     else if (durationText != null)
-    //     {
-    //         durationText.gameObject.SetActive(false);
-    //     }
-    // }
+    public void UpdateDuration(float duration)
+    {
+        currentDuration = duration;
+
+        if (durationFill != null)
+        {
+            durationFill.gameObject.SetActive(true);
+        }
+    }
 }

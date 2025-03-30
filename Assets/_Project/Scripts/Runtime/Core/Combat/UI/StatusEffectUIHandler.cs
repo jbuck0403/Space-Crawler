@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 /// <summary>
@@ -30,6 +31,9 @@ public class StatusEffectUIHandler : MonoBehaviour
     [SerializeField]
     private StatusEffectIconRegistry iconRegistry;
 
+    [SerializeField]
+    private Vector2Event onDeath; // should match onDeath SO in HealthSystem
+
     [Tooltip("The spacing between status effect icons")]
     [SerializeField]
     private float spacing = 5f;
@@ -48,6 +52,12 @@ public class StatusEffectUIHandler : MonoBehaviour
         onStatusEffectApplied.AddListener(targetEntity, OnStatusEffectApplied);
         onStatusEffectRemoved.AddListener(targetEntity, OnStatusEffectRemoved);
         onStatusEffectTick.AddListener(targetEntity, OnStatusEffectTick);
+
+        // Subscribe to death event
+        if (onDeath != null)
+        {
+            onDeath.AddListener(targetEntity, (x) => OnDeath(x));
+        }
     }
 
     private void OnDisable()
@@ -56,6 +66,41 @@ public class StatusEffectUIHandler : MonoBehaviour
         onStatusEffectApplied.RemoveListener(targetEntity, OnStatusEffectApplied);
         onStatusEffectRemoved.RemoveListener(targetEntity, OnStatusEffectRemoved);
         onStatusEffectTick.RemoveListener(targetEntity, OnStatusEffectTick);
+
+        // Unsubscribe from death event
+        if (onDeath != null)
+        {
+            onDeath.RemoveListener(targetEntity, (x) => OnDeath(x));
+        }
+    }
+
+    private void OnDeath(Vector2 pos)
+    {
+        // when the entity dies, clear all status effects
+        ClearAllStatusEffects();
+
+        // disable this component
+        this.enabled = false;
+    }
+
+    /// <summary>
+    /// Clears all status effect UI elements and empties the tracking dictionary.
+    /// </summary>
+    public void ClearAllStatusEffects()
+    {
+        // Destroy all UI elements
+        foreach (var element in activeUIElements.Values)
+        {
+            if (element != null && element.gameObject != null)
+            {
+                Destroy(element.gameObject);
+            }
+        }
+
+        // Clear the dictionary
+        activeUIElements.Clear();
+
+        Debug.Log($"Cleared all status effects for {targetEntity.name}");
     }
 
     private void OnStatusEffectApplied(StatusEffectEventData eventData)
@@ -127,10 +172,10 @@ public class StatusEffectUIHandler : MonoBehaviour
         string effectID = eventData.EffectID;
 
         // Update the UI element if it exists
-        // if (activeUIElements.TryGetValue(effectID, out var uiElement))
-        // {
-        //     uiElement.UpdateDuration(eventData.RemainingDuration);
-        // }
+        if (activeUIElements.TryGetValue(effectID, out var uiElement))
+        {
+            uiElement.UpdateDuration(eventData.RemainingDuration);
+        }
     }
 
     /// <summary>
