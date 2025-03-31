@@ -10,6 +10,9 @@ public class DamageHandler : MonoBehaviour
     [SerializeField]
     private VoidEvent onCriticalHit;
 
+    [SerializeField]
+    private DamageTakenEvent OnDamageTaken;
+
     private void Awake()
     {
         healthSystem = GetComponent<HealthSystem>();
@@ -38,12 +41,20 @@ public class DamageHandler : MonoBehaviour
             return;
         }
 
-        float preMitigationDamage = CalculatePreMitigationDamage(rawDamageData);
+        (float preMitigationDamage, bool isCrit) = CalculatePreMitigationDamage(rawDamageData);
         print($"PreMitigation Damage: {preMitigationDamage}");
 
         float finalDamage = defenseHandler.HandleDefense(preMitigationDamage, rawDamageData);
         print($"Final Damage: {finalDamage}");
+
+        DamageTakenEventData damageTakenEventData = new DamageTakenEventData(
+            finalDamage,
+            rawDamageData.Type,
+            isCrit
+        );
+
         healthSystem.ModifyHealth(finalDamage);
+        OnDamageTaken.Raise(gameObject, damageTakenEventData);
     }
 
     public void SetDefenseHandler(IDefenseHandler defenseHandler)
@@ -51,7 +62,7 @@ public class DamageHandler : MonoBehaviour
         this.defenseHandler = defenseHandler;
     }
 
-    private float CalculatePreMitigationDamage(DamageData rawDamageData)
+    private (float, bool) CalculatePreMitigationDamage(DamageData rawDamageData)
     {
         float finalDamage = rawDamageData.Amount;
         float critMultiplier = rawDamageData.CritMultiplier;
@@ -60,13 +71,18 @@ public class DamageHandler : MonoBehaviour
             0,
             100
         );
+        bool criticalHit;
 
-        finalDamage = ApplyCriticalHit(finalDamage, critMultiplier, critChance);
+        (finalDamage, criticalHit) = ApplyCriticalHit(finalDamage, critMultiplier, critChance);
 
-        return finalDamage;
+        return (finalDamage, criticalHit);
     }
 
-    private float ApplyCriticalHit(float finalDamage, float critMultiplier, float critChance)
+    private (float, bool) ApplyCriticalHit(
+        float finalDamage,
+        float critMultiplier,
+        float critChance
+    )
     {
         bool isCrit = RandomUtils.Chance(critChance);
         print($"Crit: {isCrit} Crit%: {critChance}");
@@ -76,6 +92,6 @@ public class DamageHandler : MonoBehaviour
             onCriticalHit.Raise(gameObject);
         }
 
-        return finalDamage * (isCrit ? critMultiplier : 1);
+        return (finalDamage * (isCrit ? critMultiplier : 1), isCrit);
     }
 }

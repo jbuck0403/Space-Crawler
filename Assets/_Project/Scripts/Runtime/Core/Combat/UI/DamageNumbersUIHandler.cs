@@ -8,16 +8,16 @@ public class DamageNumbersUIHandler : MonoBehaviour
 {
     [Header("References")]
     [SerializeField]
-    private FloatEvent OnDamageTaken;
+    private StatusEffectIconRegistry registry;
+
+    [SerializeField]
+    private DamageTakenEvent OnDamageTaken;
 
     [SerializeField]
     private FloatEvent OnHealingReceived;
 
     [SerializeField]
     private GameObject damageTextPrefab;
-
-    [SerializeField]
-    private Transform canvasTransform;
 
     [Header("Settings")]
     [SerializeField]
@@ -28,6 +28,8 @@ public class DamageNumbersUIHandler : MonoBehaviour
 
     [SerializeField]
     private Vector3 offset = new Vector3(0, 1, 0);
+
+    private Transform canvasTransform;
 
     private void Awake()
     {
@@ -44,28 +46,25 @@ public class DamageNumbersUIHandler : MonoBehaviour
     private void OnEnable()
     {
         // Subscribe to events
-        OnDamageTaken.AddListener(gameObject, (amount) => HandleDamageEvent(gameObject, amount));
-        OnHealingReceived.AddListener(
-            gameObject,
-            (amount) => HandleHealingEvent(gameObject, amount)
-        );
+        OnDamageTaken.AddListener(gameObject, (data) => HandleDamageEvent(gameObject, data));
+        OnHealingReceived.AddListener(gameObject, (data) => HandleHealingEvent(gameObject, data));
     }
 
     private void OnDisable()
     {
         // Unsubscribe from events
-        OnDamageTaken.RemoveListener(gameObject, (amount) => HandleDamageEvent(gameObject, amount));
+        OnDamageTaken.RemoveListener(gameObject, (data) => HandleDamageEvent(gameObject, data));
         OnHealingReceived.RemoveListener(
             gameObject,
-            (amount) => HandleHealingEvent(gameObject, amount)
+            (data) => HandleHealingEvent(gameObject, data)
         );
     }
 
-    private void HandleDamageEvent(GameObject target, float amount)
+    private void HandleDamageEvent(GameObject target, DamageTakenEventData data)
     {
         // Use red color for damage
-        Color damageColor = Color.red;
-        SpawnDamageNumber(target.transform.position, amount, damageColor, true);
+        Color damageColor = registry.GetTintForDamageType(data.DamageType);
+        SpawnDamageNumber(target.transform.position, data.DamageAmount, damageColor, true);
     }
 
     private void HandleHealingEvent(GameObject target, float amount)

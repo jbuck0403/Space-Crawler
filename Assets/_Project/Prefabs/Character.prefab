@@ -165,6 +165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onCriticalHit: {fileID: 11400000, guid: 63de57adf05122c4ab74e0df8bbdb63b, type: 2}
+  OnDamageTaken: {fileID: 11400000, guid: 84635edb17010c84eb66cca8c8bdad52, type: 2}
 --- !u!114 &7572673133755291596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,6 +217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3402373cff3efa546a07ad4e194e580c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  registry: {fileID: 11400000, guid: c56df524f84704142a494a486f163b57, type: 2}
   OnDamageTaken: {fileID: 11400000, guid: 84635edb17010c84eb66cca8c8bdad52, type: 2}
   OnHealingReceived: {fileID: 11400000, guid: ec269003a615ca747871ee2133c0341b, type: 2}
   damageTextPrefab: {fileID: 3832803323735677624, guid: 7679dc64c63586449a698033aba28f34, type: 3}

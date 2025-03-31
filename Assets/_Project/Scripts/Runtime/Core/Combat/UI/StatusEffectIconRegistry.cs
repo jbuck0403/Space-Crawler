@@ -67,7 +67,7 @@ public class StatusEffectIconRegistry : ScriptableObject
         return (StatusEffect.Burning, null);
     }
 
-    private Color GetTintForDamageType(DamageType damageType)
+    public Color GetTintForDamageType(DamageType damageType)
     {
         return damageType switch
         {

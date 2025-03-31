@@ -20,7 +20,7 @@ public class HealthSystem : MonoBehaviour
     public FloatEvent OnHealthPercentChanged;
 
     [SerializeField]
-    public FloatEvent OnDamageTaken;
+    public DamageTakenEvent OnDamageTaken;
 
     [SerializeField]
     public FloatEvent OnHealingReceived;
@@ -49,10 +49,6 @@ public class HealthSystem : MonoBehaviour
         if (amount > 0)
         {
             OnHealingReceived.Raise(gameObject, amount);
-        }
-        else if (amount < 0)
-        {
-            OnDamageTaken.Raise(gameObject, amount);
         }
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
