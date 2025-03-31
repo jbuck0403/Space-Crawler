@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 7572673133755291596}
   - component: {fileID: -5089776167416856219}
   - component: {fileID: 5590272276130727413}
+  - component: {fileID: -1520056413329538645}
   m_Layer: 6
   m_Name: Character
   m_TagString: Untagged
@@ -203,6 +204,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 000833c22cdc313428b14b6eddd0ee6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-1520056413329538645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3080204034210999966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3402373cff3efa546a07ad4e194e580c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnDamageTaken: {fileID: 11400000, guid: 84635edb17010c84eb66cca8c8bdad52, type: 2}
+  OnHealingReceived: {fileID: 11400000, guid: ec269003a615ca747871ee2133c0341b, type: 2}
+  damageTextPrefab: {fileID: 3832803323735677624, guid: 7679dc64c63586449a698033aba28f34, type: 3}
+  fadeDuration: 1
+  moveDistance: 50
+  offset: {x: 0, y: 1, z: 0}
 --- !u!1 &7162393949837756974
 GameObject:
   m_ObjectHideFlags: 0

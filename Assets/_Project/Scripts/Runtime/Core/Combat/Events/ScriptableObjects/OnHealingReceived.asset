@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b9f7f9f30aedf2418354353b715c7e0, type: 3}
+  m_Script: {fileID: 11500000, guid: e85a1edb65f86014ba8da9753fb492ab, type: 3}
   m_Name: OnHealingReceived
   m_EditorClassIdentifier: 
