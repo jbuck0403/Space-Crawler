@@ -78,18 +78,21 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
 
     public virtual void OnUpdate(Transform self, Transform target)
     {
-        NullCheck(target);
+        bool shouldReturn = NullCheck(target);
+        if (shouldReturn)
+            return;
+
         MoveCharacter(self, target);
     }
 
-    private void NullCheck(Transform target)
+    private bool NullCheck(Transform target)
     {
         if (!isInitialized || target == null)
         {
             Debug.Log(
                 $"[{GetType().Name}] OnUpdate early return - isInitialized: {isInitialized}, target: {(target == null ? "null" : "not null")}"
             );
-            return;
+            return true;
         }
 
         if (movementHandler == null)
@@ -107,13 +110,18 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
             }
             else
             {
-                return;
+                return true;
             }
         }
+
+        return false;
     }
 
     protected virtual void MoveCharacter(Transform self, Transform target)
     {
+        if (target == null)
+            return;
+
         Vector2 directionToTarget = MovementUtils.GetTargetDirection(
             self.position,
             target.position

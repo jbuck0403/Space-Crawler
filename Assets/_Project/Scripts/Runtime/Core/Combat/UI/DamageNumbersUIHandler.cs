@@ -30,6 +30,7 @@ public class DamageNumbersUIHandler : MonoBehaviour
     private Vector3 offset = new Vector3(0, 1, 0);
 
     private Transform canvasTransform;
+    private Camera mainCamera;
 
     private void Awake()
     {
@@ -41,6 +42,8 @@ public class DamageNumbersUIHandler : MonoBehaviour
                 canvasTransform = canvas.transform;
             }
         }
+
+        mainCamera = Camera.main;
     }
 
     private void OnEnable()
@@ -87,7 +90,7 @@ public class DamageNumbersUIHandler : MonoBehaviour
             return;
         }
 
-        Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPosition + offset);
+        Vector3 screenPos = mainCamera.WorldToScreenPoint(worldPosition + offset);
 
         GameObject damageTextObj = Instantiate(
             damageTextPrefab,

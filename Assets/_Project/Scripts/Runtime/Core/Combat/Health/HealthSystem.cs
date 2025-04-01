@@ -76,8 +76,6 @@ public class HealthSystem : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void Onestroy() { }
-
     public void ModifyMaxHealth(float amount)
     {
         maxHealth += amount;

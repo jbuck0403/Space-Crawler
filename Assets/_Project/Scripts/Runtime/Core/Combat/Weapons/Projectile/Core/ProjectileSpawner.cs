@@ -16,8 +16,7 @@ public static class ProjectileSpawner
         Transform source
     )
     {
-        // Get the base projectile pool
-        var pool = Object.FindObjectOfType<ProjectilePool>();
+        ProjectilePool pool = ProjectilePool.Instance;
         if (pool == null)
         {
             Debug.LogError($"No projectile pool found");

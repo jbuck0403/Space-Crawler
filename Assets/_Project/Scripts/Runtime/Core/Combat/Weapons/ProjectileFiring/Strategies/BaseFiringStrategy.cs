@@ -46,7 +46,11 @@ public class BaseFiringStrategy : ScriptableObject, IFireStrategy
     public virtual void OnUpdate(BaseWeapon weapon, FireConfig config)
     {
         if (!isInitialized || weapon == null)
+        {
+            Debug.Log("###" + enemyController == null);
             return;
+        }
+        Debug.Log("###");
 
         nextFireTime -= Time.deltaTime;
 

@@ -6,7 +6,14 @@ public class ProjectilePool : PoolBase
     [SerializeField]
     int poolCount;
 
-    void Update()
+    public static ProjectilePool Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    private void Update()
     {
         poolCount = pool.Count;
 
