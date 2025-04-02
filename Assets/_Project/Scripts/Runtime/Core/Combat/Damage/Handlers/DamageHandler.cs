@@ -53,7 +53,7 @@ public class DamageHandler : MonoBehaviour
             isCrit
         );
 
-        healthSystem.ModifyHealth(finalDamage);
+        healthSystem.Damage(finalDamage);
         OnDamageTaken.Raise(gameObject, damageTakenEventData);
     }
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -35,28 +36,41 @@ public class HealthSystem : MonoBehaviour
     public float CurrentHealth => currentHealth;
     public bool IsDead => isDead;
 
+    // Delegate for healing modification
+    public delegate float HealingModifier(float amount);
+
+    // Dictionary to track modifiers by source
+    private Dictionary<GameObject, HealingModifier> healingModifiers =
+        new Dictionary<GameObject, HealingModifier>();
+
+    // Add/replace a healing modifier from a source
+    public void AddHealingModifier(GameObject source, HealingModifier modifier)
+    {
+        healingModifiers[source] = modifier; // This replaces any existing modifier from this source
+    }
+
+    // Remove a specific source's modifier
+    public void RemoveHealingModifier(GameObject source)
+    {
+        if (healingModifiers.ContainsKey(source))
+            healingModifiers.Remove(source);
+    }
+
     private void Awake()
     {
         currentHealth = maxHealth;
     }
 
     // positive amount heals, negative amount damages
-    public void ModifyHealth(float amount)
+    private void ModifyHealth(float amount)
     {
         if (currentHealth <= 0)
             return;
-
-        if (amount > 0)
-        {
-            OnHealingReceived.Raise(gameObject, amount);
-        }
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
 
         if (CurrentHealth / MaxHealth <= lowHealthPercent / 100)
         {
-            print("RAISING LOW HEALTH");
-            print(OnLowHealth);
             OnLowHealth.Raise(gameObject);
         }
 
@@ -68,6 +82,27 @@ public class HealthSystem : MonoBehaviour
             isDead = true;
             Die();
         }
+    }
+
+    public void Damage(float amount)
+    {
+        ModifyHealth(amount);
+    }
+
+    public void Heal(float amount)
+    {
+        float modifiedAmount = amount;
+        foreach (var modifier in healingModifiers.Values)
+        {
+            modifiedAmount = modifier(modifiedAmount);
+        }
+
+        // Ensure healing is positive
+        modifiedAmount = Mathf.Max(0, modifiedAmount);
+
+        // Apply healing through existing system
+        OnHealingReceived.Raise(gameObject, modifiedAmount);
+        ModifyHealth(modifiedAmount);
     }
 
     public void Die()
