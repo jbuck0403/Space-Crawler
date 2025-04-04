@@ -97,7 +97,9 @@ public class ShieldHandler : MonoBehaviour
     {
         // reset the shield recharge timer on damage taken
         if (rechargeCountdown != null)
+        {
             StopCoroutine(rechargeCountdown);
+        }
 
         rechargeCountdown = StartCoroutine(CountdownToShieldRecharge());
     }
