@@ -76,9 +76,12 @@ public class DamageHandler : MonoBehaviour
         }
 
         if (damageDealt)
-            shieldHandler.HandleDelayedShieldRecharge();
+        {
+            if (shieldHandler != null)
+                shieldHandler.HandleDelayedShieldRecharge();
 
-        OnDamageTaken.Raise(gameObject, damageTakenEventData);
+            OnDamageTaken.Raise(gameObject, damageTakenEventData);
+        }
     }
 
     public void SetDefenseHandler(IDefenseHandler defenseHandler)
