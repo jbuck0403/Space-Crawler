@@ -7,6 +7,7 @@ public struct DamageData
     public float CritMultiplier { get; private set; }
     public float CritChance { get; private set; }
     public DamageType Type { get; private set; }
+    public bool PenetratesShield { get; private set; }
     public StatusEffectData[] StatusEffectsToApply { get; private set; }
 
     public DamageData(
@@ -15,6 +16,7 @@ public struct DamageData
         float critMultiplier,
         float critChance,
         DamageType damageType,
+        bool penetratesShield = false,
         StatusEffectData[] statusEffectsToApply = null
     )
     {
@@ -23,6 +25,7 @@ public struct DamageData
         CritMultiplier = critMultiplier;
         CritChance = critChance;
         Type = damageType;
+        PenetratesShield = penetratesShield;
         StatusEffectsToApply = statusEffectsToApply;
     }
 

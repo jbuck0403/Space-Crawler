@@ -196,8 +196,14 @@ PrefabInstance:
       addedObject: {fileID: 5880403006701915349}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3080204034210999966, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
+      insertIndex: 3
+      addedObject: {fileID: 6522303497355678474}
+    - targetCorrespondingSourceObject: {fileID: 3080204034210999966, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1578514298758991178}
+    - targetCorrespondingSourceObject: {fileID: 3080204034210999966, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1578222438979382884}
   m_SourcePrefab: {fileID: 100100000, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
 --- !u!4 &2488037743040916224 stripped
 Transform:
@@ -209,6 +215,22 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3080204034210999966, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
   m_PrefabInstance: {fileID: 4994958338086709695}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6522303497355678474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8065591907391604513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccad06d610a455340b22b6db6e44d1ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxShield: 100
+  rechargeAmount: 0.1
+  timeUntilRecharge: 3
+  currentShield: 0
 --- !u!114 &1578514298758991178
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,3 +244,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementConfig: {fileID: 11400000, guid: 46a46fdebec8f0946bb209e0c59dd753, type: 2}
+--- !u!114 &1578222438979382884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8065591907391604513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894c48982aeb3104895636fd6dc62901, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onStatusEffectApplied: {fileID: 11400000, guid: ed8210b82b775fa4ea1bfcb3fa36a87e, type: 2}
+  onStatusEffectRemoved: {fileID: 11400000, guid: 64ef481646d3e9e4eabe991f0a6da95d, type: 2}
+  onAllStatusEffectsRemoved: {fileID: 11400000, guid: 7901b194240787944a6e200acd04fda3, type: 2}
+  onStatusEffectTick: {fileID: 11400000, guid: 9034f57cede95814bb862c4362cbecd2, type: 2}

@@ -6,6 +6,7 @@ public class DamageHandler : MonoBehaviour
 {
     private IDefenseHandler defenseHandler;
     private HealthSystem healthSystem;
+    private ShieldHandler shieldHandler;
 
     [SerializeField]
     private VoidEvent onCriticalHit;
@@ -17,6 +18,7 @@ public class DamageHandler : MonoBehaviour
     {
         healthSystem = GetComponent<HealthSystem>();
         defenseHandler = GetComponent<IDefenseHandler>();
+        shieldHandler = GetComponent<ShieldHandler>();
     }
 
     public void SetNewDefenseHandler(IDefenseHandler defenseHandler)
@@ -53,7 +55,29 @@ public class DamageHandler : MonoBehaviour
             isCrit
         );
 
-        healthSystem.Damage(finalDamage);
+        float overflowDamage = finalDamage;
+        bool damageDealt = false;
+
+        if (shieldHandler != null && !rawDamageData.PenetratesShield && shieldHandler.HasShield)
+        {
+            overflowDamage = shieldHandler.Damage(finalDamage, rawDamageData.Type);
+            float absorbedByShield = Mathf.Abs(finalDamage) - Mathf.Abs(overflowDamage);
+
+            if (absorbedByShield > 0)
+                damageDealt = true;
+            print($"Shield took {absorbedByShield} points of damage");
+        }
+
+        if (overflowDamage < 0)
+        {
+            print($"Overflow damage of {overflowDamage}");
+            healthSystem.Damage(overflowDamage);
+            damageDealt = true;
+        }
+
+        if (damageDealt)
+            shieldHandler.HandleDelayedShieldRecharge();
+
         OnDamageTaken.Raise(gameObject, damageTakenEventData);
     }
 

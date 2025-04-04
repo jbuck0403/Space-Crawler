@@ -17,6 +17,9 @@ public class DamageProfile : ScriptableObject
     private DamageType damageType;
 
     [SerializeField]
+    private bool penetratesShield = false;
+
+    [SerializeField]
     private StatusEffectData[] statusEffectsToApply;
 
     public DamageData CreateDamageData(Transform source)
@@ -27,6 +30,7 @@ public class DamageProfile : ScriptableObject
             critMultiplier,
             critChance,
             damageType,
+            penetratesShield,
             statusEffectsToApply
         );
     }

@@ -47,10 +47,8 @@ public class BaseFiringStrategy : ScriptableObject, IFireStrategy
     {
         if (!isInitialized || weapon == null)
         {
-            Debug.Log("###" + enemyController == null);
             return;
         }
-        Debug.Log("###");
 
         nextFireTime -= Time.deltaTime;
 

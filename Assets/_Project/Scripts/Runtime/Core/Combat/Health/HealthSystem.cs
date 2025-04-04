@@ -36,20 +36,17 @@ public class HealthSystem : MonoBehaviour
     public float CurrentHealth => currentHealth;
     public bool IsDead => isDead;
 
-    // Delegate for healing modification
     public delegate float HealingModifier(float amount);
 
-    // Dictionary to track modifiers by source
+    // dictionary to track modifiers by source
     private Dictionary<GameObject, HealingModifier> healingModifiers =
         new Dictionary<GameObject, HealingModifier>();
 
-    // Add/replace a healing modifier from a source
     public void AddHealingModifier(GameObject source, HealingModifier modifier)
     {
-        healingModifiers[source] = modifier; // This replaces any existing modifier from this source
+        healingModifiers[source] = modifier;
     }
 
-    // Remove a specific source's modifier
     public void RemoveHealingModifier(GameObject source)
     {
         if (healingModifiers.ContainsKey(source))
@@ -86,7 +83,8 @@ public class HealthSystem : MonoBehaviour
 
     public void Damage(float amount)
     {
-        ModifyHealth(amount);
+        float newAmount = -Mathf.Abs(amount);
+        ModifyHealth(newAmount);
     }
 
     public void Heal(float amount)
