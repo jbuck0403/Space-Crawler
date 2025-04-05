@@ -8,27 +8,19 @@ public abstract class ProjectileTypeSO : ScriptableObject
 {
     [Header("Damage Configuration")]
     [SerializeField]
-    protected DamageProfile damageProfile;
+    public DamageProfile damageProfile;
 
     /// <summary>
     /// Spawns a projectile with the given parameters and configures it using the data provider
     /// </summary>
     public virtual Projectile SpawnProjectile(
         Transform firePoint,
-        Vector2 direction,
-        float speed,
         Transform source,
         IProjectileDataProvider dataProvider
     )
     {
         // Use ProjectileSpawner for core spawning functionality
-        Projectile projectile = ProjectileSpawner.SpawnProjectile(
-            firePoint,
-            direction,
-            speed,
-            damageProfile,
-            source
-        );
+        Projectile projectile = ProjectileSpawner.SpawnProjectile(firePoint, damageProfile, source);
 
         if (projectile != null)
         {

@@ -22,16 +22,24 @@ public class DamageProfile : ScriptableObject
     [SerializeField]
     private StatusEffectData[] statusEffectsToApply;
 
-    public DamageData CreateDamageData(Transform source)
+    public DamageData CreateDamageData(
+        Transform source,
+        float? damage = null,
+        float? critMult = null,
+        float? crit = null,
+        DamageType? type = null,
+        bool? pierceShield = null,
+        StatusEffectData[] effects = null
+    )
     {
         return new DamageData(
-            baseDamage,
+            damage ?? baseDamage,
             source,
-            critMultiplier,
-            critChance,
-            damageType,
-            penetratesShield,
-            statusEffectsToApply
+            critMult ?? critMultiplier,
+            crit ?? critChance,
+            type ?? damageType,
+            pierceShield ?? penetratesShield,
+            effects ?? statusEffectsToApply
         );
     }
 }

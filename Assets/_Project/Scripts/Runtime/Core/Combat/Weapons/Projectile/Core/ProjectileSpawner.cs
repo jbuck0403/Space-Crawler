@@ -10,8 +10,6 @@ public static class ProjectileSpawner
     /// </summary>
     public static Projectile SpawnProjectile(
         Transform firePoint,
-        Vector2 direction,
-        float speed,
         DamageProfile damageProfile,
         Transform source
     )
@@ -41,9 +39,6 @@ public static class ProjectileSpawner
         // Initialize the projectile
         projectile.Initialize(pool, damageData);
 
-        // Apply velocity
-        ApplyVelocity(projectileObject, direction, speed);
-
         return projectile;
     }
 
@@ -52,8 +47,6 @@ public static class ProjectileSpawner
     /// </summary>
     public static Projectile SpawnProjectileWithBehavior<T>(
         Transform firePoint,
-        Vector2 direction,
-        float speed,
         DamageProfile damageProfile,
         Transform source,
         params object[] behaviorParams
@@ -61,7 +54,7 @@ public static class ProjectileSpawner
         where T : MonoBehaviour, IProjectileBehavior
     {
         // Spawn the base projectile
-        Projectile projectile = SpawnProjectile(firePoint, direction, speed, damageProfile, source);
+        Projectile projectile = SpawnProjectile(firePoint, damageProfile, source);
         if (projectile == null)
             return null;
 
@@ -83,8 +76,6 @@ public static class ProjectileSpawner
     /// </summary>
     public static Projectile SpawnHomingProjectile(
         Transform firePoint,
-        Vector2 direction,
-        float speed,
         DamageProfile damageProfile,
         Transform source,
         Transform target,
@@ -95,8 +86,6 @@ public static class ProjectileSpawner
         // Spawn a projectile with the homing behavior and pass the target as a parameter
         Projectile projectile = SpawnProjectileWithBehavior<HomingProjectileBehavior>(
             firePoint,
-            direction,
-            speed,
             damageProfile,
             source,
             target,
@@ -105,18 +94,5 @@ public static class ProjectileSpawner
         );
 
         return projectile;
-    }
-
-    private static void ApplyVelocity(GameObject projectileObject, Vector2 direction, float speed)
-    {
-        Rigidbody2D rb = projectileObject.GetComponent<Rigidbody2D>();
-        if (rb != null)
-        {
-            rb.velocity = direction.normalized * speed;
-        }
-        else
-        {
-            Debug.LogWarning("Projectile does not have a Rigidbody component!");
-        }
     }
 }
