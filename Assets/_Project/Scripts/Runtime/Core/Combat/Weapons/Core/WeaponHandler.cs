@@ -29,6 +29,7 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider
 
     public BaseWeaponSO CurrentWeapon => currentWeapon;
     public event Action<BaseWeaponSO> OnWeaponChanged;
+    public Transform FirePoint => firePoint;
 
     private void Awake()
     {
@@ -44,7 +45,7 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider
             Vector2 direction = transform.up;
 
             // Update the weapon's firing state
-            currentWeapon.UpdateFiring(firePoint, direction, transform, gameObject, this);
+            currentWeapon.UpdateFireWeapon(firePoint, direction, transform, gameObject, this);
         }
     }
 

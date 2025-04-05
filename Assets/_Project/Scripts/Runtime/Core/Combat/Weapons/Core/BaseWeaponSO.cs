@@ -95,7 +95,7 @@ public abstract class BaseWeaponSO : ScriptableObject
 
             if (projectile != null)
             {
-                Vector2 modifiedDirection = ApplyAccuracySpread(source.position, fireConfig.spread);
+                Vector2 modifiedDirection = ApplyAccuracySpread(direction, fireConfig.spread);
                 ApplyVelocity(projectile.gameObject, modifiedDirection);
 
                 // Raise event on the source object
@@ -124,7 +124,7 @@ public abstract class BaseWeaponSO : ScriptableObject
     /// <summary>
     /// Update the fire timer for auto weapons
     /// </summary>
-    public virtual bool UpdateFiring(
+    public virtual bool UpdateFireWeapon(
         Transform firePoint,
         Vector2 direction,
         Transform source,

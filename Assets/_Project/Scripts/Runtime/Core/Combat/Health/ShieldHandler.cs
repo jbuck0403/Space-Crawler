@@ -143,7 +143,9 @@ public class ShieldHandler : MonoBehaviour
 
     public void OnDestroy()
     {
-        StopCoroutine(rechargeCountdown);
+        if (rechargeCountdown != null)
+            StopCoroutine(rechargeCountdown);
+
         rechargeCountdown = null;
     }
 }

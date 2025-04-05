@@ -29,13 +29,16 @@ public class BaseEnemyController : BaseCharacterController, IProjectileDataProvi
         {
             movementController.Initialize(this, movementConfig, defaultTarget);
         }
+
+        weaponHandler = GetComponent<WeaponHandler>();
     }
 
     protected override void HandleShooting(Transform target = null)
     {
         if (
-            !MovementUtils.TargetViewObstructed(
-                weapon.firePoint,
+            weaponHandler != null
+            && !MovementUtils.TargetViewObstructed(
+                weaponHandler.FirePoint,
                 movementController.CurrentTarget.gameObject,
                 obstacleLayer
             )
@@ -49,12 +52,9 @@ public class BaseEnemyController : BaseCharacterController, IProjectileDataProvi
         }
     }
 
-    protected override void Start()
+    protected virtual void Start()
     {
         InitializeStrategies();
-
-        base.Start();
-
         ChangeToDefaultStrategy();
     }
 

@@ -9,7 +9,7 @@ public abstract class BaseCharacterController : MonoBehaviour
     [SerializeField]
     protected MovementConfig movementConfig;
 
-    protected BaseWeapon weapon;
+    protected WeaponHandler weaponHandler;
 
     protected bool shooting = false;
 
@@ -17,50 +17,47 @@ public abstract class BaseCharacterController : MonoBehaviour
 
     protected virtual void Awake()
     {
-        weapon = GetComponent<BaseWeapon>();
+        weaponHandler = GetComponent<WeaponHandler>();
     }
 
-    protected virtual void Start()
-    {
-        InitializeWeapon();
-    }
+    // protected virtual void Start()
+    // {
+    //     InitializeWeapon();
+    // }
 
-    protected virtual void InitializeWeapon()
-    {
-        if (
-            weapon != null
-            && weapon.weaponConfig != null
-            && weapon.weaponConfig.firingStrategies != null
-            && weapon.weaponConfig.firingStrategies.Count > 0
-        )
-        {
-            weapon.SetStrategy(weapon.weaponConfig.firingStrategies[0]);
-        }
-    }
+    // protected virtual void InitializeWeapon()
+    // {
+    //     if (
+    //         weapon != null
+    //         && weapon.weaponConfig != null
+    //         && weapon.weaponConfig.firingStrategies != null
+    //         && weapon.weaponConfig.firingStrategies.Count > 0
+    //     )
+    //     {
+    //         weapon.SetStrategy(weapon.weaponConfig.firingStrategies[0]);
+    //     }
+    // }
 
-    public void EnableShooting(bool shooting, bool external = false)
+    public void EnableShooting(bool enabled, bool external = false)
     {
-        if (weapon != null)
-        {
-            this.shooting = shooting;
-            shootingDisabledExternally = external;
-        }
+        shooting = enabled;
+        shootingDisabledExternally = external;
     }
 
     protected virtual void HandleShooting(Transform target = null)
     {
-        if (weapon != null)
+        if (weaponHandler != null)
         {
-            if (shooting)
+            if (shooting && !shootingDisabledExternally)
             {
-                if (!weapon.GetFiring())
+                if (!weaponHandler.GetFiring())
                 {
                     FireWeapon(target);
                 }
             }
             else
             {
-                if (weapon.GetFiring())
+                if (weaponHandler.GetFiring())
                 {
                     StopFiringWeapon();
                 }
@@ -70,16 +67,17 @@ public abstract class BaseCharacterController : MonoBehaviour
 
     protected virtual void FireWeapon(Transform target = null)
     {
-        if (weapon != null)
+        if (weaponHandler != null)
         {
-            weapon.SetCanFire(true);
+            weaponHandler.SetTarget(target);
+            weaponHandler.StartFiring();
         }
     }
 
     protected virtual void StopFiringWeapon()
     {
-        if (weapon != null)
-            weapon.SetCanFire(false);
+        if (weaponHandler != null)
+            weaponHandler.StopFiring();
     }
 
     public MovementConfig GetMovementConfig()

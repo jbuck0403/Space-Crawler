@@ -15,20 +15,6 @@ public class PlayerController : BaseCharacterController, IProjectileDataProvider
 
         movementHandler = new MovementHandler(movementConfig);
         mainCamera = Camera.main;
-        weapon = GetComponent<BaseWeapon>();
-
-        // Set a firing strategy for the weapon
-        if (weapon != null && weapon.weaponConfig != null)
-        {
-            // Use a firing strategy from the weapon config if available
-            if (
-                weapon.weaponConfig.firingStrategies != null
-                && weapon.weaponConfig.firingStrategies.Count > 0
-            )
-            {
-                weapon.SetStrategy(weapon.weaponConfig.firingStrategies[0]);
-            }
-        }
     }
 
     private void Update()
@@ -39,12 +25,15 @@ public class PlayerController : BaseCharacterController, IProjectileDataProvider
 
         if (Input.GetMouseButton(0))
         {
-            FireWeapon();
+            EnableShooting(true);
         }
         else
         {
-            StopFiringWeapon();
+            EnableShooting(false);
         }
+
+        // Handle actual shooting (now delegated to BaseCharacterController)
+        HandleShooting();
     }
 
     private void GetMoveInput()

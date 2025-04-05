@@ -15,8 +15,6 @@ GameObject:
   - component: {fileID: 1464502688549555566}
   - component: {fileID: 3887703589186330965}
   - component: {fileID: 7572673133755291596}
-  - component: {fileID: -5089776167416856219}
-  - component: {fileID: 5590272276130727413}
   - component: {fileID: -1520056413329538645}
   m_Layer: 6
   m_Name: Character
@@ -167,33 +165,6 @@ MonoBehaviour:
   onCriticalHit: {fileID: 11400000, guid: 63de57adf05122c4ab74e0df8bbdb63b, type: 2}
   OnDamageTaken: {fileID: 11400000, guid: 84635edb17010c84eb66cca8c8bdad52, type: 2}
 --- !u!114 &7572673133755291596
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3080204034210999966}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 000833c22cdc313428b14b6eddd0ee6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &-5089776167416856219
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3080204034210999966}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fd84e5b8593ba745ac9e3d0a6d5c1c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weaponConfig: {fileID: 11400000, guid: b1a83a032de778b4499999aa8ef5fcb0, type: 2}
-  firePoint: {fileID: 3833714410248275113}
-  OnFireWeapon: {fileID: 11400000, guid: 223caf201c0b288429a112fd8f959e9b, type: 2}
---- !u!114 &5590272276130727413
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

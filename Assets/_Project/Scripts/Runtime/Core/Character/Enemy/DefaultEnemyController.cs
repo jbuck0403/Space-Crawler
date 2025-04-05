@@ -3,7 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(HealthSystem))]
 [RequireComponent(typeof(BaseMovementController))]
-[RequireComponent(typeof(BaseWeapon))]
+[RequireComponent(typeof(WeaponHandler))]
 public class DefaultEnemyController : BaseEnemyController
 {
     [SerializeField]
