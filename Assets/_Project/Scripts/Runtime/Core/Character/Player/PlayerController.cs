@@ -32,8 +32,26 @@ public class PlayerController : BaseCharacterController, IProjectileDataProvider
             EnableShooting(false);
         }
 
-        // Handle actual shooting (now delegated to BaseCharacterController)
         HandleShooting();
+        HandleWeaponSwap();
+    }
+
+    private bool HandleWeaponSwap()
+    {
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            return weaponHandler.SwitchToWeapon(0); // First weapon
+        }
+        else if (Input.GetKeyDown(KeyCode.F2))
+        {
+            return weaponHandler.SwitchToWeapon(1); // Second weapon
+        }
+        else if (Input.GetKeyDown(KeyCode.F3))
+        {
+            return weaponHandler.SwitchToWeapon(2); // Third weapon
+        }
+
+        return false;
     }
 
     private void GetMoveInput()

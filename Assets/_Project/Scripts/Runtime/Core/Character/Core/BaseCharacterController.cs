@@ -50,7 +50,7 @@ public abstract class BaseCharacterController : MonoBehaviour
         {
             if (shooting && !shootingDisabledExternally)
             {
-                if (!weaponHandler.GetFiring())
+                if (!weaponHandler.GetFiring() && weaponHandler.CanFire())
                 {
                     FireWeapon(target);
                 }

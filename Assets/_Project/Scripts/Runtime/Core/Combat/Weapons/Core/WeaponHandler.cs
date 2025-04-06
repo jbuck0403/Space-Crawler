@@ -38,13 +38,10 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider
 
     private void Update()
     {
-        // Handle auto firing for the current weapon if enabled
         if (isFiring && currentWeapon != null)
         {
-            // Get the firing direction (up vector in 2D top-down)
             Vector2 direction = transform.up;
 
-            // Update the weapon's firing state
             currentWeapon.UpdateFireWeapon(firePoint, direction, transform, gameObject, this);
         }
     }
@@ -56,6 +53,11 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider
 
         BaseWeaponSO instance = weapon.Initialize(this);
         weaponInstances.Add(instance);
+    }
+
+    public bool CanFire()
+    {
+        return currentWeapon.CanFire();
     }
 
     private void InitializeWeapons()
@@ -72,25 +74,28 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider
             InitializeWeapon(weaponDef);
         }
 
-        // Use weaponInstances for actual weapon references
         currentWeaponIndex = Mathf.Clamp(startingWeaponIndex, 0, weaponInstances.Count - 1);
         SwitchToWeapon(currentWeaponIndex);
     }
 
-    public void SwitchToWeapon(int index)
+    public bool SwitchToWeapon(int index)
     {
+        if (index < weaponInstances.Count)
+            print($"Swapping to {weaponInstances[index].name}");
+
         if (index < 0 || index >= weaponInstances.Count)
         {
             Debug.LogWarning($"Invalid weapon index: {index}");
-            return;
+            return false;
         }
 
         currentWeaponIndex = index;
         currentWeapon = weaponInstances[index];
 
-        // notify listeners
         OnWeaponChanged?.Invoke(currentWeapon);
         OnWeaponSwitched.Raise(gameObject);
+
+        return true;
     }
 
     public void SwitchToNextWeapon()
@@ -107,11 +112,9 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider
 
     public void StartFiring()
     {
-        isFiring = true;
-
-        // If not using auto-fire, immediately fire once
-        if (currentWeapon != null)
+        if (!isFiring && currentWeapon != null)
         {
+            isFiring = true;
             Vector2 direction = transform.up;
             currentWeapon.FireWeapon(firePoint, direction, transform, gameObject, this);
         }
@@ -146,7 +149,6 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider
         return Vector2.Distance(transform.position, currentTarget.position);
     }
 
-    // Manual firing method (can be called from other scripts)
     public bool FireWeapon(Vector2? direction = null)
     {
         if (currentWeapon == null)
@@ -156,32 +158,32 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider
         return currentWeapon.FireWeapon(firePoint, fireDirection, transform, gameObject, this);
     }
 
-#if ENABLE_INPUT_SYSTEM
-    // Input System integration
-    public void OnFire(InputValue value)
-    {
-        if (value.isPressed)
-        {
-            StartFiring();
-        }
-        else
-        {
-            StopFiring();
-        }
-    }
+    // #if ENABLE_INPUT_SYSTEM
+    //     // Input System integration
+    //     public void OnFire(InputValue value)
+    //     {
+    //         if (value.isPressed)
+    //         {
+    //             StartFiring();
+    //         }
+    //         else
+    //         {
+    //             StopFiring();
+    //         }
+    //     }
 
-    public void OnSwitchWeapon(InputValue value)
-    {
-        float direction = value.Get<float>();
+    //     public void OnSwitchWeapon(InputValue value)
+    //     {
+    //         float direction = value.Get<float>();
 
-        if (direction > 0)
-        {
-            SwitchToNextWeapon();
-        }
-        else if (direction < 0)
-        {
-            SwitchToPreviousWeapon();
-        }
-    }
-#endif
+    //         if (direction > 0)
+    //         {
+    //             SwitchToNextWeapon();
+    //         }
+    //         else if (direction < 0)
+    //         {
+    //             SwitchToPreviousWeapon();
+    //         }
+    //     }
+    // #endif
 }

@@ -277,6 +277,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponDefinitions:
   - {fileID: 11400000, guid: a7ec9984d9c8a604eaeaa08e85917fc1, type: 2}
+  - {fileID: 11400000, guid: d45879d49c9afee4398238c7a8f9871f, type: 2}
   firePoint: {fileID: 8099089328420793622}
   startingWeaponIndex: 0
   OnWeaponSwitched: {fileID: 11400000, guid: c3c5e421a7051704f89e4fe8d790cde0, type: 2}

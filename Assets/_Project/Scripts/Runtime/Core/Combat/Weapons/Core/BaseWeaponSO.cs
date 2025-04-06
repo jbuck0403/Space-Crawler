@@ -81,10 +81,10 @@ public abstract class BaseWeaponSO : ScriptableObject
         IProjectileDataProvider provider
     )
     {
-        if (CanFire())
-        {
-            Projectile projectile = GetProjectile(firePoint, source, provider);
+        Projectile projectile = GetProjectile(firePoint, source, provider);
 
+        if (damageModifier != 1f)
+        {
             DamageData damageData = projectile.damageData;
             float newDamage = damageData.Amount * damageModifier;
 
@@ -92,17 +92,17 @@ public abstract class BaseWeaponSO : ScriptableObject
                 source,
                 damage: newDamage
             );
+        }
 
-            if (projectile != null)
-            {
-                Vector2 modifiedDirection = ApplyAccuracySpread(direction, fireConfig.spread);
-                ApplyVelocity(projectile.gameObject, modifiedDirection);
+        if (projectile != null)
+        {
+            Vector2 modifiedDirection = ApplyAccuracySpread(direction, fireConfig.spread);
+            ApplyVelocity(projectile.gameObject, modifiedDirection);
 
-                // Raise event on the source object
-                OnFireWeapon.Raise(sourceObject);
+            // Raise event on the source object
+            OnFireWeapon.Raise(sourceObject);
 
-                return true;
-            }
+            return true;
         }
 
         return false;
@@ -132,7 +132,10 @@ public abstract class BaseWeaponSO : ScriptableObject
         IProjectileDataProvider provider
     )
     {
-        return FireWeapon(firePoint, direction, source, sourceObject, provider);
+        if (CanFire())
+            return FireWeapon(firePoint, direction, source, sourceObject, provider);
+
+        return false;
     }
 
     /// <summary>
