@@ -2,12 +2,21 @@ using System;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class PlayerController : BaseCharacterController, IProjectileDataProvider
+public class PlayerController
+    : BaseCharacterController,
+        IProjectileDataProvider,
+        IWeaponAbilityDataProvider
 {
     private MovementHandler movementHandler;
     private Vector2 moveInput;
     private Vector2 aimDirection;
     private Camera mainCamera;
+
+    private Transform currentTarget;
+
+    // Add dash timer variables
+    private bool applyingExternalMovement = false;
+    private float externalMovementDisableTime = 0f;
 
     protected override void Awake()
     {
@@ -17,11 +26,40 @@ public class PlayerController : BaseCharacterController, IProjectileDataProvider
         mainCamera = Camera.main;
     }
 
+    public void SetApplyingExternalMovement(bool value, float disableTime = default)
+    {
+        applyingExternalMovement = value;
+
+        if (disableTime != default)
+        {
+            externalMovementDisableTime = Time.time + disableTime;
+        }
+    }
+
+    private void HandleDisablingExternalMovement()
+    {
+        if (Time.time >= externalMovementDisableTime)
+        {
+            SetApplyingExternalMovement(false);
+            externalMovementDisableTime = default;
+        }
+    }
+
     private void Update()
     {
-        GetMoveInput();
+        HandleDisablingExternalMovement();
         GetAimDirection();
-        MoveAndFaceTarget();
+
+        if (!applyingExternalMovement)
+        {
+            GetMoveInput();
+            MoveAndFaceTarget();
+        }
+        else
+        {
+            // give external movement commands a chance to apply their velocity changes
+            movementHandler.ApplyMovement(transform, Vector2.zero, Time.deltaTime);
+        }
 
         if (Input.GetMouseButton(0))
         {
@@ -34,24 +72,33 @@ public class PlayerController : BaseCharacterController, IProjectileDataProvider
 
         HandleShooting();
         HandleWeaponSwap();
+        HandleWeaponAbility();
     }
 
     private bool HandleWeaponSwap()
     {
         if (Input.GetKeyDown(KeyCode.F1))
         {
-            return weaponHandler.SwitchToWeapon(0); // First weapon
+            return weaponHandler.SwitchToWeapon(0);
         }
         else if (Input.GetKeyDown(KeyCode.F2))
         {
-            return weaponHandler.SwitchToWeapon(1); // Second weapon
+            return weaponHandler.SwitchToWeapon(1);
         }
         else if (Input.GetKeyDown(KeyCode.F3))
         {
-            return weaponHandler.SwitchToWeapon(2); // Third weapon
+            return weaponHandler.SwitchToWeapon(2);
         }
 
         return false;
+    }
+
+    private void HandleWeaponAbility()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            weaponHandler.ActivateWeaponAbility(this);
+        }
     }
 
     private void GetMoveInput()
@@ -65,14 +112,8 @@ public class PlayerController : BaseCharacterController, IProjectileDataProvider
     private void GetAimDirection()
     {
         // get mouse position in world space
-        Vector3 mouseWorldPosition = mainCamera.ScreenToWorldPoint(
-            new Vector3(
-                Input.mousePosition.x,
-                Input.mousePosition.y,
-                -mainCamera.transform.position.z
-            )
-        );
-        aimDirection = ((Vector2)mouseWorldPosition - (Vector2)transform.position).normalized;
+        Vector2 mouseWorldPosition = GetMouseWorldPosition();
+        aimDirection = (mouseWorldPosition - (Vector2)transform.position).normalized;
     }
 
     private void MoveAndFaceTarget()
@@ -101,6 +142,30 @@ public class PlayerController : BaseCharacterController, IProjectileDataProvider
 
     public Transform GetTarget()
     {
-        throw new NotImplementedException();
+        return currentTarget;
+    }
+
+    public Vector2 GetAbilityTarget()
+    {
+        Vector2 mouseWorldPosition = GetMouseWorldPosition();
+        return mouseWorldPosition;
+    }
+
+    public Transform GetWeaponOwnerTransform()
+    {
+        return transform;
+    }
+
+    private Vector3 GetMouseWorldPosition()
+    {
+        Vector3 mouseWorldPosition = mainCamera.ScreenToWorldPoint(
+            new Vector3(
+                Input.mousePosition.x,
+                Input.mousePosition.y,
+                -mainCamera.transform.position.z
+            )
+        );
+
+        return mouseWorldPosition;
     }
 }

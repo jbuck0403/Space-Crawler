@@ -68,7 +68,6 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider
             return;
         }
 
-        // Initialize all weapons
         foreach (var weaponDef in weaponDefinitions)
         {
             InitializeWeapon(weaponDef);
@@ -114,9 +113,7 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider
     {
         if (!isFiring && currentWeapon != null)
         {
-            isFiring = true;
-            Vector2 direction = transform.up;
-            currentWeapon.FireWeapon(firePoint, direction, transform, gameObject, this);
+            isFiring = FireWeapon();
         }
     }
 
@@ -156,6 +153,14 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider
 
         Vector2 fireDirection = direction ?? transform.up;
         return currentWeapon.FireWeapon(firePoint, fireDirection, transform, gameObject, this);
+    }
+
+    public void ActivateWeaponAbility(IWeaponAbilityDataProvider provider)
+    {
+        if (currentWeapon.CanActivateAbility())
+        {
+            currentWeapon.UseUniqueAbility(provider);
+        }
     }
 
     // #if ENABLE_INPUT_SYSTEM

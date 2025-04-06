@@ -1,8 +1,15 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PistolWeapon", menuName = "SpaceShooter/Weapon Types/Pistol")]
 public class PistolWeapon : BaseWeaponSO
 {
+    [SerializeField]
+    private float dashForce = 20f;
+
+    [SerializeField]
+    private float dashDuration = 0.2f;
+
     public override bool FireWeapon(
         Transform firePoint,
         Vector2 direction,
@@ -16,8 +23,19 @@ public class PistolWeapon : BaseWeaponSO
         return fired;
     }
 
-    protected override void UniqueAbility()
+    protected override void UniqueAbility(IWeaponAbilityDataProvider provider)
     {
-        throw new System.NotImplementedException();
+        MovementHandler movementHandler = provider.GetMovementHandler();
+
+        Vector2 dashDirection = MovementUtils.GetTargetDirection(
+            provider.GetWeaponOwnerTransform().position,
+            provider.GetAbilityTarget()
+        );
+
+        provider.SetApplyingExternalMovement(true, dashDuration);
+
+        movementHandler.ApplyVelocity(dashDirection * dashForce);
+
+        UpdateNextAbilityTime();
     }
 }

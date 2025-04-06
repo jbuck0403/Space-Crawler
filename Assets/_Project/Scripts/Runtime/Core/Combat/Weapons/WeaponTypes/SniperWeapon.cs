@@ -16,7 +16,7 @@ public class SniperWeapon : BaseWeaponSO
         return fired;
     }
 
-    protected override void UniqueAbility()
+    protected override void UniqueAbility(IWeaponAbilityDataProvider provider)
     {
         throw new System.NotImplementedException();
     }

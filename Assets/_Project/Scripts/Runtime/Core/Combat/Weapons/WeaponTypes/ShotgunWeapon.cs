@@ -19,7 +19,7 @@ public class ShotgunWeapon : BaseWeaponSO
         return fired1 && fired2 && fired3;
     }
 
-    protected override void UniqueAbility()
+    protected override void UniqueAbility(IWeaponAbilityDataProvider provider)
     {
         throw new System.NotImplementedException();
     }

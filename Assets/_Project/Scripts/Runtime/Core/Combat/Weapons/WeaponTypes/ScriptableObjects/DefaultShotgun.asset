@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 042da40ffefa8124cb0fcda942f2da78, type: 3}
   m_Name: DefaultShotgun
   m_EditorClassIdentifier: 
-  fireConfig: {fileID: 0}
-  projectileType: {fileID: 0}
-  OnFireWeapon: {fileID: 0}
+  fireConfig: {fileID: 11400000, guid: cf8f47ba36317ea4980d82639ffcc77c, type: 2}
+  projectileType: {fileID: 11400000, guid: 2ae3f0555f5cae74080e5f6308ab8d07, type: 2}
+  OnFireWeapon: {fileID: 11400000, guid: 223caf201c0b288429a112fd8f959e9b, type: 2}
   damageModifier: 1
   velocityModifier: 1

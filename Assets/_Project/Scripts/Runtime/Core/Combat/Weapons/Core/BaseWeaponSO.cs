@@ -22,9 +22,12 @@ public abstract class BaseWeaponSO : ScriptableObject
     [SerializeField]
     protected float velocityModifier = 1f;
 
-    // Runtime state (not serialized)
+    [SerializeField]
+    protected float abilityCooldown = 5f;
+
     protected bool isInitialized = false;
     protected float nextFireTime = 0f;
+    protected float nextAbilityTime = 0f;
 
     // Properties
     public FireConfig FireConfig => fireConfig;
@@ -119,6 +122,16 @@ public abstract class BaseWeaponSO : ScriptableObject
     protected void UpdateNextFireTime()
     {
         nextFireTime = Time.time + fireConfig.fireRate;
+    }
+
+    public bool CanActivateAbility()
+    {
+        return Time.time >= nextAbilityTime;
+    }
+
+    protected void UpdateNextAbilityTime()
+    {
+        nextAbilityTime = Time.time + abilityCooldown;
     }
 
     /// <summary>
@@ -217,10 +230,10 @@ public abstract class BaseWeaponSO : ScriptableObject
         return spreadDegrees * Mathf.PI / 180f;
     }
 
-    public void UseUniqueAbility()
+    public void UseUniqueAbility(IWeaponAbilityDataProvider provider)
     {
-        UniqueAbility();
+        UniqueAbility(provider);
     }
 
-    protected abstract void UniqueAbility();
+    protected abstract void UniqueAbility(IWeaponAbilityDataProvider provider);
 }
