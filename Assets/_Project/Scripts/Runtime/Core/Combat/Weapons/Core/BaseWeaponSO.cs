@@ -100,7 +100,7 @@ public abstract class BaseWeaponSO : ScriptableObject
 
                 // Raise event on the source object
                 OnFireWeapon.Raise(sourceObject);
-                UpdateNextFireTime();
+
                 return true;
             }
         }
@@ -116,7 +116,7 @@ public abstract class BaseWeaponSO : ScriptableObject
         return Time.time >= nextFireTime;
     }
 
-    private void UpdateNextFireTime()
+    protected void UpdateNextFireTime()
     {
         nextFireTime = Time.time + fireConfig.fireRate;
     }
@@ -213,4 +213,11 @@ public abstract class BaseWeaponSO : ScriptableObject
         // 180 degrees = PI radians
         return spreadDegrees * Mathf.PI / 180f;
     }
+
+    public void UseUniqueAbility()
+    {
+        UniqueAbility();
+    }
+
+    protected abstract void UniqueAbility();
 }
