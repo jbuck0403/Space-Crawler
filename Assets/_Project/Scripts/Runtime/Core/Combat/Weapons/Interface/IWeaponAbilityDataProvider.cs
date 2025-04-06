@@ -6,4 +6,5 @@ public interface IWeaponAbilityDataProvider
     public Vector2 GetAbilityTarget();
     public Transform GetWeaponOwnerTransform();
     public void SetApplyingExternalMovement(bool value, float disableTime = default);
+    public Transform GetFirePoint();
 }

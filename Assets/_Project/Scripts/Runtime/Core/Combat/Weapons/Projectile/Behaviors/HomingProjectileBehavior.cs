@@ -86,4 +86,6 @@ public class HomingProjectileBehavior : BaseProjectileBehavior
         target = null;
         base.Cleanup();
     }
+
+    public override void OnHit() { }
 }

@@ -168,4 +168,9 @@ public class PlayerController
 
         return mouseWorldPosition;
     }
+
+    public Transform GetFirePoint()
+    {
+        return weaponHandler.FirePoint;
+    }
 }

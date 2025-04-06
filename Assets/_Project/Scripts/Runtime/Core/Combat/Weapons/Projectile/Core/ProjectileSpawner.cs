@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -68,6 +69,8 @@ public static class ProjectileSpawner
         // Initialize the behavior with provided parameters
         behavior.Initialize(projectile, behaviorParams);
 
+        projectile.CanonizeBehaviors();
+
         return projectile;
     }
 
@@ -91,6 +94,24 @@ public static class ProjectileSpawner
             target,
             turnSpeed,
             config
+        );
+
+        return projectile;
+    }
+
+    public static Projectile SpawnGrenadeProjectile(
+        Transform firePoint,
+        DamageProfile damageProfile,
+        Transform source,
+        object[] parameters
+    )
+    {
+        // Spawn a projectile with the Grenade behavior and pass the target as a parameter
+        Projectile projectile = SpawnProjectileWithBehavior<GrenadeProjectileBehavior>(
+            firePoint,
+            damageProfile,
+            source,
+            parameters
         );
 
         return projectile;

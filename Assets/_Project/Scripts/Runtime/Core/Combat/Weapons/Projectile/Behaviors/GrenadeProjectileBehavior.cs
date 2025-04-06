@@ -3,11 +3,13 @@ using UnityEngine;
 public class GrenadeProjectileBehavior : BaseProjectileBehavior
 {
     private int numProjectiles = 5;
-    private Vector2[] directions;
     private bool exploded = false;
     private DamageProfile damageProfile;
     private Transform source;
     private float fuseTime;
+    private FireConfig fireConfig;
+
+    private Projectile grenadeProjectile;
 
     protected override void InitializeFromParams(object[] parameters)
     {
@@ -26,13 +28,23 @@ public class GrenadeProjectileBehavior : BaseProjectileBehavior
 
         if (parameters[3] is float fuseTime)
         {
-            this.fuseTime = fuseTime;
+            this.fuseTime = Time.time + fuseTime;
         }
+
+        if (parameters[4] is FireConfig fireConfig)
+        {
+            this.fireConfig = fireConfig;
+        }
+
+        grenadeProjectile = GetComponent<Projectile>();
     }
 
     private void Update()
     {
-        // count down until explosion time
+        if (Time.time >= fuseTime)
+        {
+            Explode();
+        }
     }
 
     private void Explode()
@@ -41,10 +53,24 @@ public class GrenadeProjectileBehavior : BaseProjectileBehavior
         {
             for (int i = 0; i < numProjectiles; i++)
             {
-                ProjectileSpawner.SpawnProjectile(transform, damageProfile, source);
+                Projectile projectile = ProjectileSpawner.SpawnProjectile(
+                    transform,
+                    damageProfile,
+                    source
+                );
+                Vector2[] projectileDirections = GetProjectileDirections();
+
+                ProjectileSpawner.ApplyVelocity(
+                    projectile.gameObject,
+                    projectileDirections[i],
+                    fireConfig
+                );
             }
 
             exploded = true;
+
+            if (grenadeProjectile != null)
+                grenadeProjectile.DestroyProjectile();
         }
     }
 
@@ -66,5 +92,10 @@ public class GrenadeProjectileBehavior : BaseProjectileBehavior
         }
 
         return directions;
+    }
+
+    public override void OnHit()
+    {
+        Explode();
     }
 }

@@ -18,7 +18,7 @@ public class FireConfig : ScriptableObject
     [Range(0, 180)]
     public float spread = 90f;
 
-    [Range(10, 100)]
+    [Range(0, 100)]
     public float projectileSpeed = 10f;
 
     private void OnValidate()

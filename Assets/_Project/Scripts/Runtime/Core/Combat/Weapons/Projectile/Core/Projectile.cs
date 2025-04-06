@@ -17,6 +17,7 @@ public class Projectile : MonoBehaviour
 
     private int behaviorsCleanedUp = 0;
     private int totalBehaviors = 0;
+    private IProjectileBehavior[] behaviors;
 
     protected virtual IEnumerator SelfDestruct()
     {
@@ -31,6 +32,12 @@ public class Projectile : MonoBehaviour
         this.damageData = damageData;
     }
 
+    public virtual void CanonizeBehaviors()
+    {
+        behaviors = GetComponents<IProjectileBehavior>();
+        totalBehaviors = behaviors.Length;
+    }
+
     private void OnEnable()
     {
         if (selfDestructTime != 0f)
@@ -43,9 +50,6 @@ public class Projectile : MonoBehaviour
     {
         gameObject.SetActive(false);
         behaviorsCleanedUp = 0;
-
-        var behaviors = GetComponents<IProjectileBehavior>();
-        totalBehaviors = behaviors.Length;
 
         // if no behaviors to clean up, destroy immediately
         if (totalBehaviors == 0)
@@ -75,8 +79,16 @@ public class Projectile : MonoBehaviour
 
     public virtual void OnHit(GameObject hitGameObject)
     {
-        print("#StatusEffect# OnHit");
         damageData.ApplyAllStatusEffects(hitGameObject);
+
+        if (totalBehaviors > 0)
+        {
+            foreach (var behavior in behaviors)
+            {
+                behavior.OnHit();
+            }
+        }
+
         hasDealtDamage = true;
     }
 

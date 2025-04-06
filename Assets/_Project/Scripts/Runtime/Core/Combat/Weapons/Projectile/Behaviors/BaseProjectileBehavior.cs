@@ -38,4 +38,6 @@ public abstract class BaseProjectileBehavior : MonoBehaviour, IProjectileBehavio
     {
         OnCleanupComplete?.Invoke();
     }
+
+    public abstract void OnHit();
 }
