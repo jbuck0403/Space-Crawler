@@ -95,4 +95,66 @@ public static class ProjectileSpawner
 
         return projectile;
     }
+
+    /// <summary>
+    /// Apply velocity to a projectile in the specified direction
+    /// </summary>
+    public static void ApplyVelocity(
+        GameObject projectile,
+        Vector2 direction,
+        FireConfig fireConfig,
+        float velocityModifier = 1f,
+        float velocityOverload = 1f
+    )
+    {
+        if (projectile == null)
+            return;
+
+        Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            float projectileSpeed =
+                velocityOverload == 1f
+                    ? fireConfig.projectileSpeed * velocityModifier
+                    : velocityOverload * velocityModifier;
+
+            rb.velocity = projectileSpeed * direction.normalized;
+        }
+        else
+        {
+            Debug.LogWarning(
+                $"Projectile {projectile.name} has no Rigidbody2D component to apply velocity to"
+            );
+        }
+    }
+
+    /// <summary>
+    /// Apply accuracy spread to the direction vector
+    /// </summary>
+    public static Vector2 ApplyAccuracySpread(FireConfig fireConfig, Vector2 baseDirection)
+    {
+        if (fireConfig.accuracy >= 1f)
+            return baseDirection;
+
+        float maxSpreadRadians =
+            ConvertSpreadDegreesToRadians(fireConfig.spread) * (1f - fireConfig.accuracy);
+
+        float randomSpread = Random.Range(-maxSpreadRadians / 2f, maxSpreadRadians / 2f);
+
+        float cos = Mathf.Cos(randomSpread);
+        float sin = Mathf.Sin(randomSpread);
+        return new Vector2(
+            baseDirection.x * cos - baseDirection.y * sin,
+            baseDirection.x * sin + baseDirection.y * cos
+        );
+    }
+
+    private static float ConvertSpreadDegreesToRadians(float spreadDegrees)
+    {
+        // Clamp the input to valid range
+        spreadDegrees = Mathf.Clamp(spreadDegrees, 0f, 180f);
+
+        // 180 degrees = PI radians
+        return spreadDegrees * Mathf.PI / 180f;
+    }
 }
