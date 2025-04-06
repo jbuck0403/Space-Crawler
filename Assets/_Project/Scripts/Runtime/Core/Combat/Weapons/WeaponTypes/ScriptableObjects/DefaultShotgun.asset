@@ -20,7 +20,7 @@ MonoBehaviour:
   abilityCooldown: 5
   numFragments: 8
   fuseTime: 2
-  grenadeProjectileDamageProfile: {fileID: 0}
-  grenadeProjectileFireConfig: {fileID: 0}
-  grenadeShrapnelDamageProfile: {fileID: 0}
-  grenadeShrapnelFireConfig: {fileID: 0}
+  grenadeProjectileDamageProfile: {fileID: 11400000, guid: 0377062de9a4d974ba20fa5ba5f9f048, type: 2}
+  grenadeProjectileFireConfig: {fileID: 11400000, guid: 7bf99c51cbc41f24bbcf2db0ec8b448e, type: 2}
+  grenadeShrapnelDamageProfile: {fileID: 11400000, guid: facbd86698fd3934aa4c1004c0a22ded, type: 2}
+  grenadeShrapnelFireConfig: {fileID: 11400000, guid: c8d90b9ddbe397645b93b279a5d91cf3, type: 2}
