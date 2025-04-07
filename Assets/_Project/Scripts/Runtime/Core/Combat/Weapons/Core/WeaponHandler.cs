@@ -157,7 +157,7 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider
 
     public void ActivateWeaponAbility(IWeaponAbilityDataProvider provider)
     {
-        if (currentWeapon.CanActivateAbility())
+        if (currentWeapon != null && currentWeapon.CanActivateAbility())
         {
             currentWeapon.UseUniqueAbility(provider);
         }

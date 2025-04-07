@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a0b561b69c3d824aa174a861d3acc26, type: 3}
+  m_Name: BurningAmmoStatusEffectData
+  m_EditorClassIdentifier: 
+  effectType: 0
+  duration: 2
+  tickRate: 1
+  isStackable: 1
+  maxStacks: 5
+  description: 
+  icon: {fileID: 0}
+  baseDamage: 1
+  critMultiplier: 1.5
+  critChance: 0.1
+  damageType: 2

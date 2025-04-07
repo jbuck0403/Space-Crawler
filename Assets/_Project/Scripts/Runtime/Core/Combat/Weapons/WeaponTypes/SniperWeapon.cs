@@ -27,8 +27,8 @@ public class SniperWeapon : BaseWeaponSO
     private float originalVelocityModifier;
     private float originalAccuracy;
 
-    public delegate void ChargeUpdatedHandler(float chargePercent);
-    public event ChargeUpdatedHandler OnChargeUpdated;
+    // public delegate void ChargeUpdatedHandler(float chargePercent);
+    // public event ChargeUpdatedHandler OnChargeUpdated;
 
     public override bool FireWeapon(
         Transform firePoint,

@@ -40,7 +40,6 @@ public abstract class BaseWeaponSO : ScriptableObject
     {
         BaseWeaponSO instance = Instantiate(this);
 
-        instance.fireConfig.accuracy *= velocityModifier;
         instance.nextFireTime = 0f;
         instance.isInitialized = true;
 
