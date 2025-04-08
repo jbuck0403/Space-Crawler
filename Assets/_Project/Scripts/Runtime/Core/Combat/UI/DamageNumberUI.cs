@@ -23,7 +23,6 @@ public class DamageNumberUI : MonoBehaviour
         float maxY
     )
     {
-        // Cache components
         textComponent = GetComponent<TextMeshProUGUI>();
         if (textComponent == null)
         {
@@ -36,7 +35,6 @@ public class DamageNumberUI : MonoBehaviour
             }
         }
 
-        // Store the starting position and animation parameters
         startPos = transform.position;
         textColor = color;
         movementCurve = movement;
@@ -45,16 +43,12 @@ public class DamageNumberUI : MonoBehaviour
         maxXMovement = maxX;
         maxYMovement = maxY;
 
-        // Set up the text
         textComponent.text = text;
 
-        // Create a material instance to avoid affecting other text
         textComponent.fontMaterial = new Material(textComponent.fontMaterial);
 
-        // Set initial colors with full opacity
         SetTextOpacity(1f);
 
-        // Start the animation
         StartCoroutine(AnimateDamageNumber());
     }
 
@@ -74,33 +68,24 @@ public class DamageNumberUI : MonoBehaviour
             elapsed += Time.deltaTime;
             float normalizedTime = elapsed / duration;
 
-            // Evaluate the movement curve at this time
-            // The curve's Y value represents the percentage of maxYMovement to apply
             float curveValue = movementCurve.Evaluate(normalizedTime);
 
-            // Calculate position based on curve evaluation
-            // X position is determined by normalizedTime * maxXMovement
-            // Y position is determined by the curve's Y value * maxYMovement
             Vector3 offset = new Vector3(
-                normalizedTime * maxXMovement, // X moves based on time
-                curveValue * maxYMovement, // Y moves based on curve height
+                normalizedTime * maxXMovement,
+                curveValue * maxYMovement,
                 0
             );
 
-            // Apply the position
             transform.position = startPos + offset;
 
-            // Get opacity directly from opacity curve (curve value of 0 = transparent, 1 = opaque)
             float opacity = opacityCurve.Evaluate(normalizedTime);
             SetTextOpacity(opacity);
 
             yield return null;
         }
 
-        // Ensure we're fully transparent before destroying
         SetTextOpacity(0f);
 
-        // Self-destruct when animation is complete
         Destroy(gameObject);
     }
 }

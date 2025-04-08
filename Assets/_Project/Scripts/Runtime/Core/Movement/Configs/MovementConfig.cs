@@ -17,7 +17,6 @@ public class MovementConfig : ScriptableObject
     [Tooltip("How quickly the entity rotates to face movement direction")]
     public float rotationSpeed = 10f;
 
-    // Optional: Add validation
     private void OnValidate()
     {
         maxSpeed = Mathf.Max(0.1f, maxSpeed);

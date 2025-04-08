@@ -1,7 +1,17 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MovementHandler
 {
+    // Delegate type for modifying movement config
+    public delegate MovementConfig MovementConfigModifier(MovementConfig config);
+
+    // List of active movement config modifiers
+    private List<MovementConfigModifier> movementModifiers = new List<MovementConfigModifier>();
+
+    // Single instance of modified config that gets updated when modifiers change
+    private MovementConfig modifiedConfig;
+
     public float maxSpeed;
     public float rotationSpeed;
     public float acceleration;
@@ -21,6 +31,9 @@ public class MovementHandler
 
         prevConfig = this.config;
         this.config = config;
+
+        modifiedConfig = ScriptableObject.CreateInstance<MovementConfig>();
+        UpdateModifiedConfig();
     }
 
     public MovementHandler(MovementConfig config)
@@ -34,14 +47,17 @@ public class MovementHandler
         float deltaTime
     )
     {
+        // Get the modified config for this frame
+        MovementConfig modifiedConfig = GetModifiedConfig();
+
         // Accelerate or decelerate based on input
         if (targetDirection != Vector2.zero)
         {
             // Accelerate towards target direction
             currentVelocity = Vector2.MoveTowards(
                 currentVelocity,
-                targetDirection * maxSpeed,
-                acceleration * deltaTime
+                targetDirection * modifiedConfig.maxSpeed,
+                modifiedConfig.acceleration * deltaTime
             );
         }
         else
@@ -50,7 +66,7 @@ public class MovementHandler
             currentVelocity = Vector2.MoveTowards(
                 currentVelocity,
                 Vector2.zero,
-                deceleration * deltaTime
+                modifiedConfig.deceleration * deltaTime
             );
         }
 
@@ -63,7 +79,7 @@ public class MovementHandler
         float newRotation = CalculateRotation(
             targetDirection,
             transform.eulerAngles.z,
-            rotationSpeed,
+            GetModifiedConfig().rotationSpeed,
             deltaTime
         );
 
@@ -73,7 +89,6 @@ public class MovementHandler
     public void ApplyMovement(Transform transform, Vector2 targetDirection, float deltaTime)
     {
         Vector2 newPosition = CalculateMovement(targetDirection, transform.position, deltaTime);
-
         transform.position = newPosition;
     }
 
@@ -82,7 +97,7 @@ public class MovementHandler
         float rotation = CalculateRotation(
             targetDirection,
             transform.eulerAngles.z,
-            rotationSpeed,
+            GetModifiedConfig().rotationSpeed,
             deltaTime
         );
         transform.rotation = Quaternion.Euler(0, 0, rotation);
@@ -134,5 +149,86 @@ public class MovementHandler
     public void AddToVelocity(Vector2 velocity)
     {
         currentVelocity += velocity;
+    }
+
+    public MovementConfig GetMovementConfig()
+    {
+        return config;
+    }
+
+    public MovementConfig SetMovementConfig(MovementConfig newConfig)
+    {
+        prevConfig = config;
+        config = newConfig;
+
+        return config;
+    }
+
+    public MovementConfig RevertToPrevConfig()
+    {
+        MovementConfig currentConfig = config;
+        config = prevConfig;
+        prevConfig = currentConfig;
+
+        return config;
+    }
+
+    public void AddMovementModifier(MovementConfigModifier modifier)
+    {
+        if (modifier != null)
+        {
+            movementModifiers.Add(modifier);
+            UpdateModifiedConfig();
+        }
+    }
+
+    public void RemoveMovementModifier(MovementConfigModifier modifier)
+    {
+        if (modifier != null)
+        {
+            movementModifiers.Remove(modifier);
+            UpdateModifiedConfig();
+        }
+    }
+
+    public void UpdateMovementModifier(
+        MovementConfigModifier oldModifier,
+        MovementConfigModifier newModifier
+    )
+    {
+        if (oldModifier != null && newModifier != null)
+        {
+            int index = movementModifiers.IndexOf(oldModifier);
+            if (index != -1)
+            {
+                movementModifiers[index] = newModifier;
+                UpdateModifiedConfig();
+            }
+        }
+    }
+
+    private void UpdateModifiedConfig()
+    {
+        // create a new instance starting with base config values
+        MovementConfig newConfig = ScriptableObject.CreateInstance<MovementConfig>();
+        newConfig.maxSpeed = config.maxSpeed;
+        newConfig.acceleration = config.acceleration;
+        newConfig.deceleration = config.deceleration;
+        newConfig.rotationSpeed = config.rotationSpeed;
+
+        // Apply each modifier to the new instance
+        foreach (var modifier in movementModifiers)
+        {
+            newConfig = modifier(newConfig);
+        }
+
+        // Replace the class-wide instance with our new one
+        modifiedConfig = newConfig;
+    }
+
+    // Get the current modified config
+    public MovementConfig GetModifiedConfig()
+    {
+        return modifiedConfig;
     }
 }
