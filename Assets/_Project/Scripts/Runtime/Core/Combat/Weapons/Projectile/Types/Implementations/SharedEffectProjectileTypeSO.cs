@@ -2,7 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// Projectile type that applies status effects to both the target that's hit AND the character that shot it.
-/// Can use either the same damage profile for both or a separate one for the shooter.
+/// Can use either damage profiles or direct status effects.
 /// </summary>
 [CreateAssetMenu(
     fileName = "SharedEffectProjectileType",
@@ -12,10 +12,14 @@ public class SharedEffectProjectileTypeSO : ProjectileTypeSO
 {
     [Header("Shooter Effect Configuration")]
     [Tooltip(
-        "Optional separate damage profile to apply to the shooter. If null, the projectile's damage profile will be used."
+        "Optional separate damage profile to apply to the shooter. If null, no damage profile effects will be applied."
     )]
     [SerializeField]
     private DamageProfile shooterDamageProfile;
+
+    [Tooltip("Direct status effects to apply to the shooter, independent of damage profile")]
+    [SerializeField]
+    private StatusEffectData[] shooterStatusEffects;
 
     public override Projectile SpawnProjectile(
         Transform firePoint,
@@ -27,12 +31,25 @@ public class SharedEffectProjectileTypeSO : ProjectileTypeSO
 
         if (source != null)
         {
-            DamageProfile profileToUse =
-                shooterDamageProfile != null ? shooterDamageProfile : damageProfile;
+            // Apply damage profile effects if configured
+            if (shooterDamageProfile != null)
+            {
+                DamageData shooterDamageData = shooterDamageProfile.CreateDamageData(source);
+                shooterDamageData.ApplyAllStatusEffects(source.gameObject);
+            }
 
-            DamageData shooterDamageData = profileToUse.CreateDamageData(source);
-
-            shooterDamageData.ApplyAllStatusEffects(source.gameObject);
+            // Apply direct status effects if any
+            if (shooterStatusEffects != null && shooterStatusEffects.Length > 0)
+            {
+                foreach (var effect in shooterStatusEffects)
+                {
+                    if (effect != null)
+                    {
+                        effect.SetSource(source);
+                        effect.ApplyStatusEffect(source.gameObject);
+                    }
+                }
+            }
         }
 
         return projectile;

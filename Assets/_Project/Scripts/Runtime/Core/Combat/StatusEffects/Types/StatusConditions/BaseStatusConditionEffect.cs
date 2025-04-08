@@ -10,11 +10,7 @@ public abstract class BaseStatusConditionEffect : BaseStatusEffect
         ApplyStatusCondition();
     }
 
-    protected override void OnTick()
-    {
-        // most status conditions don't need tick behavior
-        // override if needed
-    }
+    protected override void OnTick() { }
 
     public override void OnRemove()
     {

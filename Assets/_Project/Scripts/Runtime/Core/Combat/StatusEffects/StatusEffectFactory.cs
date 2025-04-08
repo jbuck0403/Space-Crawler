@@ -22,22 +22,17 @@ public class StatusEffectFactory
         Transform source
     )
     {
-        Debug.Log($"#StatusEffect# Creating Status Effect of type {data.GetType().Name}");
-        if (data is DoTEffectData dotData)
+        if (data is DoTEffectData dotData) // DoT specific handling
         {
-            Debug.Log("#StatusEffect# Data is DoTEffectData");
             return CreateDoTEffect(dotData, target, source);
         }
-        else
+        else // normal status effect handling
         {
-            Debug.Log("#StatusEffect# Data is not DoTEffectData");
-            // create regular effect based on type
-            switch (data.EffectType)
+            return data.EffectType switch
             {
-                // stun, etc. TBD
-                default:
-                    return null;
-            }
+                StatusEffect.Freezing => new FreezingEffect(data, target, source),
+                _ => null
+            };
         }
     }
 }

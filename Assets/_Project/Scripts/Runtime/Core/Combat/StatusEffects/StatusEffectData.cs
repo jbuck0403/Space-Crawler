@@ -45,7 +45,7 @@ public class StatusEffectData : ScriptableObject
         this.source = source;
     }
 
-    public void ApplyStatusEffect(GameObject target)
+    public virtual void ApplyStatusEffect(GameObject target)
     {
         Debug.Log($"#StatusEffect# Attempting to apply effect to {target.name}");
         var receiver = target.GetComponent<IStatusEffectReceiver>();

@@ -20,4 +20,9 @@ public class DoTEffectData : StatusEffectData
     public float CritMultiplier => critMultiplier;
     public float CritChance => critChance;
     public DamageType DamageType => damageType;
+
+    public override void ApplyStatusEffect(GameObject target)
+    {
+        base.ApplyStatusEffect(target);
+    }
 }
