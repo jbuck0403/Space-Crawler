@@ -16,3 +16,6 @@ MonoBehaviour:
   - effectType: 0
     baseIcon: {fileID: 21300000, guid: 0599866e4a8a9f34ea2d3419d36973ed, type: 3}
     defaultTint: {r: 0, g: 0, b: 0, a: 0}
+  - effectType: 1
+    baseIcon: {fileID: 21300000, guid: 62cd87da91037ec41a9b7896be1f63cd, type: 3}
+    defaultTint: {r: 0, g: 0, b: 0, a: 0}
