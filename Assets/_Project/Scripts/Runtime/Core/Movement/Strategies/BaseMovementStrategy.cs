@@ -47,7 +47,7 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
             if (instance.movementHandler is CollisionAwareMovementHandler collisionHandler)
             {
                 collisionHandler.InitializeCollisionDetection(
-                    instance.avoidanceLayers,
+                    enemyController.combatantLayers + enemyController.obstacleLayers,
                     enemyController.transform
                 );
             }
@@ -153,6 +153,27 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
         Vector2 avoidanceVector = AvoidOtherCharacters(self);
 
         Vector2 adjustedMoveDirection = (targetDirection + avoidanceVector).normalized;
+
+        // Check if WouldCollide is available and working
+        if (movementHandler is CollisionAwareMovementHandler collisionHandler)
+        {
+            Vector2 currentPosition = self.position;
+            Vector2 nextPosition =
+                currentPosition + (adjustedMoveDirection * Time.deltaTime * config.maxSpeed);
+
+            Vector2 hitPoint;
+            Vector2 hitNormal;
+            bool wouldCollide = collisionHandler.WouldCollide(
+                self,
+                target.gameObject,
+                out hitPoint,
+                out hitNormal
+            );
+
+            Debug.Log(
+                $"###[{GetType().Name}] WouldCollide check: {wouldCollide}, Hit Point: {hitPoint}, Hit Normal: {hitNormal}"
+            );
+        }
 
         movementHandler.ApplyRotation(self, directionToTarget, Time.deltaTime);
 

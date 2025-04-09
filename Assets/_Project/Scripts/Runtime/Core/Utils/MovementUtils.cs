@@ -74,14 +74,17 @@ public static class MovementUtils
             float distance = GetDistanceToTarget(self.position, targetPosition);
 
             RaycastHit2D hit = Physics2D.Raycast(self.position, direction, distance, obstacleLayer);
+            Debug.Log($"###HIT{hit.collider.gameObject.name}");
 
             // if the raycast didn't hit anything or if it hit the target
             if (hit.collider == null || hit.collider.gameObject == targetObject)
             {
+                Debug.Log($"###RETURNING FALSE {hit.collider.gameObject.name}");
                 return false;
             }
         }
 
+        Debug.Log($"###RETURNING TRUE");
         return true;
     }
 }

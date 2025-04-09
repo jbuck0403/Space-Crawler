@@ -14,7 +14,7 @@ public class BaseEnemyController : BaseCharacterController, IProjectileDataProvi
     protected MovementStrategyType defaultStrategy;
 
     [SerializeField]
-    protected LayerMask combatantLayers;
+    public LayerMask combatantLayers;
 
     protected BaseMovementController movementController;
     protected HealthSystem healthSystem;

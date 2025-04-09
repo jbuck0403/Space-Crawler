@@ -284,49 +284,44 @@ public class CollisionAwareMovementHandler : MovementHandler
     }
 
     /// <summary>
-    /// Checks if a movement would cause a collision and returns true if it would
+    /// Checks if a movement would cause a collision using TargetViewObstructed
     /// </summary>
     public bool WouldCollide(
-        Vector2 fromPosition,
-        Vector2 toPosition,
+        Transform self,
+        GameObject target,
         out Vector2 hitPoint,
         out Vector2 hitNormal,
         float extraDistance = 0f
     )
     {
-        hitPoint = toPosition;
-        hitNormal = Vector2.zero;
+        hitPoint = default;
+        hitNormal = default;
 
         if (!collisionDetectionEnabled || collisionLayers == 0)
-            return false;
-
-        Vector2 direction = toPosition - fromPosition;
-        float distance = direction.magnitude + extraDistance;
-
-        if (distance < 0.001f)
-            return false;
-
-        direction = direction.normalized;
-
-        Bounds? bounds = null;
-        if (attachedCollider != null)
-            bounds = attachedCollider.bounds;
-
-        float raycastRadius = bounds.HasValue
-            ? Mathf.Max(bounds.Value.extents.x, bounds.Value.extents.y)
-            : collisionRadius;
-
-        for (int i = 0; i < raycastCount; i++)
         {
-            float angle = ((float)i / raycastCount) * 2 * Mathf.PI;
-            Vector2 offset = new Vector2(
-                Mathf.Cos(angle) * raycastRadius * 0.8f,
-                Mathf.Sin(angle) * raycastRadius * 0.8f
+            Debug.Log("###WOULDCOLLIDE EARLY RETURN");
+            return false;
+        }
+
+        // Use TargetViewObstructed to check for collisions
+        bool obstructed = MovementUtils.TargetViewObstructed(self, target, collisionLayers);
+        Debug.Log($"###OBSTRUCTED {obstructed} {self.name} {target.name}");
+
+        if (obstructed)
+        {
+            // Perform a raycast to get hit details
+            Vector2 fromPosition = self.position;
+            Vector2 toPosition = target.transform.position;
+            Vector2 direction = toPosition - fromPosition;
+            float distance = direction.magnitude + extraDistance;
+            direction = direction.normalized;
+
+            RaycastHit2D hit = Physics2D.Raycast(
+                fromPosition,
+                direction,
+                distance,
+                collisionLayers
             );
-
-            Vector2 rayOrigin = fromPosition + offset;
-
-            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, direction, distance, collisionLayers);
 
             if (hit.collider != null && !hit.collider.isTrigger)
             {

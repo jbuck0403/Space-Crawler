@@ -12,7 +12,7 @@ public abstract class BaseCharacterController : MonoBehaviour
     protected WeaponHandler weaponHandler;
 
     [SerializeField]
-    protected LayerMask obstacleLayers;
+    public LayerMask obstacleLayers;
 
     protected bool shooting = false;
 
