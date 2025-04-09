@@ -419,6 +419,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementConfig: {fileID: 11400000, guid: 46a46fdebec8f0946bb209e0c59dd753, type: 2}
+  colliders:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!114 &1578222438979382884
 MonoBehaviour:
   m_ObjectHideFlags: 0

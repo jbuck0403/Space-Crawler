@@ -82,7 +82,7 @@ public class BaseMovementController : StrategyController<IMovementStrategy>
         strategy.OnUpdate(transform, CurrentTarget);
     }
 
-    public MovementHandler GetMovementHandler()
+    public virtual MovementHandler GetMovementHandler()
     {
         return currentStrategy.GetMovementHandler();
     }

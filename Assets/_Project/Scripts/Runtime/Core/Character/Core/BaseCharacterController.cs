@@ -20,24 +20,6 @@ public abstract class BaseCharacterController : MonoBehaviour
         weaponHandler = GetComponent<WeaponHandler>();
     }
 
-    // protected virtual void Start()
-    // {
-    //     InitializeWeapon();
-    // }
-
-    // protected virtual void InitializeWeapon()
-    // {
-    //     if (
-    //         weapon != null
-    //         && weapon.weaponConfig != null
-    //         && weapon.weaponConfig.firingStrategies != null
-    //         && weapon.weaponConfig.firingStrategies.Count > 0
-    //     )
-    //     {
-    //         weapon.SetStrategy(weapon.weaponConfig.firingStrategies[0]);
-    //     }
-    // }
-
     public void EnableShooting(bool enabled, bool external = false)
     {
         shooting = enabled;

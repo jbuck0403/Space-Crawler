@@ -41,7 +41,7 @@ public class MovementHandler
         Initialize(config);
     }
 
-    public Vector2 CalculateMovement(
+    public virtual Vector2 CalculateMovement(
         Vector2 targetDirection,
         Vector2 currentPosition,
         float deltaTime
@@ -112,7 +112,7 @@ public class MovementHandler
         transform.SetPositionAndRotation(newPosition, Quaternion.Euler(0, 0, newRotation));
     }
 
-    public float CalculateRotation(
+    public virtual float CalculateRotation(
         Vector2 targetDirection,
         float currentRotation,
         float rotationSpeed,

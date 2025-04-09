@@ -7,7 +7,10 @@ public class PlayerController
         IProjectileDataProvider,
         IWeaponAbilityDataProvider
 {
-    private MovementHandler movementHandler;
+    [SerializeField]
+    protected LayerMask colliders;
+
+    private CollisionAwareMovementHandler movementHandler;
     private Vector2 moveInput;
     private Vector2 aimDirection;
     private Camera mainCamera;
@@ -22,7 +25,12 @@ public class PlayerController
     {
         base.Awake();
 
-        movementHandler = new MovementHandler(movementConfig);
+        movementHandler = new CollisionAwareMovementHandler(movementConfig);
+
+        if (movementHandler != null)
+        {
+            movementHandler.InitializeCollisionDetection(colliders, transform);
+        }
         mainCamera = Camera.main;
     }
 
