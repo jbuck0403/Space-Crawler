@@ -30,7 +30,9 @@ public class RoomManager : MonoBehaviour
 
     // Currently active room
     private GameObject currentRoom;
-    private List<GameObject> allRooms = new List<GameObject>();
+
+    // Dictionary of all rooms: GameObject -> bool (has been entered)
+    private Dictionary<GameObject, bool> allRooms = new Dictionary<GameObject, bool>();
     private int roomsCompleted = 0;
 
     private void Awake()
@@ -45,7 +47,7 @@ public class RoomManager : MonoBehaviour
     {
         // Spawn initial room
         currentRoom = Instantiate(normalRoomPrefab, Vector3.zero, Quaternion.identity);
-        allRooms.Add(currentRoom);
+        allRooms.Add(currentRoom, false); // Initialize as not entered yet
 
         // Spawn connecting rooms
         SpawnConnectingRooms();
@@ -54,6 +56,23 @@ public class RoomManager : MonoBehaviour
     // Called by RoomCollider when player enters a room
     public void OnPlayerEnteredRoom(GameObject room)
     {
+        // Check if we have this room in our dictionary
+        if (!allRooms.ContainsKey(room))
+        {
+            Debug.LogWarning("Player entered an unknown room");
+            return;
+        }
+
+        // Check if the room has been entered before
+        if (allRooms[room])
+        {
+            Debug.Log("Room has been entered before, not respawning");
+            return;
+        }
+
+        // Mark the room as entered
+        allRooms[room] = true;
+
         // Set this as the current room
         currentRoom = room;
 
@@ -116,7 +135,7 @@ public class RoomManager : MonoBehaviour
 
         // Instantiate the room at the exact position and rotation of the snap point
         GameObject newRoom = Instantiate(roomPrefab, snapPoint.position, snapPoint.rotation);
-        allRooms.Add(newRoom);
+        allRooms.Add(newRoom, false); // Add to dictionary as not entered yet
 
         Debug.Log($"Room of type {roomPrefab.name} spawned at: {snapPoint.position}");
     }
@@ -124,13 +143,22 @@ public class RoomManager : MonoBehaviour
     // Destroys all rooms except the specified one
     private void DestroyAllRoomsExcept(GameObject roomToKeep)
     {
-        for (int i = allRooms.Count - 1; i >= 0; i--)
+        List<GameObject> roomsToRemove = new List<GameObject>();
+
+        // Collect rooms to remove
+        foreach (var roomEntry in allRooms)
         {
-            if (allRooms[i] != roomToKeep)
+            if (roomEntry.Key != roomToKeep)
             {
-                Destroy(allRooms[i]);
-                allRooms.RemoveAt(i);
+                roomsToRemove.Add(roomEntry.Key);
             }
+        }
+
+        // Destroy and remove collected rooms
+        foreach (var room in roomsToRemove)
+        {
+            Destroy(room);
+            allRooms.Remove(room);
         }
     }
 }

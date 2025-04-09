@@ -108,9 +108,9 @@ public class ShieldHandler : MonoBehaviour
     private void ModifyShield(float amount)
     {
         float previousShield = currentShield;
-        print($"ModifyShield {amount} Current Shield {currentShield}");
+        // print($"ModifyShield {amount} Current Shield {currentShield}");
         currentShield = Mathf.Min(currentShield + amount, maxShield);
-        print($"New Shield {currentShield}");
+        // print($"New Shield {currentShield}");
 
         // OnShieldChanged.Raise(gameObject, currentShield);
         // OnShieldPercentChanged.Raise(gameObject, currentShield / maxShield);
