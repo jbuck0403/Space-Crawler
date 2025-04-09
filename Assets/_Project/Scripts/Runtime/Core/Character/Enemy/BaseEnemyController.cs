@@ -14,7 +14,8 @@ public class BaseEnemyController : BaseCharacterController, IProjectileDataProvi
     protected MovementStrategyType defaultStrategy;
 
     [SerializeField]
-    protected LayerMask obstacleLayer;
+    protected LayerMask combatantLayers;
+
     protected BaseMovementController movementController;
     protected HealthSystem healthSystem;
 
@@ -40,7 +41,7 @@ public class BaseEnemyController : BaseCharacterController, IProjectileDataProvi
             && !MovementUtils.TargetViewObstructed(
                 weaponHandler.FirePoint,
                 movementController.CurrentTarget.gameObject,
-                obstacleLayer
+                obstacleLayers + combatantLayers
             )
         )
         {

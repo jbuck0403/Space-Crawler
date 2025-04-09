@@ -11,6 +11,9 @@ public abstract class BaseCharacterController : MonoBehaviour
 
     protected WeaponHandler weaponHandler;
 
+    [SerializeField]
+    protected LayerMask obstacleLayers;
+
     protected bool shooting = false;
 
     protected bool shootingDisabledExternally = false;

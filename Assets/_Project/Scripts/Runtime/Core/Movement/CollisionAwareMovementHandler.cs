@@ -35,6 +35,11 @@ public class CollisionAwareMovementHandler : MovementHandler
         this.collisionRadius = collisionRadius;
         this.attachedCollider = attachedCollider;
         collisionDetectionEnabled = true;
+
+        // Log initialization for debugging
+        Debug.Log(
+            $"CollisionAwareMovementHandler initialized with transform: {(transform != null ? transform.name : "null")}"
+        );
     }
 
     /// <summary>
@@ -143,6 +148,17 @@ public class CollisionAwareMovementHandler : MovementHandler
             );
         }
 
+        // If transform is not set, use base rotation
+        if (transform == null)
+        {
+            return base.CalculateRotation(
+                targetDirection,
+                currentRotation,
+                rotationSpeed,
+                deltaTime
+            );
+        }
+
         float lookAheadDistance = 1.0f + GetCurrentVelocity().magnitude * 0.5f;
 
         Vector2 currentPosition = transform.position;
@@ -157,7 +173,41 @@ public class CollisionAwareMovementHandler : MovementHandler
             );
         }
 
-        if (Physics2D.Raycast(currentPosition, targetDirection, lookAheadDistance, collisionLayers))
+        // Check for collisions in the direction of rotation
+        bool collisionDetected = false;
+        for (int i = 0; i < raycastCount; i++)
+        {
+            float angle = (i * 2 * Mathf.PI) / raycastCount;
+            Vector2 offset = new Vector2(
+                Mathf.Cos(angle) * collisionRadius,
+                Mathf.Sin(angle) * collisionRadius
+            );
+            Vector2 rayOrigin = currentPosition + offset;
+
+            RaycastHit2D hit = Physics2D.Raycast(
+                rayOrigin,
+                targetDirection,
+                lookAheadDistance,
+                collisionLayers
+            );
+
+            hit = SkipTriggerColliders(hit, targetDirection, lookAheadDistance, 0);
+
+            if (hit.collider != null)
+            {
+                float adjustedDistance =
+                    hit.distance
+                    - (offset.magnitude * Vector2.Dot(targetDirection, offset.normalized));
+
+                if (adjustedDistance < collisionRadius + collisionBuffer)
+                {
+                    collisionDetected = true;
+                    break;
+                }
+            }
+        }
+
+        if (collisionDetected)
         {
             return currentRotation;
         }
@@ -347,14 +397,20 @@ public class CollisionAwareMovementHandler : MovementHandler
     /// </summary>
     public new void Move(Transform transform, Vector2 targetDirection, float deltaTime)
     {
+        // Ensure we have a valid transform reference
+        if (this.transform == null)
+        {
+            this.transform = transform;
+        }
+
         Vector2 currentPosition = transform.position;
         float currentRotation = transform.eulerAngles.z;
 
         Vector2 newPosition = CalculateMovement(targetDirection, currentPosition, deltaTime);
 
-        float newRotation = CalculateRotationWithPosition(
+        // Use the base CalculateRotation method for rotation
+        float newRotation = base.CalculateRotation(
             targetDirection,
-            currentPosition,
             currentRotation,
             GetModifiedConfig().rotationSpeed,
             deltaTime

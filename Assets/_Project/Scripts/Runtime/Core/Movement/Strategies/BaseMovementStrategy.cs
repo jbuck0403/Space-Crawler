@@ -41,7 +41,16 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
 
         if (config != null)
         {
-            instance.movementHandler = new MovementHandler(config);
+            instance.movementHandler = new CollisionAwareMovementHandler(config);
+
+            // If we're using a CollisionAwareMovementHandler, initialize it with collision detection
+            if (instance.movementHandler is CollisionAwareMovementHandler collisionHandler)
+            {
+                collisionHandler.InitializeCollisionDetection(
+                    instance.avoidanceLayers,
+                    enemyController.transform
+                );
+            }
         }
         else
         {
@@ -53,6 +62,7 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
         Debug.Log(
             $"[{GetType().Name}] New instance created with isInstance: {instance.isInstance}"
         );
+
         return instance;
     }
 
@@ -106,7 +116,15 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
                 Debug.Log(
                     $"[{GetType().Name}] Attempting to recover by creating new MovementHandler"
                 );
-                movementHandler = new MovementHandler(config);
+                movementHandler = new CollisionAwareMovementHandler(config);
+                // If we're using a CollisionAwareMovementHandler, initialize it with collision detection
+                if (movementHandler is CollisionAwareMovementHandler collisionHandler)
+                {
+                    collisionHandler.InitializeCollisionDetection(
+                        avoidanceLayers,
+                        enemyController.transform
+                    );
+                }
             }
             else
             {

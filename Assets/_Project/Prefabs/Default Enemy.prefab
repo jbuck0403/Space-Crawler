@@ -269,6 +269,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementConfig: {fileID: 11400000, guid: c564bd8396d385347a6f3fb00ce28522, type: 2}
+  obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 8
   movementStrategies:
   - strategyType: 0
     strategy: {fileID: 11400000, guid: f64f5b12df108164f8f206d432f56c17, type: 2}
@@ -282,7 +285,7 @@ MonoBehaviour:
     strategy: {fileID: 11400000, guid: d279c5d0ce2719f47bba5c5c78864da4, type: 2}
   defaultTarget: {fileID: 0}
   defaultStrategy: 0
-  obstacleLayer:
+  combatantLayers:
     serializedVersion: 2
     m_Bits: 64
   maxFiringDistance: 15

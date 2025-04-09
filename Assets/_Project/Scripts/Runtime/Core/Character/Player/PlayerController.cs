@@ -7,9 +7,6 @@ public class PlayerController
         IProjectileDataProvider,
         IWeaponAbilityDataProvider
 {
-    [SerializeField]
-    protected LayerMask colliders;
-
     private CollisionAwareMovementHandler movementHandler;
     private Vector2 moveInput;
     private Vector2 aimDirection;
@@ -29,7 +26,7 @@ public class PlayerController
 
         if (movementHandler != null)
         {
-            movementHandler.InitializeCollisionDetection(colliders, transform);
+            movementHandler.InitializeCollisionDetection(obstacleLayers, transform);
         }
         mainCamera = Camera.main;
     }
