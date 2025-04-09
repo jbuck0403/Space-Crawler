@@ -9,9 +9,29 @@ public class RoomManager : MonoBehaviour
     [SerializeField]
     private GameObject normalRoomPrefab;
 
+    [SerializeField]
+    private GameObject eliteRoomPrefab;
+
+    [SerializeField]
+    private GameObject treasureRoomPrefab;
+
+    [SerializeField]
+    private GameObject bossRoomPrefab;
+
+    [Header("Spawn Chances")]
+    [SerializeField]
+    private float eliteRoomChance = 0.5f;
+
+    [SerializeField]
+    private float treasureRoomChance = 0.2f;
+
+    [SerializeField]
+    private int roomsBeforeBoss = 10;
+
     // Currently active room
     private GameObject currentRoom;
     private List<GameObject> allRooms = new List<GameObject>();
+    private int roomsCompleted = 0;
 
     private void Awake()
     {
@@ -40,11 +60,14 @@ public class RoomManager : MonoBehaviour
         // Destroy all other rooms
         DestroyAllRoomsExcept(currentRoom);
 
+        // Increment counter (this is a new room)
+        roomsCompleted++;
+
         // Spawn new connecting rooms
         SpawnConnectingRooms();
     }
 
-    // Spawns rooms at all snap points
+    // Spawns rooms with chance-based selection
     private void SpawnConnectingRooms()
     {
         RoomCollider roomCollider = currentRoom.GetComponent<RoomCollider>();
@@ -52,29 +75,50 @@ public class RoomManager : MonoBehaviour
             return;
 
         Transform[] snapPoints = roomCollider.GetSnapPoints();
-        if (snapPoints == null)
+        if (snapPoints == null || snapPoints.Length == 0)
             return;
 
-        // Create a room at each snap point
-        foreach (Transform snapPoint in snapPoints)
+        // First snap point always gets a normal room or boss room (based on progression)
+        if (snapPoints.Length > 0)
         {
-            if (snapPoint != null)
+            if (roomsCompleted >= roomsBeforeBoss && bossRoomPrefab != null)
             {
-                SpawnRoomAtSnapPoint(snapPoint);
+                SpawnRoomAtSnapPoint(snapPoints[0], bossRoomPrefab);
+                Debug.Log("Boss room spawned!");
             }
+            else
+            {
+                SpawnRoomAtSnapPoint(snapPoints[0], normalRoomPrefab);
+            }
+        }
+
+        // Second snap point has a chance for elite room
+        if (snapPoints.Length > 1 && Random.value < eliteRoomChance)
+        {
+            GameObject roomPrefab = eliteRoomPrefab != null ? eliteRoomPrefab : normalRoomPrefab;
+            SpawnRoomAtSnapPoint(snapPoints[1], roomPrefab);
+        }
+
+        // Third snap point has a chance for treasure room
+        if (snapPoints.Length > 2 && Random.value < treasureRoomChance)
+        {
+            GameObject roomPrefab =
+                treasureRoomPrefab != null ? treasureRoomPrefab : normalRoomPrefab;
+            SpawnRoomAtSnapPoint(snapPoints[2], roomPrefab);
         }
     }
 
-    // Spawn a room at a specific snap point using exact transform
-    private void SpawnRoomAtSnapPoint(Transform snapPoint)
+    // Spawn a specific room prefab at a snap point
+    private void SpawnRoomAtSnapPoint(Transform snapPoint, GameObject roomPrefab)
     {
-        // Simply instantiate a room at the exact position and rotation of the snap point
-        GameObject newRoom = Instantiate(normalRoomPrefab, snapPoint.position, snapPoint.rotation);
+        if (snapPoint == null || roomPrefab == null)
+            return;
+
+        // Instantiate the room at the exact position and rotation of the snap point
+        GameObject newRoom = Instantiate(roomPrefab, snapPoint.position, snapPoint.rotation);
         allRooms.Add(newRoom);
 
-        Debug.Log(
-            $"Room spawned at: {snapPoint.position} with rotation: {snapPoint.rotation.eulerAngles}"
-        );
+        Debug.Log($"Room of type {roomPrefab.name} spawned at: {snapPoint.position}");
     }
 
     // Destroys all rooms except the specified one

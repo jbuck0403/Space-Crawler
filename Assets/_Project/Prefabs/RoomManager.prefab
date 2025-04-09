@@ -45,11 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   normalRoomPrefab: {fileID: 1768510736677487877, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
-  eliteRoomPrefab: {fileID: 1768510736677487877, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
-  treasureRoomPrefab: {fileID: 1768510736677487877, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
-  bossRoomPrefab: {fileID: 1768510736677487877, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
-  fallbackNormalRoomOffset: {x: 20, y: 0, z: 0}
-  fallbackEliteRoomOffset: {x: 0, y: 0, z: 20}
-  fallbackTreasureRoomOffset: {x: 0, y: 0, z: -20}
-  eliteRoomChance: 1
-  treasureRoomChance: 1
+  eliteRoomPrefab: {fileID: 1437422975350827992, guid: 40cc5e896cf0371408c9967d0856cdd7, type: 3}
+  treasureRoomPrefab: {fileID: 1060505485327265152, guid: 8561d372ad75cc84da69baeed262f54d, type: 3}
+  bossRoomPrefab: {fileID: 1971521178485243517, guid: 311a48edcf2c7884f80eebf3051bf6e8, type: 3}
+  eliteRoomChance: 0.5
+  treasureRoomChance: 0.5
+  roomsBeforeBoss: 10
