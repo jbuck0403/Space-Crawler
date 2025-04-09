@@ -48,7 +48,7 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
             {
                 collisionHandler.InitializeCollisionDetection(
                     enemyController.combatantLayers + enemyController.obstacleLayers,
-                    enemyController.transform
+                    enemyController.weaponHandler.FirePoint
                 );
             }
         }
@@ -122,7 +122,7 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
                 {
                     collisionHandler.InitializeCollisionDetection(
                         avoidanceLayers,
-                        enemyController.transform
+                        enemyController.weaponHandler.FirePoint
                     );
                 }
             }
@@ -154,12 +154,23 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
 
         Vector2 adjustedMoveDirection = (targetDirection + avoidanceVector).normalized;
 
+        Debug.Log(
+            $"###MoveCharacter: Entity={self.name}, Target={target.name}, ShouldFollow={shouldFollow}, Distance={distanceToTarget}, FollowDistance={followDistance}"
+        );
+        Debug.Log(
+            $"###MoveCharacter: TargetDirection={targetDirection}, AvoidanceVector={avoidanceVector}, AdjustedDirection={adjustedMoveDirection}"
+        );
+
         // Check if WouldCollide is available and working
         if (movementHandler is CollisionAwareMovementHandler collisionHandler)
         {
             Vector2 currentPosition = self.position;
             Vector2 nextPosition =
                 currentPosition + (adjustedMoveDirection * Time.deltaTime * config.maxSpeed);
+
+            Debug.Log(
+                $"###MoveCharacter: Checking collision from {currentPosition} to {nextPosition}"
+            );
 
             Vector2 hitPoint;
             Vector2 hitNormal;
@@ -173,11 +184,19 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
             Debug.Log(
                 $"###[{GetType().Name}] WouldCollide check: {wouldCollide}, Hit Point: {hitPoint}, Hit Normal: {hitNormal}"
             );
+
+            // Log movement handler info
+            Debug.Log(
+                $"###MoveCharacter: MovementHandler type: {movementHandler.GetType().Name}, CollisionDetectionEnabled: {collisionHandler.GetCollisionDetectionStatus()}"
+            );
         }
 
         movementHandler.ApplyRotation(self, directionToTarget, Time.deltaTime);
 
         movementHandler.ApplyMovement(self, adjustedMoveDirection, Time.deltaTime);
+
+        // Log final position after movement
+        Debug.Log($"###MoveCharacter: Final position after movement: {self.position}");
     }
 
     protected virtual Vector2 AvoidOtherCharacters(Transform self)

@@ -9,7 +9,7 @@ public abstract class BaseCharacterController : MonoBehaviour
     [SerializeField]
     protected MovementConfig movementConfig;
 
-    protected WeaponHandler weaponHandler;
+    public WeaponHandler weaponHandler;
 
     [SerializeField]
     public LayerMask obstacleLayers;

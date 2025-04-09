@@ -61,6 +61,7 @@ public class CollisionAwareMovementHandler : MovementHandler
     {
         if (!collisionDetectionEnabled || collisionLayers == 0)
         {
+            Debug.Log("###CalculateMovement: Collision detection disabled or no layers");
             return base.CalculateMovement(targetDirection, currentPosition, deltaTime);
         }
 
@@ -70,14 +71,23 @@ public class CollisionAwareMovementHandler : MovementHandler
             deltaTime
         );
 
+        Debug.Log(
+            $"###CalculateMovement: From {currentPosition} to target {targetPosition}, direction {targetDirection}"
+        );
+
         if (targetPosition == currentPosition)
         {
+            Debug.Log("###CalculateMovement: Target position is the same as current position");
             return currentPosition;
         }
 
         Vector2 movement = targetPosition - currentPosition;
         float movementDistance = movement.magnitude;
         Vector2 movementDirection = movement.normalized;
+
+        Debug.Log(
+            $"###CalculateMovement: Movement vector {movement}, distance {movementDistance}, direction {movementDirection}"
+        );
 
         bool collisionDetected = false;
         float closestHitDistance = float.MaxValue;
@@ -106,6 +116,10 @@ public class CollisionAwareMovementHandler : MovementHandler
             {
                 collisionDetected = true;
 
+                Debug.Log(
+                    $"###CalculateMovement: Ray {i} hit {hit.collider.name} at distance {hit.distance}"
+                );
+
                 float adjustedDistance =
                     hit.distance
                     - (offset.magnitude * Vector2.Dot(movementDirection, offset.normalized));
@@ -120,11 +134,18 @@ public class CollisionAwareMovementHandler : MovementHandler
                 closestHitDistance - collisionBuffer - collisionRadius
             );
 
+            Debug.Log(
+                $"###CalculateMovement: Collision detected, closest hit {closestHitDistance}, safe distance {safeDistance}"
+            );
+
             ResetVelocity();
 
-            return currentPosition + (movementDirection * safeDistance);
+            Vector2 newPosition = currentPosition + (movementDirection * safeDistance);
+            Debug.Log($"###CalculateMovement: RETURNING collision-adjusted position {newPosition}");
+            return newPosition;
         }
 
+        Debug.Log($"###CalculateMovement: RETURNING original target position {targetPosition}");
         return targetPosition;
     }
 
@@ -284,7 +305,7 @@ public class CollisionAwareMovementHandler : MovementHandler
     }
 
     /// <summary>
-    /// Checks if a movement would cause a collision using TargetViewObstructed
+    /// Checks if a movement would cause a collision by using WouldMovementCollide
     /// </summary>
     public bool WouldCollide(
         Transform self,
@@ -294,43 +315,51 @@ public class CollisionAwareMovementHandler : MovementHandler
         float extraDistance = 0f
     )
     {
-        hitPoint = default;
-        hitNormal = default;
+        hitPoint = Vector2.zero;
+        hitNormal = Vector2.zero;
+
+        // Log input parameters
+        Debug.Log(
+            $"###WouldCollide CALLED: Self={self.name}, Target={target.name}, Layers={collisionLayers.value}"
+        );
 
         if (!collisionDetectionEnabled || collisionLayers == 0)
         {
-            Debug.Log("###WOULDCOLLIDE EARLY RETURN");
+            Debug.Log($"###WouldCollide: Collision detection disabled or no layers");
             return false;
         }
 
-        // Use TargetViewObstructed to check for collisions
-        bool obstructed = MovementUtils.TargetViewObstructed(self, target, collisionLayers);
-        Debug.Log($"###OBSTRUCTED {obstructed} {self.name} {target.name}");
+        // Get current position and direction to target
+        Vector2 fromPosition = self.position;
+        Vector2 targetPosition = target.transform.position;
+        Vector2 direction = (targetPosition - fromPosition).normalized;
 
-        if (obstructed)
+        // Create a test position a small distance away in the direction of the target
+        float testDistance = 0.5f; // Use a small test distance
+
+        Debug.Log(
+            $"###WouldCollide: Testing movement from {fromPosition} to {targetPosition}, direction={direction}"
+        );
+
+        // Use the utility method to check for collisions
+        bool collisionDetected = MovementUtils.WouldMovementCollide(
+            this,
+            fromPosition,
+            direction,
+            testDistance,
+            out hitPoint,
+            out hitNormal
+        );
+
+        Debug.Log($"###WouldCollide: Collision detected={collisionDetected}, hit point={hitPoint}");
+
+        if (collisionDetected)
         {
-            // Perform a raycast to get hit details
-            Vector2 fromPosition = self.position;
-            Vector2 toPosition = target.transform.position;
-            Vector2 direction = toPosition - fromPosition;
-            float distance = direction.magnitude + extraDistance;
-            direction = direction.normalized;
-
-            RaycastHit2D hit = Physics2D.Raycast(
-                fromPosition,
-                direction,
-                distance,
-                collisionLayers
-            );
-
-            if (hit.collider != null && !hit.collider.isTrigger)
-            {
-                hitPoint = hit.point;
-                hitNormal = hit.normal;
-                return true;
-            }
+            Debug.Log($"###WouldCollide: RETURNING TRUE, collision detected at {hitPoint}");
+            return true;
         }
 
+        Debug.Log($"###WouldCollide: RETURNING FALSE, no collision detected");
         return false;
     }
 
@@ -431,5 +460,13 @@ public class CollisionAwareMovementHandler : MovementHandler
             );
         }
         return hit;
+    }
+
+    /// <summary>
+    /// Returns whether collision detection is enabled
+    /// </summary>
+    public bool GetCollisionDetectionStatus()
+    {
+        return collisionDetectionEnabled && collisionLayers != 0;
     }
 }
