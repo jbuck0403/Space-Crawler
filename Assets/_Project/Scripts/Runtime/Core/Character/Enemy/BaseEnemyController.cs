@@ -19,19 +19,36 @@ public class BaseEnemyController : BaseCharacterController, IProjectileDataProvi
     protected BaseMovementController movementController;
     protected HealthSystem healthSystem;
 
+    protected bool initialized = false;
+
     protected override void Awake()
     {
         base.Awake();
 
         movementController = GetComponent<BaseMovementController>();
-
         healthSystem = GetComponent<HealthSystem>();
-        if (movementController != null)
+    }
+
+    public virtual bool Initialize(Transform defaultTarget)
+    {
+        if (movementController != null && defaultTarget != null)
         {
-            movementController.Initialize(this, movementConfig, defaultTarget);
+            this.defaultTarget = defaultTarget;
+            movementController.Initialize(this, movementConfig, this.defaultTarget);
+            InitializeStrategies();
+            ChangeToDefaultStrategy();
+
+            initialized = true;
+            return initialized;
+        }
+        else
+        {
+            Debug.Log(
+                $"{name} MovementController: {movementController == null} Default Target: {defaultTarget}"
+            );
         }
 
-        weaponHandler = GetComponent<WeaponHandler>();
+        return false;
     }
 
     protected override void HandleShooting(Transform target = null)
@@ -53,11 +70,11 @@ public class BaseEnemyController : BaseCharacterController, IProjectileDataProvi
         }
     }
 
-    protected virtual void Start()
-    {
-        InitializeStrategies();
-        ChangeToDefaultStrategy();
-    }
+    // protected virtual void Start()
+    // {
+    //     InitializeStrategies();
+    //     ChangeToDefaultStrategy();
+    // }
 
     public void UpdateTarget(Transform target, bool setDefault = false)
     {

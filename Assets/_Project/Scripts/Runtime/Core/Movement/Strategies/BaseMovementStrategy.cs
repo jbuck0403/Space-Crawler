@@ -166,7 +166,8 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
         {
             Vector2 currentPosition = self.position;
             Vector2 nextPosition =
-                currentPosition + (adjustedMoveDirection * Time.deltaTime * config.maxSpeed);
+                currentPosition
+                + (adjustedMoveDirection * Time.deltaTime * config.maxSpeed * config.maxSpeed);
 
             Debug.Log(
                 $"###MoveCharacter: Checking collision from {currentPosition} to {nextPosition}"
@@ -189,6 +190,16 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
             Debug.Log(
                 $"###MoveCharacter: MovementHandler type: {movementHandler.GetType().Name}, CollisionDetectionEnabled: {collisionHandler.GetCollisionDetectionStatus()}"
             );
+
+            if (wouldCollide)
+            {
+                adjustedMoveDirection = CalculateObstacleAvoidanceDirection(
+                    self.position,
+                    adjustedMoveDirection,
+                    collisionHandler,
+                    target.position
+                );
+            }
         }
 
         movementHandler.ApplyRotation(self, directionToTarget, Time.deltaTime);
@@ -234,6 +245,108 @@ public abstract class BaseMovementStrategy : ScriptableObject, IMovementStrategy
         }
 
         return avoidanceVector;
+    }
+
+    /// <summary>
+    /// Calculates an adjusted movement direction that avoids obstacles
+    /// </summary>
+    /// <param name="position">Current position</param>
+    /// <param name="currentDirection">Current intended movement direction</param>
+    /// <param name="collisionHandler">The collision handler to use for raycast checks</param>
+    /// <param name="targetPosition">Optional target position to consider when avoiding</param>
+    /// <returns>Adjusted direction that avoids obstacles</returns>
+    protected Vector2 CalculateObstacleAvoidanceDirection(
+        Vector2 position,
+        Vector2 currentDirection,
+        CollisionAwareMovementHandler collisionHandler,
+        Vector2? targetPosition = null
+    )
+    {
+        // Normalize the current direction
+        Vector2 direction = currentDirection.normalized;
+        if (direction == Vector2.zero)
+            return currentDirection;
+
+        // Ray distance to check
+        float rayDistance = 5f;
+
+        // Define our three directions: forward, left-forward, right-forward
+        Vector2 forward = direction;
+
+        // Create vectors perpendicular to forward
+        Vector2 right = new Vector2(forward.y, -forward.x); // 90 degrees clockwise
+        Vector2 left = new Vector2(-forward.y, forward.x); // 90 degrees counter-clockwise
+
+        // Calculate the angled directions (45 degrees from forward)
+        Vector2 forwardRight = (forward + right).normalized;
+        Vector2 forwardLeft = (forward + left).normalized;
+
+        // Check distances in each direction
+        float forwardDistance = collisionHandler.DistanceToObstacle(position, forward, rayDistance);
+        float rightDistance = collisionHandler.DistanceToObstacle(
+            position,
+            forwardRight,
+            rayDistance
+        );
+        float leftDistance = collisionHandler.DistanceToObstacle(
+            position,
+            forwardLeft,
+            rayDistance
+        );
+
+        Debug.Log(
+            $"Obstacle distances - Forward: {forwardDistance}, Right: {rightDistance}, Left: {leftDistance}"
+        );
+
+        // Default to the original direction
+        Vector2 adjustedDirection = direction;
+
+        // If forward direction has an obstacle
+        if (forwardDistance < rayDistance)
+        {
+            // Check if we should turn left or right based on which has more space
+            if (leftDistance > rightDistance)
+            {
+                // More space to the left, rotate left by 5 degrees
+                float angle = 5f;
+                adjustedDirection = RotateVector(direction, angle);
+                Debug.Log($"Obstacle ahead, turning left {angle} degrees");
+            }
+            else if (rightDistance > leftDistance)
+            {
+                // More space to the right, rotate right by 5 degrees
+                float angle = -5f;
+                adjustedDirection = RotateVector(direction, angle);
+                Debug.Log($"Obstacle ahead, turning right {angle} degrees");
+            }
+            // If both left and right are equally blocked, then just continue in the current direction
+            // The collision system will handle stopping before hitting the wall
+        }
+
+        // If we have a target position and can see it, slightly bias movement toward target
+        if (targetPosition.HasValue && adjustedDirection != direction)
+        {
+            Vector2 directionToTarget = ((Vector2)targetPosition.Value - position).normalized;
+            // Add a small bias (10%) toward the target
+            adjustedDirection = Vector2.Lerp(adjustedDirection, directionToTarget, 0.1f).normalized;
+        }
+
+        return adjustedDirection;
+    }
+
+    /// <summary>
+    /// Rotates a 2D vector by the specified angle in degrees
+    /// </summary>
+    private Vector2 RotateVector(Vector2 vector, float degrees)
+    {
+        float radians = degrees * Mathf.Deg2Rad;
+        float sin = Mathf.Sin(radians);
+        float cos = Mathf.Cos(radians);
+
+        float x = vector.x * cos - vector.y * sin;
+        float y = vector.x * sin + vector.y * cos;
+
+        return new Vector2(x, y).normalized;
     }
 
     public virtual void OnExit()

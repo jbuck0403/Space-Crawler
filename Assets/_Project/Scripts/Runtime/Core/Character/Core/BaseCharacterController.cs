@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ public abstract class BaseCharacterController : MonoBehaviour
     [SerializeField]
     protected MovementConfig movementConfig;
 
+    [NonSerialized]
     public WeaponHandler weaponHandler;
 
     [SerializeField]

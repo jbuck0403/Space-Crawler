@@ -15,14 +15,22 @@ public class DefaultEnemyController : BaseEnemyController
     protected RetreatMovementStrategy retreatStrategy;
     private bool retreatInitialized;
 
-    protected override void Start()
-    {
-        base.Start();
+    // protected override void Start()
+    // {
+    //     base.Start();
 
-        InitializeRetreat();
+    //     InitializeRetreat();
+    // }
+
+    public override bool Initialize(Transform defaultTarget)
+    {
+        bool baseInitialized = base.Initialize(defaultTarget);
+        bool retreatInitialized = InitializeRetreat();
+
+        return baseInitialized && retreatInitialized;
     }
 
-    private void InitializeRetreat()
+    private bool InitializeRetreat()
     {
         retreatStrategy = GetMovementStrategy<RetreatMovementStrategy>();
         if (retreatStrategy != null)
@@ -30,11 +38,18 @@ public class DefaultEnemyController : BaseEnemyController
             retreatInitialized = true;
             healthSystem.SetLowHealthPercent(retreatStrategy.RetreatHealthThreshold);
             healthSystem.OnLowHealth.AddListener(gameObject, TriggerRetreat);
+
+            return true;
         }
+
+        return false;
     }
 
     private void Update()
     {
+        if (!initialized)
+            return;
+
         if (!retreatInitialized)
         {
             InitializeRetreat();

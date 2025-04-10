@@ -61,6 +61,33 @@ public class RetreatMovementStrategy : BaseMovementStrategy
         Vector2 targetDirection =
             distanceFromTarget < retreatDistance ? directionFromTarget : Vector2.zero;
 
+        // Apply obstacle avoidance if needed
+        if (movementHandler is CollisionAwareMovementHandler collisionHandler)
+        {
+            Vector2 hitPoint;
+            Vector2 hitNormal;
+            bool wouldCollide = collisionHandler.WouldCollide(
+                self,
+                target.gameObject,
+                out hitPoint,
+                out hitNormal
+            );
+
+            if (wouldCollide)
+            {
+                targetDirection = CalculateObstacleAvoidanceDirection(
+                    self.position,
+                    targetDirection,
+                    collisionHandler,
+                    null // No target position bias - we're retreating away
+                );
+
+                Debug.Log(
+                    $"[RetreatMovementStrategy] Adjusted direction to avoid obstacle: {targetDirection}"
+                );
+            }
+        }
+
         movementHandler.Move(self, targetDirection, Time.deltaTime);
     }
 

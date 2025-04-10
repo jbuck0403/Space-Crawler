@@ -50,6 +50,43 @@ public class CautiousMovementStrategy : BaseMovementStrategy
             targetDirection = Vector2.zero;
         }
 
+        // Apply obstacle avoidance if needed and we're moving
+        if (
+            targetDirection != Vector2.zero
+            && movementHandler is CollisionAwareMovementHandler collisionHandler
+        )
+        {
+            Vector2 hitPoint;
+            Vector2 hitNormal;
+            bool wouldCollide = collisionHandler.WouldCollide(
+                self,
+                target.gameObject,
+                out hitPoint,
+                out hitNormal
+            );
+
+            if (wouldCollide)
+            {
+                Vector2? targetPos = null;
+                // If moving toward target, provide target position for bias
+                if (targetDirection == directionToTarget)
+                {
+                    targetPos = target.position;
+                }
+
+                targetDirection = CalculateObstacleAvoidanceDirection(
+                    self.position,
+                    targetDirection,
+                    collisionHandler,
+                    targetPos
+                );
+
+                Debug.Log(
+                    $"[CautiousMovementStrategy] Adjusted direction to avoid obstacle: {targetDirection}"
+                );
+            }
+        }
+
         movementHandler.ApplyRotation(self, directionToTarget, Time.deltaTime);
         movementHandler.ApplyMovement(self, targetDirection, Time.deltaTime);
     }
