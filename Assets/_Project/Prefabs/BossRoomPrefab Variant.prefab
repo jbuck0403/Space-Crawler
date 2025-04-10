@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8254249193097703777
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6269020963220042627}
+  m_Layer: 0
+  m_Name: BossSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6269020963220042627
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8254249193097703777}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 15.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2129515382640771538}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &625578704738768293
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -52,8 +83,36 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6512944345300788866, guid: 40cc5e896cf0371408c9967d0856cdd7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7708676948433745857, guid: 40cc5e896cf0371408c9967d0856cdd7, type: 3}
+      propertyPath: enemySpawnLocations.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7708676948433745857, guid: 40cc5e896cf0371408c9967d0856cdd7, type: 3}
+      propertyPath: enemySpawnLocations.Array.data[0]
+      value: 
+      objectReference: {fileID: 6269020963220042627}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1989545802119385336, guid: 40cc5e896cf0371408c9967d0856cdd7, type: 3}
+    - {fileID: 4047904921743311914, guid: 40cc5e896cf0371408c9967d0856cdd7, type: 3}
+    - {fileID: 693154870335138775, guid: 40cc5e896cf0371408c9967d0856cdd7, type: 3}
+    - {fileID: 4419065064546978767, guid: 40cc5e896cf0371408c9967d0856cdd7, type: 3}
+    - {fileID: 635306762570330756, guid: 40cc5e896cf0371408c9967d0856cdd7, type: 3}
+    - {fileID: 7602764336134226269, guid: 40cc5e896cf0371408c9967d0856cdd7, type: 3}
+    - {fileID: 1924785369116236839, guid: 40cc5e896cf0371408c9967d0856cdd7, type: 3}
+    - {fileID: 8213754467075524568, guid: 40cc5e896cf0371408c9967d0856cdd7, type: 3}
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 1523076978767844471, guid: 40cc5e896cf0371408c9967d0856cdd7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6269020963220042627}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 40cc5e896cf0371408c9967d0856cdd7, type: 3}
+--- !u!4 &2129515382640771538 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1523076978767844471, guid: 40cc5e896cf0371408c9967d0856cdd7, type: 3}
+  m_PrefabInstance: {fileID: 625578704738768293}
+  m_PrefabAsset: {fileID: 0}

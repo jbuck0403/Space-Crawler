@@ -35,6 +35,18 @@ public class RoomManager : MonoBehaviour
     private Dictionary<GameObject, bool> allRooms = new Dictionary<GameObject, bool>();
     private int roomsCompleted = 0;
 
+    [SerializeField]
+    Transform defaultTarget;
+
+    [SerializeField]
+    GameObject[] defaultEnemyPrefabs;
+
+    [SerializeField]
+    GameObject[] eliteEnemyPrefabs;
+
+    [SerializeField]
+    GameObject[] bossEnemyPrefabs;
+
     private void Awake()
     {
         if (Instance == null)
@@ -54,7 +66,7 @@ public class RoomManager : MonoBehaviour
     }
 
     // Called by RoomCollider when player enters a room
-    public void OnPlayerEnteredRoom(GameObject room)
+    public void OnPlayerEnteredRoom(GameObject room) // initialize spawned enemies
     {
         // Check if we have this room in our dictionary
         if (!allRooms.ContainsKey(room))
@@ -76,6 +88,12 @@ public class RoomManager : MonoBehaviour
         // Set this as the current room
         currentRoom = room;
 
+        Room roomComponent = currentRoom.GetComponent<Room>();
+        if (roomComponent != null)
+        {
+            roomComponent.InitializeSpawnedEnemies(defaultTarget);
+        }
+
         // Destroy all other rooms
         DestroyAllRoomsExcept(currentRoom);
 
@@ -87,9 +105,9 @@ public class RoomManager : MonoBehaviour
     }
 
     // Spawns rooms with chance-based selection
-    private void SpawnConnectingRooms()
+    private void SpawnConnectingRooms() // instantiates enemies but doesn't initialize
     {
-        RoomCollider roomCollider = currentRoom.GetComponent<RoomCollider>();
+        Room roomCollider = currentRoom.GetComponent<Room>();
         if (roomCollider == null)
             return;
 
@@ -102,12 +120,12 @@ public class RoomManager : MonoBehaviour
         {
             if (roomsCompleted >= roomsBeforeBoss && bossRoomPrefab != null)
             {
-                SpawnRoomAtSnapPoint(snapPoints[0], bossRoomPrefab);
+                SpawnRoomAtSnapPoint(snapPoints[0], bossRoomPrefab, RoomType.Boss);
                 Debug.Log("Boss room spawned!");
             }
             else
             {
-                SpawnRoomAtSnapPoint(snapPoints[0], normalRoomPrefab);
+                SpawnRoomAtSnapPoint(snapPoints[0], normalRoomPrefab, RoomType.Default);
             }
         }
 
@@ -115,7 +133,7 @@ public class RoomManager : MonoBehaviour
         if (snapPoints.Length > 1 && Random.value < eliteRoomChance)
         {
             GameObject roomPrefab = eliteRoomPrefab != null ? eliteRoomPrefab : normalRoomPrefab;
-            SpawnRoomAtSnapPoint(snapPoints[1], roomPrefab);
+            SpawnRoomAtSnapPoint(snapPoints[1], roomPrefab, RoomType.Elite);
         }
 
         // Third snap point has a chance for treasure room
@@ -123,12 +141,12 @@ public class RoomManager : MonoBehaviour
         {
             GameObject roomPrefab =
                 treasureRoomPrefab != null ? treasureRoomPrefab : normalRoomPrefab;
-            SpawnRoomAtSnapPoint(snapPoints[2], roomPrefab);
+            SpawnRoomAtSnapPoint(snapPoints[2], roomPrefab, RoomType.Treasure);
         }
     }
 
     // Spawn a specific room prefab at a snap point
-    private void SpawnRoomAtSnapPoint(Transform snapPoint, GameObject roomPrefab)
+    private void SpawnRoomAtSnapPoint(Transform snapPoint, GameObject roomPrefab, RoomType roomType)
     {
         if (snapPoint == null || roomPrefab == null)
             return;
@@ -137,7 +155,38 @@ public class RoomManager : MonoBehaviour
         GameObject newRoom = Instantiate(roomPrefab, snapPoint.position, snapPoint.rotation);
         allRooms.Add(newRoom, false); // Add to dictionary as not entered yet
 
+        InstantiateEnemies(newRoom, roomType);
+
         Debug.Log($"Room of type {roomPrefab.name} spawned at: {snapPoint.position}");
+    }
+
+    private void InstantiateEnemies(GameObject room, RoomType roomType, int numEnemies = 1)
+    {
+        Room roomComponent = room.GetComponent<Room>();
+        int maxEnemies = roomComponent.GetTotalSpawnLocations();
+
+        numEnemies = Mathf.Max(1, numEnemies);
+        int enemiesToSpawn = Mathf.Min(numEnemies, maxEnemies);
+
+        for (int i = 0; i < enemiesToSpawn; i++)
+        {
+            roomComponent.AddEnemyToSpawnedEnemies(GetCorrectEnemyType(roomType));
+        }
+    }
+
+    private GameObject GetCorrectEnemyType(RoomType roomType)
+    {
+        switch (roomType)
+        {
+            case RoomType.Default:
+                return defaultEnemyPrefabs[RandomUtils.Range(0, defaultEnemyPrefabs.Length - 1)];
+            case RoomType.Elite:
+                return eliteEnemyPrefabs[RandomUtils.Range(0, eliteEnemyPrefabs.Length - 1)];
+            case RoomType.Boss:
+                return bossEnemyPrefabs[RandomUtils.Range(0, bossEnemyPrefabs.Length - 1)];
+            default:
+                return null;
+        }
     }
 
     // Destroys all rooms except the specified one
@@ -161,4 +210,12 @@ public class RoomManager : MonoBehaviour
             allRooms.Remove(room);
         }
     }
+}
+
+public enum RoomType
+{
+    Default,
+    Elite,
+    Treasure,
+    Boss
 }

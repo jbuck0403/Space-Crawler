@@ -52,8 +52,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7026595522505316636, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+      propertyPath: enemySpawnLocations.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1217532020546551333, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+    - {fileID: 3698809505010019063, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+    - {fileID: 209231699161990410, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+    - {fileID: 3903055116525921554, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+    - {fileID: 263693210248633433, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+    - {fileID: 1910469143302776458, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4090faf8c72f76a439b27026053b0798, type: 3}

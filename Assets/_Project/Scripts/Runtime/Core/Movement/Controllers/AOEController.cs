@@ -1,3 +1,4 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -15,15 +16,14 @@ public class AOEController : BaseEnemyController
         base.Awake();
 
         currentAOE = GetComponent<BaseAOEZone>();
-        isFollowing = currentAOE.aoeProfile.followTarget;
     }
 
-    protected override void Start()
-    {
-        base.Start();
-    }
+    // protected override void Start()
+    // {
+    //     base.Start();
+    // }
 
-    public void Initialize(Transform target = null)
+    public override bool Initialize(Transform target)
     {
         // make sure we have a movement config before trying to use it
         if (movementConfig == null)
@@ -32,13 +32,18 @@ public class AOEController : BaseEnemyController
                 $"AOEController on {gameObject.name} has no movement config assigned!"
             );
 
-            return;
+            return false;
         }
+        if (currentAOE != null && currentAOE.aoeProfile != null)
+            isFollowing = currentAOE.aoeProfile.followTarget;
 
         if (movementController != null)
         {
             movementController.Initialize(this, movementConfig, isFollowing ? target : null);
+            return true;
         }
+
+        return false;
     }
 
     public void SetFollowTarget(Transform target)
