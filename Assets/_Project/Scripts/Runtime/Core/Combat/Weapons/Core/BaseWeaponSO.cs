@@ -83,10 +83,12 @@ public abstract class BaseWeaponSO : ScriptableObject
         IProjectileDataProvider provider
     )
     {
+        // TBI Skill Point Delegate: BEFORE_PROJECTILE_CREATION
         Projectile projectile = GetProjectile(firePoint, source, provider);
 
         if (damageModifier != 1f)
         {
+            // TBI Skill Point Delegate: WEAPON_DAMAGE_MODIFIER
             DamageData damageData = projectile.damageData;
             float newDamage = damageData.Amount * damageModifier;
 
@@ -102,6 +104,7 @@ public abstract class BaseWeaponSO : ScriptableObject
                 fireConfig,
                 direction
             );
+            // TBI Skill Point Delegate: PROJECTILE_VELOCITY_MODIFIER
             ProjectileSpawner.ApplyVelocity(
                 projectile.gameObject,
                 modifiedDirection,
@@ -111,6 +114,7 @@ public abstract class BaseWeaponSO : ScriptableObject
 
             // Raise event on the source object
             OnFireWeapon.Raise(sourceObject);
+            // TBI Skill Point Delegate: AFTER_WEAPON_FIRE
 
             return true;
         }
@@ -133,11 +137,13 @@ public abstract class BaseWeaponSO : ScriptableObject
 
     public bool CanActivateAbility()
     {
+        // TBI Skill Point Delegate: ABILITY_COOLDOWN_CHECK
         return Time.time >= nextAbilityTime;
     }
 
     protected void UpdateNextAbilityTime()
     {
+        // TBI Skill Point Delegate: ABILITY_COOLDOWN_MODIFIER
         nextAbilityTime = Time.time + abilityCooldown;
     }
 
@@ -153,7 +159,10 @@ public abstract class BaseWeaponSO : ScriptableObject
     )
     {
         if (CanFire())
+        {
+            // TBI Skill Point Delegate: AUTO_FIRE_RATE_MODIFIER
             return FireWeapon(firePoint, direction, source, sourceObject, provider);
+        }
 
         return false;
     }
@@ -169,6 +178,7 @@ public abstract class BaseWeaponSO : ScriptableObject
         IProjectileDataProvider provider
     )
     {
+        // TBI Skill Point Delegate: PRE_WEAPON_FIRE
         return FireProjectile(firePoint, direction, source, sourceObject, provider);
     }
 
@@ -239,7 +249,9 @@ public abstract class BaseWeaponSO : ScriptableObject
 
     public void UseUniqueAbility(IWeaponAbilityDataProvider provider)
     {
+        // TBI Skill Point Delegate: BEFORE_WEAPON_ABILITY
         UniqueAbility(provider);
+        // TBI Skill Point Delegate: AFTER_WEAPON_ABILITY
     }
 
     protected abstract void UniqueAbility(IWeaponAbilityDataProvider provider);

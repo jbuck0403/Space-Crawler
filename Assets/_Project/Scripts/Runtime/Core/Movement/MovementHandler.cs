@@ -47,12 +47,14 @@ public class MovementHandler
         float deltaTime
     )
     {
+        // TBI Skill Point Delegate: BEFORE_MOVEMENT_CALCULATION
         // Get the modified config for this frame
         MovementConfig modifiedConfig = GetModifiedConfig();
 
         // Accelerate or decelerate based on input
         if (targetDirection != Vector2.zero)
         {
+            // TBI Skill Point Delegate: MOVEMENT_ACCELERATION_MODIFIER
             // Accelerate towards target direction
             currentVelocity = Vector2.MoveTowards(
                 currentVelocity,
@@ -62,6 +64,7 @@ public class MovementHandler
         }
         else
         {
+            // TBI Skill Point Delegate: MOVEMENT_DECELERATION_MODIFIER
             // Decelerate when no input
             currentVelocity = Vector2.MoveTowards(
                 currentVelocity,
@@ -70,6 +73,7 @@ public class MovementHandler
             );
         }
 
+        // TBI Skill Point Delegate: AFTER_MOVEMENT_CALCULATION
         return currentPosition + (currentVelocity * deltaTime);
     }
 
@@ -121,11 +125,13 @@ public class MovementHandler
     {
         if (targetDirection != Vector2.zero)
         {
+            // TBI Skill Point Delegate: BEFORE_ROTATION_CALCULATION
             // Calculate target angle in degrees
             float targetAngle =
                 Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg - 90f;
 
             // Smoothly rotate towards target angle
+            // TBI Skill Point Delegate: ROTATION_SPEED_MODIFIER
             return Mathf.LerpAngle(currentRotation, targetAngle, rotationSpeed * deltaTime);
         }
         return currentRotation;
@@ -175,6 +181,7 @@ public class MovementHandler
 
     public void AddMovementModifier(MovementConfigModifier modifier)
     {
+        // TBI Skill Point Delegate: REGISTER_MOVEMENT_MODIFIER
         if (modifier != null)
         {
             movementModifiers.Add(modifier);
@@ -184,6 +191,7 @@ public class MovementHandler
 
     public void RemoveMovementModifier(MovementConfigModifier modifier)
     {
+        // TBI Skill Point Delegate: UNREGISTER_MOVEMENT_MODIFIER
         if (modifier != null)
         {
             movementModifiers.Remove(modifier);

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
@@ -111,6 +112,8 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider
 
     public void StartFiring()
     {
+        // TBI Skill Point Delegate: BEFORE_WEAPON_FIRING
+        print("Started Firing");
         if (!isFiring && currentWeapon != null)
         {
             isFiring = FireWeapon();
@@ -119,6 +122,7 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider
 
     public void StopFiring()
     {
+        // TBI Skill Point Delegate: ON_WEAPON_STOP_FIRING
         isFiring = false;
     }
 

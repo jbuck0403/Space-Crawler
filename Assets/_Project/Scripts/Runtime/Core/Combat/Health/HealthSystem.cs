@@ -64,11 +64,14 @@ public class HealthSystem : MonoBehaviour
         if (currentHealth <= 0)
             return;
 
+        // TBI Skill Point Delegate: MODIFY_HEALTH_AMOUNT
+
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
 
         if (CurrentHealth / MaxHealth <= lowHealthPercent / 100)
         {
             OnLowHealth.Raise(gameObject);
+            // TBI Skill Point Delegate: ON_LOW_HEALTH_TRIGGER
         }
 
         OnHealthChanged.Raise(gameObject, currentHealth);
@@ -77,18 +80,22 @@ public class HealthSystem : MonoBehaviour
         if (currentHealth <= 0)
         {
             isDead = true;
+            // TBI Skill Point Delegate: BEFORE_DEATH
             Die();
         }
     }
 
     public void Damage(float amount)
     {
+        // TBI Skill Point Delegate: BEFORE_DAMAGE_TAKEN
         float newAmount = -Mathf.Abs(amount);
         ModifyHealth(newAmount);
+        // TBI Skill Point Delegate: AFTER_DAMAGE_TAKEN
     }
 
     public void Heal(float amount)
     {
+        // TBI Skill Point Delegate: BEFORE_HEALING
         float modifiedAmount = amount;
         foreach (var modifier in healingModifiers.Values)
         {
@@ -101,16 +108,19 @@ public class HealthSystem : MonoBehaviour
         // Apply healing through existing system
         OnHealingReceived.Raise(gameObject, modifiedAmount);
         ModifyHealth(modifiedAmount);
+        // TBI Skill Point Delegate: AFTER_HEALING
     }
 
     public void Die()
     {
         OnDeath.Raise(gameObject, transform.position);
+        // TBI Skill Point Delegate: ON_DEATH
         Destroy(gameObject);
     }
 
     public void ModifyMaxHealth(float amount)
     {
+        // TBI Skill Point Delegate: MODIFY_MAX_HEALTH
         maxHealth += amount;
     }
 

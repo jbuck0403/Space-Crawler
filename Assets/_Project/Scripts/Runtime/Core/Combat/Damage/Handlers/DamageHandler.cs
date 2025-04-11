@@ -28,6 +28,7 @@ public class DamageHandler : MonoBehaviour
 
     public void HandleDamage(DamageData rawDamageData)
     {
+        // TBI Skill Point Delegate: BEFORE_DAMAGE_HANDLER
         print(
             $"HandleDamage Raw:{rawDamageData.Amount} Crit% {rawDamageData.CritChance} CritX {rawDamageData.CritMultiplier}"
         );
@@ -46,7 +47,9 @@ public class DamageHandler : MonoBehaviour
         (float preMitigationDamage, bool isCrit) = CalculatePreMitigationDamage(rawDamageData);
         print($"PreMitigation Damage: {preMitigationDamage}");
 
+        // TBI Skill Point Delegate: BEFORE_DEFENSE_CALCULATION
         float finalDamage = defenseHandler.HandleDefense(preMitigationDamage, rawDamageData);
+        // TBI Skill Point Delegate: AFTER_DEFENSE_CALCULATION
         print($"Final Damage: {finalDamage}");
 
         DamageTakenEventData damageTakenEventData = new DamageTakenEventData(
@@ -71,6 +74,7 @@ public class DamageHandler : MonoBehaviour
         if (overflowDamage < 0)
         {
             print($"Overflow damage of {overflowDamage}");
+            // TBI Skill Point Delegate: BEFORE_HEALTH_DAMAGE
             healthSystem.Damage(overflowDamage);
             damageDealt = true;
         }
@@ -84,6 +88,7 @@ public class DamageHandler : MonoBehaviour
             }
 
             OnDamageTaken.Raise(gameObject, damageTakenEventData);
+            // TBI Skill Point Delegate: AFTER_DAMAGE_DEALT
         }
     }
 
@@ -95,6 +100,7 @@ public class DamageHandler : MonoBehaviour
     private (float, bool) CalculatePreMitigationDamage(DamageData rawDamageData)
     {
         float finalDamage = rawDamageData.Amount;
+        // TBI Skill Point Delegate: BEFORE_CRIT_CALCULATION
         float critMultiplier = rawDamageData.CritMultiplier;
         float critChance = Mathf.Clamp(
             rawDamageData.CritChance - defenseHandler.GetCritResistance(),
@@ -104,6 +110,7 @@ public class DamageHandler : MonoBehaviour
         bool criticalHit;
 
         (finalDamage, criticalHit) = ApplyCriticalHit(finalDamage, critMultiplier, critChance);
+        // TBI Skill Point Delegate: AFTER_CRIT_CALCULATION
 
         return (finalDamage, criticalHit);
     }
@@ -120,6 +127,7 @@ public class DamageHandler : MonoBehaviour
         if (isCrit)
         {
             onCriticalHit.Raise(gameObject);
+            // TBI Skill Point Delegate: ON_CRITICAL_HIT
         }
 
         return (finalDamage * (isCrit ? critMultiplier : 1), isCrit);

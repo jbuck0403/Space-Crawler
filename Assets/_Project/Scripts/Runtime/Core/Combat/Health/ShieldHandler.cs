@@ -48,12 +48,14 @@ public class ShieldHandler : MonoBehaviour
     {
         if (recharging)
         {
+            // TBI Skill Point Delegate: SHIELD_RECHARGE_RATE
             RechargeShield(rechargeAmount);
         }
     }
 
     private IEnumerator CountdownToShieldRecharge()
     {
+        // TBI Skill Point Delegate: SHIELD_RECHARGE_DELAY
         yield return new WaitForSeconds(timeUntilRecharge);
 
         TriggerShieldRecharge();
@@ -74,12 +76,14 @@ public class ShieldHandler : MonoBehaviour
 
     public float Damage(float amount, DamageType damageType)
     {
+        // TBI Skill Point Delegate: BEFORE_SHIELD_DAMAGE
         float adjustedAmount = Mathf.Abs(amount);
         if (!HasShield)
             return 0f;
 
         if (damageType == DamageType.Lightning)
         {
+            // TBI Skill Point Delegate: DAMAGE_TYPE_SHIELD_MODIFIER
             adjustedAmount *= 2f;
         }
 
@@ -90,6 +94,7 @@ public class ShieldHandler : MonoBehaviour
         float overflowDamage = adjustedAmount - damageAbsorbed;
         print($"Overflow Damage Returned {overflowDamage}");
 
+        // TBI Skill Point Delegate: AFTER_SHIELD_DAMAGE
         return -overflowDamage;
     }
 
@@ -107,19 +112,17 @@ public class ShieldHandler : MonoBehaviour
     // positive amount adds shield, negative amount damages shield
     private void ModifyShield(float amount)
     {
+        // TBI Skill Point Delegate: MODIFY_SHIELD_AMOUNT
         float previousShield = currentShield;
         // print($"ModifyShield {amount} Current Shield {currentShield}");
         currentShield = Mathf.Min(currentShield + amount, maxShield);
         // print($"New Shield {currentShield}");
 
-        // OnShieldChanged.Raise(gameObject, currentShield);
-        // OnShieldPercentChanged.Raise(gameObject, currentShield / maxShield);
-
         // Check if shield was just depleted
-        // if (previousShield > 0 && currentShield <= 0)
-        // {
-        //     OnShieldDepleted.Raise(gameObject);
-        // }
+        if (previousShield > 0 && currentShield <= 0)
+        {
+            // TBI Skill Point Delegate: ON_SHIELD_DEPLETED
+        }
     }
 
     public void RechargeShield(float amount)
@@ -129,6 +132,7 @@ public class ShieldHandler : MonoBehaviour
 
     public void SetMaxShield(float newMax)
     {
+        // TBI Skill Point Delegate: MODIFY_MAX_SHIELD
         maxShield = Mathf.Max(0, newMax);
         currentShield = Mathf.Min(currentShield, maxShield);
 
