@@ -49,7 +49,7 @@ public class TalentTree : MonoBehaviour
         }
 
         // Verify talent is not already active
-        if (activeTalents.Contains(talent))
+        if (activeTalents.Contains(talent) && talent.pointsSpent >= talent.maxTalentLevels)
         {
             Debug.LogWarning($"Talent {talent.name} is already unlocked");
             return false;
@@ -63,7 +63,7 @@ public class TalentTree : MonoBehaviour
         }
 
         // Check if enough points
-        if (AvailablePoints < talent.pointCost)
+        if (AvailablePoints < 1)
         {
             Debug.LogWarning($"Not enough points to unlock talent {talent.name}");
             return false;
@@ -76,7 +76,7 @@ public class TalentTree : MonoBehaviour
             activeTalents.Add(talent);
 
             // Update points
-            spentPoints += talent.pointCost;
+            spentPoints++;
 
             // Fire event
             OnTalentUnlocked?.Invoke(talent);
@@ -121,7 +121,7 @@ public class TalentTree : MonoBehaviour
         activeTalents.Remove(talent);
 
         // Restore points
-        spentPoints -= talent.pointCost;
+        spentPoints--;
 
         // Fire event
         OnTalentRemoved?.Invoke(talent);
