@@ -32,7 +32,7 @@ public static class TalentModifierHelper
         modifiers[type].Add((source, modifier));
 
         Debug.Log(
-            $"Added {type} modifier from talent {source.talentName} (Level {source.pointsSpent})"
+            $"Added {type} modifier from talent {source.talentName} (Level {source.pointsDesignated})"
         );
     }
 

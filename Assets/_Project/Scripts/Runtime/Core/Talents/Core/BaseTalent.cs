@@ -11,18 +11,11 @@ public abstract class BaseTalent : ScriptableObject
     public string talentName;
     public string description;
     public Sprite icon;
-    public int maxTalentLevels = 1;
-    public int pointsSpent = 0;
+    public int maxDesignatedPoints = 1;
+    public int pointsDesignated = 0;
 
     [Header("Talent Requirements")]
     public List<BaseTalent> requiredTalents;
-
-    // Runtime state - not serialized
-    [HideInInspector]
-    public bool isActivated = false;
-
-    // Dictionary to track GameObject instances this talent is applied to
-    protected Dictionary<GameObject, bool> appliedInstances = new Dictionary<GameObject, bool>();
 
     /// <summary>
     /// Activates this talent on the specified GameObject
@@ -31,11 +24,7 @@ public abstract class BaseTalent : ScriptableObject
     /// <returns>True if activation was successful</returns>
     public virtual bool TryActivate(GameObject owner)
     {
-        if (
-            appliedInstances.ContainsKey(owner)
-            && appliedInstances[owner]
-            && maxTalentLevels <= pointsSpent
-        )
+        if (maxDesignatedPoints <= pointsDesignated)
             return false; // Already activated on this object
 
         OnPointAdded(owner);
@@ -49,7 +38,7 @@ public abstract class BaseTalent : ScriptableObject
     /// <param name="owner">The GameObject to remove talent effects from</param>
     public virtual void Deactivate(GameObject owner)
     {
-        if (!appliedInstances.ContainsKey(owner) || !appliedInstances[owner] && pointsSpent > 0)
+        if (pointsDesignated > 0)
             return; // Not active on this object
 
         OnPointRemoved(owner);
@@ -57,36 +46,34 @@ public abstract class BaseTalent : ScriptableObject
 
     protected virtual void OnPointAdded(GameObject owner)
     {
-        if (maxTalentLevels > pointsSpent)
+        if (maxDesignatedPoints > pointsDesignated)
         {
-            if (appliedInstances[owner])
+            if (pointsDesignated > 0)
             {
                 OnDeactivate(owner);
-                pointsSpent++;
+                pointsDesignated++;
                 OnActivate(owner);
             }
             else
             {
-                appliedInstances[owner] = true;
                 OnActivate(owner);
-                pointsSpent = 1;
+                pointsDesignated = 1;
             }
         }
     }
 
     protected virtual void OnPointRemoved(GameObject owner)
     {
-        if (pointsSpent > 1)
+        if (pointsDesignated > 1)
         {
             OnDeactivate(owner);
-            pointsSpent--;
+            pointsDesignated--;
             OnActivate(owner);
         }
-        else if (pointsSpent == 1)
+        else if (pointsDesignated == 1)
         {
             OnDeactivate(owner);
-            pointsSpent = 0;
-            appliedInstances[owner] = false;
+            pointsDesignated = 0;
         }
     }
 

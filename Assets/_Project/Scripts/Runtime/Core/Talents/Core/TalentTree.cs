@@ -18,23 +18,9 @@ public class TalentTree : MonoBehaviour
     [SerializeField]
     private int spentPoints = 0;
 
-    // Event fired when talents change
-    public event Action<BaseTalent> OnTalentUnlocked;
-    public event Action<BaseTalent> OnTalentRemoved;
-    public event Action<int, int> OnPointsChanged; // Available, Total
-
     public int AvailablePoints => totalPoints - spentPoints;
     public int TotalPoints => totalPoints;
     public int SpentPoints => spentPoints;
-
-    private void Awake()
-    {
-        // Initialize runtime state for available talents
-        foreach (var talent in availableTalents)
-        {
-            talent.isActivated = false;
-        }
-    }
 
     /// <summary>
     /// Try to unlock a talent if prerequisites are met and points are available
@@ -49,7 +35,7 @@ public class TalentTree : MonoBehaviour
         }
 
         // Verify talent is not already active
-        if (activeTalents.Contains(talent) && talent.pointsSpent >= talent.maxTalentLevels)
+        if (activeTalents.Contains(talent) && talent.pointsDesignated >= talent.maxDesignatedPoints)
         {
             Debug.LogWarning($"Talent {talent.name} is already unlocked");
             return false;
@@ -77,10 +63,6 @@ public class TalentTree : MonoBehaviour
 
             // Update points
             spentPoints++;
-
-            // Fire event
-            OnTalentUnlocked?.Invoke(talent);
-            OnPointsChanged?.Invoke(AvailablePoints, totalPoints);
 
             return true;
         }
@@ -123,10 +105,6 @@ public class TalentTree : MonoBehaviour
         // Restore points
         spentPoints--;
 
-        // Fire event
-        OnTalentRemoved?.Invoke(talent);
-        OnPointsChanged?.Invoke(AvailablePoints, totalPoints);
-
         return true;
     }
 
@@ -139,7 +117,6 @@ public class TalentTree : MonoBehaviour
             return;
 
         totalPoints += points;
-        OnPointsChanged?.Invoke(AvailablePoints, totalPoints);
     }
 
     /// <summary>
@@ -185,9 +162,6 @@ public class TalentTree : MonoBehaviour
 
         // Reset spent points
         spentPoints = 0;
-
-        // Fire event
-        OnPointsChanged?.Invoke(AvailablePoints, totalPoints);
     }
 
     private void OnDestroy()
