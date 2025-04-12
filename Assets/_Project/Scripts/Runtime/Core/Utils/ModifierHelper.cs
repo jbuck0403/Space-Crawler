@@ -75,27 +75,32 @@ public static class ModifierHelper
         if (!modifiers.TryGetValue(type, out var modifierList))
             return new List<T>();
 
-        return modifierList
-            .Where(entry => entry.Modifier is T)
-            .Select(entry => entry.Modifier as T)
-            .ToList();
+        List<T> result = new List<T>(modifierList.Count);
+
+        foreach (var entry in modifierList)
+        {
+            if (entry.Modifier is T typedModifier)
+                result.Add(typedModifier);
+        }
+
+        return result;
     }
 
-    /// <summary>
-    /// Gets all modifiers of a specific type without requiring type specification
-    /// </summary>
-    /// <param name="modifiable">The object with modifiers</param>
-    /// <param name="type">The modification point</param>
-    /// <returns>List of raw delegates</returns>
-    public static List<Delegate> GetModifiers(IModifiable modifiable, ModifierType type)
-    {
-        var modifiers = modifiable.Modifiers;
+    // /// <summary>
+    // /// Gets all modifiers of a specific type without requiring type specification
+    // /// </summary>
+    // /// <param name="modifiable">The object with modifiers</param>
+    // /// <param name="type">The modification point</param>
+    // /// <returns>List of raw delegates</returns>
+    // public static List<Delegate> GetModifiers(IModifiable modifiable, ModifierType type)
+    // {
+    //     var modifiers = modifiable.Modifiers;
 
-        if (!modifiers.TryGetValue(type, out var modifierList))
-            return new List<Delegate>();
+    //     if (!modifiers.TryGetValue(type, out var modifierList))
+    //         return new List<Delegate>();
 
-        return modifierList.Select(entry => entry.Modifier).ToList();
-    }
+    //     return modifierList.Select(entry => entry.Modifier).ToList();
+    // }
 
     /// <summary>
     /// Checks if any modifiers exist for a specific type
