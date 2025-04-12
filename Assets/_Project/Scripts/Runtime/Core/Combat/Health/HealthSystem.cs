@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class HealthSystem : MonoBehaviour, ITalentModifiable
+public class HealthSystem : MonoBehaviour, IModifiable
 {
     [SerializeField]
     private float maxHealth = 100f;
@@ -39,12 +39,8 @@ public class HealthSystem : MonoBehaviour, ITalentModifiable
     public bool IsDead => isDead;
 
     public delegate float HealingModifier(float amount);
-    public Dictionary<ModifierType, List<(BaseTalent Source, Delegate Modifier)>> TalentModifiers =
-        new Dictionary<ModifierType, List<(BaseTalent Source, Delegate Modifier)>>();
-    Dictionary<
-        ModifierType,
-        List<(BaseTalent Source, Delegate Modifier)>
-    > ITalentModifiable.TalentModifiers => TalentModifiers;
+    public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> Modifiers =
+        new Dictionary<ModifierType, List<(object Source, Delegate Modifier)>>();
 
     private void Awake()
     {
@@ -91,7 +87,7 @@ public class HealthSystem : MonoBehaviour, ITalentModifiable
         // TBI Skill Point Delegate: BEFORE_HEALING
         float modifiedAmount = Mathf.Abs(amount);
         foreach (
-            HealingModifier modifier in TalentModifierHelper.GetModifiers<HealingModifier>(
+            HealingModifier modifier in ModifierHelper.GetModifiers<HealingModifier>(
                 this,
                 ModifierType.BEFORE_HEALING
             )

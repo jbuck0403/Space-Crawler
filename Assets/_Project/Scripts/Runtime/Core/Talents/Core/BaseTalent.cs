@@ -99,21 +99,20 @@ public abstract class BaseTalent : ScriptableObject
     /// </summary>
     protected virtual void OnActivate(GameObject owner)
     {
-        // Get the ITalentModifiable component
-        var modifiable = owner.GetComponent<ITalentModifiable>();
-        if (modifiable == null)
-        {
-            Debug.LogWarning(
-                $"Talent {talentName} requires an ITalentModifiable component on {owner.name}"
-            );
-            return;
-        }
-
         // Apply all modifiers for this talent
         var modifierData = GetModifierData();
         foreach (var data in modifierData)
         {
-            TalentModifierHelper.AddModifier(modifiable, data.ModifierType, this, data.Modifier);
+            var modifiable = GetModifiable(owner, data.TargetComponent);
+            if (modifiable == null)
+            {
+                Debug.LogWarning(
+                    $"Talent {talentName} requires an IModifiable component of type {data.TargetComponent} on {owner.name}"
+                );
+                continue;
+            }
+
+            ModifierHelper.AddModifier(modifiable, data.ModifierType, this, data.Modifier);
         }
     }
 
@@ -122,13 +121,13 @@ public abstract class BaseTalent : ScriptableObject
     /// </summary>
     protected virtual void OnDeactivate(GameObject owner)
     {
-        // Get the ITalentModifiable component
-        var modifiable = owner.GetComponent<ITalentModifiable>();
-        if (modifiable == null)
-            return;
-
-        // Remove all modifiers from this talent
-        TalentModifierHelper.RemoveModifiersFromTalent(modifiable, this);
+        // Find all IModifiable components on the owner and its children
+        var modifiables = owner.GetComponentsInChildren<IModifiable>();
+        foreach (var modifiable in modifiables)
+        {
+            // Remove all modifiers from this talent
+            ModifierHelper.RemoveModifiersFromSource(modifiable, this);
+        }
     }
 
     /// <summary>
@@ -153,14 +152,6 @@ public abstract class BaseTalent : ScriptableObject
     }
 
     /// <summary>
-    /// Override to return the list of modifiers and their types for this talent
-    /// </summary>
-    protected virtual List<TalentModifierData> GetModifierData()
-    {
-        return new List<TalentModifierData>();
-    }
-
-    /// <summary>
     /// Checks if all prerequisites for this talent are met
     /// </summary>
     public bool ArePrerequisitesMet(List<BaseTalent> activeTalents)
@@ -178,17 +169,43 @@ public abstract class BaseTalent : ScriptableObject
     }
 
     /// <summary>
+    /// Override to return the list of modifiers and their types for this talent
+    /// </summary>
+    protected virtual List<TalentModifierData> GetModifierData()
+    {
+        return new List<TalentModifierData>();
+    }
+
+    /// <summary>
+    /// Gets the appropriate IModifiable component from the owner
+    /// </summary>
+    protected virtual IModifiable GetModifiable(GameObject owner, Type targetComponent)
+    {
+        if (targetComponent == null)
+            return owner.GetComponent<IModifiable>();
+
+        // Get component of specific type
+        var component = owner.GetComponent(targetComponent);
+        if (component is IModifiable modifiable)
+            return modifiable;
+
+        return null;
+    }
+
+    /// <summary>
     /// Data structure for talent modifiers
     /// </summary>
     protected class TalentModifierData
     {
         public ModifierType ModifierType { get; set; }
         public Delegate Modifier { get; set; }
+        public Type TargetComponent { get; set; }
 
-        public TalentModifierData(ModifierType type, Delegate modifier)
+        public TalentModifierData(ModifierType type, Delegate modifier, Type targetComponent = null)
         {
             ModifierType = type;
             Modifier = modifier;
+            TargetComponent = targetComponent;
         }
     }
 }

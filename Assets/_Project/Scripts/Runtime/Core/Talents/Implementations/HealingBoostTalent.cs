@@ -16,7 +16,11 @@ public class HealingBoostTalent : BaseTalent
         // Return list with single modifier
         return new List<TalentModifierData>
         {
-            new TalentModifierData(ModifierType.BEFORE_HEALING, ModifyHealingAmountDelegate())
+            new TalentModifierData(
+                ModifierType.BEFORE_HEALING,
+                ModifyHealingAmountDelegate(),
+                typeof(HealthSystem)
+            )
         };
     }
 
