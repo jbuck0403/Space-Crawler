@@ -100,14 +100,14 @@ public abstract class BaseTalent : ScriptableObject
     protected virtual void OnActivate(GameObject owner)
     {
         // Apply all modifiers for this talent
-        var modifierData = GetModifierData();
+        var modifierData = GetModifierData(owner);
         foreach (var data in modifierData)
         {
-            var modifiable = GetModifiable(owner, data.TargetComponent);
+            var modifiable = GetModifiable(owner);
             if (modifiable == null)
             {
                 Debug.LogWarning(
-                    $"Talent {talentName} requires an IModifiable component of type {data.TargetComponent} on {owner.name}"
+                    $"Talent {talentName} requires an IModifiable component of type {data.Modifiable} on {owner.name}"
                 );
                 continue;
             }
@@ -171,26 +171,12 @@ public abstract class BaseTalent : ScriptableObject
     /// <summary>
     /// Override to return the list of modifiers and their types for this talent
     /// </summary>
-    protected virtual List<TalentModifierData> GetModifierData()
-    {
-        return new List<TalentModifierData>();
-    }
+    protected abstract List<TalentModifierData> GetModifierData(GameObject gameObject);
 
     /// <summary>
     /// Gets the appropriate IModifiable component from the owner
     /// </summary>
-    protected virtual IModifiable GetModifiable(GameObject owner, Type targetComponent)
-    {
-        if (targetComponent == null)
-            return owner.GetComponent<IModifiable>();
-
-        // Get component of specific type
-        var component = owner.GetComponent(targetComponent);
-        if (component is IModifiable modifiable)
-            return modifiable;
-
-        return null;
-    }
+    protected abstract IModifiable GetModifiable(GameObject owner);
 
     /// <summary>
     /// Data structure for talent modifiers
@@ -199,13 +185,13 @@ public abstract class BaseTalent : ScriptableObject
     {
         public ModifierType ModifierType { get; set; }
         public Delegate Modifier { get; set; }
-        public Type TargetComponent { get; set; }
+        public IModifiable Modifiable;
 
-        public TalentModifierData(ModifierType type, Delegate modifier, Type targetComponent = null)
+        public TalentModifierData(ModifierType type, Delegate modifier, IModifiable modifiable)
         {
             ModifierType = type;
             Modifier = modifier;
-            TargetComponent = targetComponent;
+            Modifiable = modifiable;
         }
     }
 }

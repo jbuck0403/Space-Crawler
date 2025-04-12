@@ -38,6 +38,9 @@ public class HealthSystem : MonoBehaviour, IModifiable
     public float CurrentHealth => currentHealth;
     public bool IsDead => isDead;
 
+    Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> IModifiable.Modifiers =>
+        Modifiers;
+
     public delegate float HealingModifier(float amount);
     public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> Modifiers =
         new Dictionary<ModifierType, List<(object Source, Delegate Modifier)>>();

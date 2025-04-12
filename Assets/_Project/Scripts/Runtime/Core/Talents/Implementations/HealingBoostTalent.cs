@@ -11,7 +11,7 @@ public class HealingBoostTalent : BaseTalent
     [SerializeField]
     private float healingMultiplier = 1.25f;
 
-    protected override List<TalentModifierData> GetModifierData()
+    protected override List<TalentModifierData> GetModifierData(GameObject gameObject)
     {
         // Return list with single modifier
         return new List<TalentModifierData>
@@ -19,7 +19,7 @@ public class HealingBoostTalent : BaseTalent
             new TalentModifierData(
                 ModifierType.BEFORE_HEALING,
                 ModifyHealingAmountDelegate(),
-                typeof(HealthSystem)
+                GetModifiable(gameObject)
             )
         };
     }
@@ -28,5 +28,10 @@ public class HealingBoostTalent : BaseTalent
     {
         HealthSystem.HealingModifier fn = (amount) => amount * healingMultiplier;
         return fn;
+    }
+
+    protected override IModifiable GetModifiable(GameObject gameObject)
+    {
+        return gameObject.GetComponent<HealthSystem>();
     }
 }
