@@ -81,6 +81,22 @@ public static class TalentModifierHelper
     }
 
     /// <summary>
+    /// Gets all modifiers of a specific type without requiring type specification
+    /// </summary>
+    /// <param name="modifiable">The object with modifiers</param>
+    /// <param name="type">The modification point</param>
+    /// <returns>List of raw delegates</returns>
+    public static List<Delegate> GetModifiers(ITalentModifiable modifiable, ModifierType type)
+    {
+        var modifiers = modifiable.TalentModifiers;
+
+        if (!modifiers.TryGetValue(type, out var modifierList))
+            return new List<Delegate>();
+
+        return modifierList.Select(entry => entry.Modifier).ToList();
+    }
+
+    /// <summary>
     /// Checks if any modifiers exist for a specific type
     /// </summary>
     /// <param name="modifiable">The object to check</param>

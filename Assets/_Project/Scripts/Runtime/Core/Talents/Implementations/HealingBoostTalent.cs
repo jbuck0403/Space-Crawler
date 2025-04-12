@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,45 +11,18 @@ public class HealingBoostTalent : BaseTalent
     [SerializeField]
     private float healingMultiplier = 1.25f;
 
-    // Track delegate instances for cleanup
-    private Dictionary<GameObject, HealthSystem.HealingModifier> healingModifiers =
-        new Dictionary<GameObject, HealthSystem.HealingModifier>();
-
-    protected override void OnActivate(GameObject owner)
+    protected override List<TalentModifierData> GetModifierData()
     {
-        var healthSystem = owner.GetComponent<HealthSystem>();
-        if (healthSystem == null)
+        // Return list with single modifier
+        return new List<TalentModifierData>
         {
-            Debug.LogWarning($"HealingBoostTalent requires a HealthSystem on {owner.name}");
-            return;
-        }
-
-        // Create delegate that will boost healing
-        HealthSystem.HealingModifier healingBooster = (amount) => amount * healingMultiplier;
-
-        // Register with health system
-        healthSystem.AddHealingModifier(owner, healingBooster);
-
-        // Store for cleanup
-        healingModifiers[owner] = healingBooster;
-
-        Debug.Log(
-            $"Activated healing boost talent on {owner.name} with multiplier {healingMultiplier}"
-        );
+            new TalentModifierData(ModifierType.BEFORE_HEALING, ModifyHealingAmountDelegate())
+        };
     }
 
-    protected override void OnDeactivate(GameObject owner)
+    private Delegate ModifyHealingAmountDelegate()
     {
-        var healthSystem = owner.GetComponent<HealthSystem>();
-        if (healthSystem == null)
-            return;
-
-        // Cleanup delegate registration
-        healthSystem.RemoveHealingModifier(owner);
-
-        // Remove from tracking
-        healingModifiers.Remove(owner);
-
-        Debug.Log($"Deactivated healing boost talent on {owner.name}");
+        HealthSystem.HealingModifier fn = (amount) => amount * healingMultiplier;
+        return fn;
     }
 }

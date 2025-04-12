@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,7 +26,7 @@ public abstract class BaseTalent : ScriptableObject
     public virtual bool TryActivate(GameObject owner)
     {
         if (maxDesignatedPoints <= pointsDesignated)
-            return false; // Already activated on this object
+            return false; // Already max level
 
         OnPointAdded(owner);
 
@@ -38,8 +39,8 @@ public abstract class BaseTalent : ScriptableObject
     /// <param name="owner">The GameObject to remove talent effects from</param>
     public virtual void Deactivate(GameObject owner)
     {
-        if (pointsDesignated > 0)
-            return; // Not active on this object
+        if (pointsDesignated <= 0)
+            return; // Not active
 
         OnPointRemoved(owner);
     }
@@ -78,14 +79,49 @@ public abstract class BaseTalent : ScriptableObject
     }
 
     /// <summary>
-    /// Implemented by derived classes to apply talent effects
+    /// Handles common talent activation logic
     /// </summary>
-    protected abstract void OnActivate(GameObject owner);
+    protected virtual void OnActivate(GameObject owner)
+    {
+        // Get the ITalentModifiable component
+        var modifiable = owner.GetComponent<ITalentModifiable>();
+        if (modifiable == null)
+        {
+            Debug.LogWarning(
+                $"Talent {talentName} requires an ITalentModifiable component on {owner.name}"
+            );
+            return;
+        }
+
+        // Apply all modifiers for this talent
+        var modifierData = GetModifierData();
+        foreach (var data in modifierData)
+        {
+            TalentModifierHelper.AddModifier(modifiable, data.ModifierType, this, data.Modifier);
+        }
+    }
 
     /// <summary>
-    /// Implemented by derived classes to clean up talent effects
+    /// Handles common talent deactivation logic
     /// </summary>
-    protected abstract void OnDeactivate(GameObject owner);
+    protected virtual void OnDeactivate(GameObject owner)
+    {
+        // Get the ITalentModifiable component
+        var modifiable = owner.GetComponent<ITalentModifiable>();
+        if (modifiable == null)
+            return;
+
+        // Remove all modifiers from this talent
+        TalentModifierHelper.RemoveModifiersFromTalent(modifiable, this);
+    }
+
+    /// <summary>
+    /// Override to return the list of modifiers and their types for this talent
+    /// </summary>
+    protected virtual List<TalentModifierData> GetModifierData()
+    {
+        return new List<TalentModifierData>();
+    }
 
     /// <summary>
     /// Checks if all prerequisites for this talent are met
@@ -102,5 +138,20 @@ public abstract class BaseTalent : ScriptableObject
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// Data structure for talent modifiers
+    /// </summary>
+    protected class TalentModifierData
+    {
+        public ModifierType ModifierType { get; set; }
+        public Delegate Modifier { get; set; }
+
+        public TalentModifierData(ModifierType type, Delegate modifier)
+        {
+            ModifierType = type;
+            Modifier = modifier;
+        }
     }
 }

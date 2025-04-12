@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class HealthSystem : MonoBehaviour
+public class HealthSystem : MonoBehaviour, ITalentModifiable
 {
     [SerializeField]
     private float maxHealth = 100f;
@@ -37,21 +39,12 @@ public class HealthSystem : MonoBehaviour
     public bool IsDead => isDead;
 
     public delegate float HealingModifier(float amount);
-
-    // dictionary to track modifiers by source
-    private Dictionary<GameObject, HealingModifier> healingModifiers =
-        new Dictionary<GameObject, HealingModifier>();
-
-    public void AddHealingModifier(GameObject source, HealingModifier modifier)
-    {
-        healingModifiers[source] = modifier;
-    }
-
-    public void RemoveHealingModifier(GameObject source)
-    {
-        if (healingModifiers.ContainsKey(source))
-            healingModifiers.Remove(source);
-    }
+    public Dictionary<ModifierType, List<(BaseTalent Source, Delegate Modifier)>> TalentModifiers =
+        new Dictionary<ModifierType, List<(BaseTalent Source, Delegate Modifier)>>();
+    Dictionary<
+        ModifierType,
+        List<(BaseTalent Source, Delegate Modifier)>
+    > ITalentModifiable.TalentModifiers => TalentModifiers;
 
     private void Awake()
     {
@@ -96,8 +89,13 @@ public class HealthSystem : MonoBehaviour
     public void Heal(float amount)
     {
         // TBI Skill Point Delegate: BEFORE_HEALING
-        float modifiedAmount = amount;
-        foreach (var modifier in healingModifiers.Values)
+        float modifiedAmount = Mathf.Abs(amount);
+        foreach (
+            HealingModifier modifier in TalentModifierHelper.GetModifiers<HealingModifier>(
+                this,
+                ModifierType.BEFORE_HEALING
+            )
+        )
         {
             modifiedAmount = modifier(modifiedAmount);
         }
