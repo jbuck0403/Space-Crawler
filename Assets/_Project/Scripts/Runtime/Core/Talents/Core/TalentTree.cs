@@ -8,8 +8,11 @@ using UnityEngine;
 public class TalentTree : MonoBehaviour
 {
     [SerializeField]
-    private List<BaseTalent> availableTalents = new List<BaseTalent>();
+    private List<BaseTalent> availableTalentTemplates = new List<BaseTalent>();
 
+    // Dictionary to store runtime instances of talents
+    private Dictionary<BaseTalent, BaseTalent> runtimeTalentInstances =
+        new Dictionary<BaseTalent, BaseTalent>();
     private List<BaseTalent> activeTalents = new List<BaseTalent>();
 
     [SerializeField]
@@ -22,13 +25,29 @@ public class TalentTree : MonoBehaviour
     public int TotalPoints => totalPoints;
     public int SpentPoints => spentPoints;
 
+    private void Awake()
+    {
+        // Create runtime instances of all available talents
+        foreach (var talentTemplate in availableTalentTemplates)
+        {
+            runtimeTalentInstances[talentTemplate] = Instantiate(talentTemplate);
+        }
+    }
+
     /// <summary>
     /// Try to unlock a talent if prerequisites are met and points are available
     /// </summary>
-    public bool TryUnlockTalent(BaseTalent talent)
+    public bool TryUnlockTalent(BaseTalent talentTemplate)
     {
+        // Get runtime instance of the talent
+        if (!runtimeTalentInstances.TryGetValue(talentTemplate, out var talent))
+        {
+            Debug.LogWarning($"Talent {talentTemplate.name} is not available in this talent tree");
+            return false;
+        }
+
         // Verify talent is in available talents
-        if (!availableTalents.Contains(talent))
+        if (!availableTalentTemplates.Contains(talentTemplate))
         {
             Debug.LogWarning($"Talent {talent.name} is not available in this talent tree");
             return false;
@@ -73,8 +92,14 @@ public class TalentTree : MonoBehaviour
     /// <summary>
     /// Removes a talent if it's currently active
     /// </summary>
-    public bool TryRemoveTalent(BaseTalent talent)
+    public bool TryRemoveTalent(BaseTalent talentTemplate)
     {
+        // Get runtime instance of the talent
+        if (!runtimeTalentInstances.TryGetValue(talentTemplate, out var talent))
+        {
+            return false;
+        }
+
         // Check if talent is active
         if (!activeTalents.Contains(talent))
         {
@@ -86,7 +111,7 @@ public class TalentTree : MonoBehaviour
         {
             if (
                 activeTalent.requiredTalents != null
-                && activeTalent.requiredTalents.Contains(talent)
+                && activeTalent.requiredTalents.Contains(talentTemplate)
             )
             {
                 Debug.LogWarning(
@@ -132,14 +157,27 @@ public class TalentTree : MonoBehaviour
     /// </summary>
     public List<BaseTalent> GetAvailableTalents()
     {
-        return new List<BaseTalent>(availableTalents);
+        return new List<BaseTalent>(availableTalentTemplates);
+    }
+
+    /// <summary>
+    /// Get the runtime instance of a talent template
+    /// </summary>
+    public BaseTalent GetRuntimeTalent(BaseTalent talentTemplate)
+    {
+        if (runtimeTalentInstances.TryGetValue(talentTemplate, out var instance))
+            return instance;
+        return null;
     }
 
     /// <summary>
     /// Check if a specific talent is currently unlocked
     /// </summary>
-    public bool IsTalentUnlocked(BaseTalent talent)
+    public bool IsTalentUnlocked(BaseTalent talentTemplate)
     {
+        if (!runtimeTalentInstances.TryGetValue(talentTemplate, out var talent))
+            return false;
+
         return activeTalents.Contains(talent);
     }
 

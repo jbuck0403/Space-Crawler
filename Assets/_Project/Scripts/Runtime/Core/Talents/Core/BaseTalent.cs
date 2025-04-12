@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,6 +19,13 @@ public abstract class BaseTalent : ScriptableObject
     [Header("Talent Requirements")]
     public List<BaseTalent> requiredTalents;
 
+    // Runtime state - not serialized
+    [System.NonSerialized]
+    protected GameObject currentOwner;
+
+    [System.NonSerialized]
+    protected MonoBehaviour coroutineRunner;
+
     /// <summary>
     /// Activates this talent on the specified GameObject
     /// </summary>
@@ -27,6 +35,11 @@ public abstract class BaseTalent : ScriptableObject
     {
         if (maxDesignatedPoints <= pointsDesignated)
             return false; // Already max level
+
+        currentOwner = owner;
+
+        // Find a MonoBehaviour to run coroutines if needed
+        coroutineRunner = owner.GetComponent<TalentTree>();
 
         OnPointAdded(owner);
 
@@ -43,6 +56,9 @@ public abstract class BaseTalent : ScriptableObject
             return; // Not active
 
         OnPointRemoved(owner);
+
+        currentOwner = null;
+        coroutineRunner = null;
     }
 
     protected virtual void OnPointAdded(GameObject owner)
@@ -113,6 +129,27 @@ public abstract class BaseTalent : ScriptableObject
 
         // Remove all modifiers from this talent
         TalentModifierHelper.RemoveModifiersFromTalent(modifiable, this);
+    }
+
+    /// <summary>
+    /// Starts a coroutine on the owner GameObject
+    /// </summary>
+    protected Coroutine StartCoroutine(IEnumerator routine)
+    {
+        if (coroutineRunner != null)
+            return coroutineRunner.StartCoroutine(routine);
+
+        Debug.LogWarning($"No coroutine runner available for talent {talentName}");
+        return null;
+    }
+
+    /// <summary>
+    /// Stops a coroutine on the owner GameObject
+    /// </summary>
+    protected void StopCoroutine(Coroutine coroutine)
+    {
+        if (coroutineRunner != null && coroutine != null)
+            coroutineRunner.StopCoroutine(coroutine);
     }
 
     /// <summary>
