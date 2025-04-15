@@ -8,6 +8,12 @@ using UnityEngine;
 /// </summary>
 public static class ModifierHelper
 {
+    public delegate float FloatInFloatOutModifier(float value);
+    public delegate void FloatInModifier(float value);
+    public delegate void GameObjectInModifier(GameObject gameObject);
+    public delegate GameObject GameObjectInGameObjectOutModifier(GameObject gameObject);
+    public delegate void TriggerModifier();
+
     /// <summary>
     /// Adds a modifier to a modifiable object
     /// </summary>

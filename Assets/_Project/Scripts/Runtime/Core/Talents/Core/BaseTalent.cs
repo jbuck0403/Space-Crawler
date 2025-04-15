@@ -6,7 +6,6 @@ using UnityEngine;
 /// <summary>
 /// Base class for all talents that can be unlocked in the skill tree
 /// </summary>
-[CreateAssetMenu(menuName = "SpaceShooter/Talents/Base Talent")]
 public abstract class BaseTalent : ScriptableObject
 {
     [Header("Talent Information")]
@@ -17,7 +16,8 @@ public abstract class BaseTalent : ScriptableObject
     public int pointsDesignated = 0;
 
     [Header("Talent Requirements")]
-    public List<BaseTalent> requiredTalents;
+    [SerializeField]
+    public List<TalentPreRequisiteData> requiredTalents;
 
     // Runtime state - not serialized
     [System.NonSerialized]
@@ -161,7 +161,7 @@ public abstract class BaseTalent : ScriptableObject
 
         foreach (var prerequisite in requiredTalents)
         {
-            if (!activeTalents.Contains(prerequisite))
+            if (!activeTalents.Contains(prerequisite.talent))
                 return false; // Missing a required talent
         }
 
@@ -193,5 +193,18 @@ public abstract class BaseTalent : ScriptableObject
             Modifier = modifier;
             Modifiable = modifiable;
         }
+    }
+}
+
+[Serializable]
+public class TalentPreRequisiteData
+{
+    public BaseTalent talent;
+    public int requiredPointsInvested;
+
+    public TalentPreRequisiteData(BaseTalent requiredTalent, int requiredPointsInvested)
+    {
+        this.talent = requiredTalent;
+        this.requiredPointsInvested = requiredPointsInvested;
     }
 }

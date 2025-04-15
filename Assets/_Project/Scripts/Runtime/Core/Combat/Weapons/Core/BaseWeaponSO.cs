@@ -1,9 +1,10 @@
 using System;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "SpaceShooter/Weapons/Base Weapon")]
-public abstract class BaseWeaponSO : ScriptableObject
+public abstract class BaseWeaponSO : ScriptableObject, IModifiable
 {
     [Header("Weapon Configuration")]
     [SerializeField]
@@ -32,6 +33,11 @@ public abstract class BaseWeaponSO : ScriptableObject
     // Properties
     public FireConfig FireConfig => fireConfig;
     public ProjectileTypeSO ProjectileType => projectileType;
+
+    public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> modifiers =
+        new Dictionary<ModifierType, List<(object Source, Delegate Modifier)>>();
+    public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> Modifiers =>
+        modifiers;
 
     /// <summary>
     /// Initialize the weapon with necessary references and return an instance
@@ -86,11 +92,22 @@ public abstract class BaseWeaponSO : ScriptableObject
         // TBI Skill Point Delegate: BEFORE_PROJECTILE_CREATION
         Projectile projectile = GetProjectile(firePoint, source, provider);
 
-        if (damageModifier != 1f)
+        float newDamageModifier = damageModifier;
+        foreach (
+            var modifier in ModifierHelper.GetModifiers<ModifierHelper.FloatInFloatOutModifier>(
+                this,
+                ModifierType.WEAPON_DAMAGE_MODIFIER
+            )
+        )
+        {
+            newDamageModifier = modifier(newDamageModifier);
+        }
+
+        if (newDamageModifier != 1f)
         {
             // TBI Skill Point Delegate: WEAPON_DAMAGE_MODIFIER
             DamageData damageData = projectile.damageData;
-            float newDamage = damageData.Amount * damageModifier;
+            float newDamage = damageData.Amount * newDamageModifier;
 
             projectile.damageData = projectileType.damageProfile.CreateDamageData(
                 source,
@@ -132,7 +149,18 @@ public abstract class BaseWeaponSO : ScriptableObject
 
     protected void UpdateNextFireTime()
     {
-        nextFireTime = Time.time + fireConfig.fireRate;
+        float modifiedFireRate = fireConfig.fireRate;
+        foreach (
+            var modifier in ModifierHelper.GetModifiers<ModifierHelper.FloatInFloatOutModifier>(
+                this,
+                ModifierType.AUTO_FIRE_RATE_MODIFIER
+            )
+        )
+        {
+            modifiedFireRate = modifier(modifiedFireRate);
+        }
+
+        nextFireTime = Time.time + modifiedFireRate;
     }
 
     public bool CanActivateAbility()

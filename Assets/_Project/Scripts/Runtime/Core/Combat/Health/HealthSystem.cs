@@ -41,7 +41,6 @@ public class HealthSystem : MonoBehaviour, IModifiable
     Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> IModifiable.Modifiers =>
         Modifiers;
 
-    public delegate float HealingModifier(float amount);
     public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> Modifiers =
         new Dictionary<ModifierType, List<(object Source, Delegate Modifier)>>();
 
@@ -90,7 +89,7 @@ public class HealthSystem : MonoBehaviour, IModifiable
         // TBI Skill Point Delegate: BEFORE_HEALING
         float modifiedAmount = Mathf.Abs(amount);
         foreach (
-            HealingModifier modifier in ModifierHelper.GetModifiers<HealingModifier>(
+            var modifier in ModifierHelper.GetModifiers<ModifierHelper.FloatInFloatOutModifier>(
                 this,
                 ModifierType.BEFORE_HEALING
             )

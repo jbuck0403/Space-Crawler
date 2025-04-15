@@ -110,7 +110,7 @@ public class DamageHandler : MonoBehaviour
         bool criticalHit;
 
         (finalDamage, criticalHit) = ApplyCriticalHit(finalDamage, critMultiplier, critChance);
-        // TBI Skill Point Delegate: AFTER_CRIT_CALCULATION
+        // TBI Skill Point Delegate: ON_CRITICAL_HIT
 
         return (finalDamage, criticalHit);
     }

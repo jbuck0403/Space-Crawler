@@ -26,7 +26,8 @@ public class HealingBoostTalent : BaseTalent
 
     private Delegate ModifyHealingAmountDelegate()
     {
-        HealthSystem.HealingModifier fn = (amount) => amount * healingMultiplier;
+        // HealthSystem.HealingModifier fn = (amount) => amount * healingMultiplier;
+        ModifierHelper.FloatInFloatOutModifier fn = (amount) => amount * healingMultiplier;
         return fn;
     }
 

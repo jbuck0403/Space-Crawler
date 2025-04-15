@@ -1,10 +1,17 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseDefenseHandler : MonoBehaviour, IDefenseHandler
+public class BaseDefenseHandler : MonoBehaviour, IDefenseHandler, IModifiable
 {
     [SerializeField]
     protected DefenseProfile defenseProfile;
     protected DefenseData defenseData;
+
+    public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> modifiers =
+        new Dictionary<ModifierType, List<(object Source, Delegate Modifier)>>();
+    public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> Modifiers =>
+        modifiers;
 
     private void Awake()
     {
@@ -25,7 +32,18 @@ public class BaseDefenseHandler : MonoBehaviour, IDefenseHandler
     public virtual float HandleDefense(float incomingDamage, DamageData damageData)
     {
         float finalDamage = CalculateDamageAfterDefense(incomingDamage, damageData.Type);
-        return -finalDamage; // negative because it's damage
+
+        foreach (
+            var modifier in ModifierHelper.GetModifiers<ModifierHelper.FloatInFloatOutModifier>(
+                this,
+                ModifierType.AFTER_DEFENSE_CALCULATION
+            )
+        )
+        {
+            finalDamage = modifier(finalDamage);
+        }
+
+        return -Mathf.Abs(finalDamage); // negative because it's damage
     }
 
     protected virtual float CalculateDamageAfterDefense(float incomingDamage, DamageType type)
