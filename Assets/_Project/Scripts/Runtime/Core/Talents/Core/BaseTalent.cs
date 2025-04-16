@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -33,14 +34,20 @@ public abstract class BaseTalent : ScriptableObject
     /// <returns>True if activation was successful</returns>
     public virtual bool TryActivate(GameObject owner)
     {
+        Debug.Log($"%%% BaseTalent: Trying to activate talent {talentName} ({name})");
+
         if (maxDesignatedPoints <= pointsDesignated)
+        {
+            Debug.LogWarning($"%%% BaseTalent: Talent {talentName} already at max level");
             return false; // Already max level
+        }
 
         currentOwner = owner;
 
         // Find a MonoBehaviour to run coroutines if needed
-        coroutineRunner = owner.GetComponent<TalentTree>();
+        coroutineRunner = owner.GetComponent<TalentTreeHandler>();
 
+        Debug.Log($"%%% BaseTalent: Adding point to talent {talentName}");
         OnPointAdded(owner);
 
         return true;
@@ -63,20 +70,30 @@ public abstract class BaseTalent : ScriptableObject
 
     protected virtual void OnPointAdded(GameObject owner)
     {
+        Debug.Log(
+            $"%%% BaseTalent: OnPointAdded for {talentName}, current points: {pointsDesignated}"
+        );
+
         if (maxDesignatedPoints > pointsDesignated)
         {
-            if (pointsDesignated > 0)
+            pointsDesignated++;
+
+            if (pointsDesignated > 1)
             {
+                Debug.Log($"%%% BaseTalent: Reactivating talent {talentName} to add point");
                 OnDeactivate(owner);
-                pointsDesignated++;
                 OnActivate(owner);
             }
             else
             {
+                Debug.Log($"%%% BaseTalent: First activation of talent {talentName}");
                 OnActivate(owner);
-                pointsDesignated = 1;
             }
         }
+
+        Debug.Log(
+            $"%%% BaseTalent: Talent {talentName} now at {pointsDesignated}/{maxDesignatedPoints} points"
+        );
     }
 
     protected virtual void OnPointRemoved(GameObject owner)
@@ -99,20 +116,15 @@ public abstract class BaseTalent : ScriptableObject
     /// </summary>
     protected virtual void OnActivate(GameObject owner)
     {
+        Debug.Log($"%%% BaseTalent: OnActivate for {talentName}");
+
         // Apply all modifiers for this talent
+        var modifiables = GetModifiable(owner);
         var modifierData = GetModifierData(owner);
+
         foreach (var data in modifierData)
         {
-            var modifiable = GetModifiable(owner);
-            if (modifiable == null)
-            {
-                Debug.LogWarning(
-                    $"Talent {talentName} requires an IModifiable component of type {data.Modifiable} on {owner.name}"
-                );
-                continue;
-            }
-
-            ModifierHelper.AddModifier(modifiable, data.ModifierType, this, data.Modifier);
+            ModifierHelper.AddModifiers(modifiables, data.ModifierType, this, data.Modifier);
         }
     }
 
@@ -122,7 +134,7 @@ public abstract class BaseTalent : ScriptableObject
     protected virtual void OnDeactivate(GameObject owner)
     {
         // Find all IModifiable components on the owner and its children
-        var modifiables = owner.GetComponentsInChildren<IModifiable>();
+        var modifiables = GetModifiable(owner);
         foreach (var modifiable in modifiables)
         {
             // Remove all modifiers from this talent
@@ -156,15 +168,37 @@ public abstract class BaseTalent : ScriptableObject
     /// </summary>
     public bool ArePrerequisitesMet(List<BaseTalent> activeTalents)
     {
+        Debug.Log(
+            $"%%% BaseTalent: Checking prerequisites for {talentName}, required talents: {(requiredTalents != null ? requiredTalents.Count : 0)}"
+        );
+
         if (requiredTalents == null || requiredTalents.Count == 0)
+        {
+            Debug.Log($"%%% BaseTalent: No prerequisites for {talentName}");
             return true; // No prerequisites
+        }
 
         foreach (var prerequisite in requiredTalents)
         {
-            if (!activeTalents.Contains(prerequisite.talent))
+            bool foundTalent = activeTalents.Any(t =>
+                t.name == prerequisite.talent.name
+                && t.pointsDesignated >= prerequisite.requiredPointsInvested
+            );
+
+            Debug.Log(
+                $"%%% BaseTalent: Prerequisite {prerequisite.talent.name} found? {foundTalent}, required points: {prerequisite.requiredPointsInvested}"
+            );
+
+            if (!foundTalent)
+            {
+                Debug.LogWarning(
+                    $"%%% BaseTalent: Missing prerequisite {prerequisite.talent.name} for {talentName}"
+                );
                 return false; // Missing a required talent
+            }
         }
 
+        Debug.Log($"%%% BaseTalent: All prerequisites met for {talentName}");
         return true;
     }
 
@@ -176,7 +210,7 @@ public abstract class BaseTalent : ScriptableObject
     /// <summary>
     /// Gets the appropriate IModifiable component from the owner
     /// </summary>
-    protected abstract IModifiable GetModifiable(GameObject owner);
+    protected abstract List<IModifiable> GetModifiable(GameObject owner);
 
     /// <summary>
     /// Data structure for talent modifiers

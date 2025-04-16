@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7dcf48915d0b1642ae33ed3bda6052a, type: 3}
   m_Name: DamageBoost
   m_EditorClassIdentifier: 
-  talentName: 
+  talentName: Damage Boost
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 673da70531bbca045aa18ddd4b018575, type: 3}
   maxDesignatedPoints: 5
   pointsDesignated: 0
   requiredTalents: []

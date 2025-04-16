@@ -42,6 +42,19 @@ public static class ModifierHelper
         Debug.Log($"Added {type} modifier from {sourceName}");
     }
 
+    public static void AddModifiers(
+        List<IModifiable> modifiables,
+        ModifierType type,
+        object source,
+        Delegate modifier
+    )
+    {
+        foreach (IModifiable modifiable in modifiables)
+        {
+            AddModifier(modifiable, type, source, modifier);
+        }
+    }
+
     /// <summary>
     /// Removes all modifiers from a specific source
     /// </summary>
@@ -127,6 +140,14 @@ public static class ModifierHelper
     public static void ClearAllModifiers(IModifiable modifiable)
     {
         modifiable.Modifiers.Clear();
+    }
+
+    public static void ClearAllModifiers(List<IModifiable> modifiables)
+    {
+        foreach (IModifiable modifiable in modifiables)
+        {
+            ClearAllModifiers(modifiable);
+        }
     }
 
     /// <summary>

@@ -13,15 +13,20 @@ public class PercentageDamageTakenReductionTalent : BaseTalent
 
     protected override List<TalentModifierData> GetModifierData(GameObject gameObject)
     {
-        // Return list with single modifier
-        return new List<TalentModifierData>
+        List<TalentModifierData> modifierDataList = new List<TalentModifierData>();
+
+        foreach (IModifiable modifiable in GetModifiable(gameObject))
         {
-            new TalentModifierData(
-                ModifierType.AFTER_DEFENSE_CALCULATION,
-                ModifyIncomingDamageDelegate(),
-                GetModifiable(gameObject)
-            )
-        };
+            modifierDataList.Add(
+                new TalentModifierData(
+                    ModifierType.AUTO_FIRE_RATE_MODIFIER,
+                    ModifyIncomingDamageDelegate(),
+                    modifiable
+                )
+            );
+        }
+
+        return modifierDataList;
     }
 
     private Delegate ModifyIncomingDamageDelegate()
@@ -39,10 +44,10 @@ public class PercentageDamageTakenReductionTalent : BaseTalent
         return fn;
     }
 
-    protected override IModifiable GetModifiable(GameObject gameObject)
+    protected override List<IModifiable> GetModifiable(GameObject gameObject)
     {
         // DamageHandler is the component that processes incoming damage
         var damageHandler = gameObject.GetComponent<BaseDefenseHandler>();
-        return damageHandler;
+        return new List<IModifiable> { damageHandler };
     }
 }

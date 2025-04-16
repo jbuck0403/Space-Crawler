@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 #endif
 
-public class WeaponHandler : MonoBehaviour, IProjectileDataProvider
+public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
 {
     [Header("Weapon Configuration")]
     [SerializeField]
@@ -31,6 +31,12 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider
     public BaseWeaponSO CurrentWeapon => currentWeapon;
     public event Action<BaseWeaponSO> OnWeaponChanged;
     public Transform FirePoint => firePoint;
+    public List<BaseWeaponSO> WeaponInstances => weaponInstances;
+
+    public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> modifiers =
+        new Dictionary<ModifierType, List<(object Source, Delegate Modifier)>>();
+    public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> Modifiers =>
+        modifiers;
 
     private void Awake()
     {

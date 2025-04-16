@@ -382,6 +382,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3080204034210999966, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2635574350697940816}
+    - targetCorrespondingSourceObject: {fileID: 3080204034210999966, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -3121990192987300796}
   m_SourcePrefab: {fileID: 100100000, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
 --- !u!4 &2488037743040916224 stripped
 Transform:
@@ -472,12 +475,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4de7de75397fc1643b7fcbb85a581d89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  availableTalentTemplates:
-  - {fileID: 11400000, guid: d5d2cbad03ffa944c87555c3931407fd, type: 2}
-  - {fileID: 11400000, guid: 9c522565e63d59d4db401ac40d427dec, type: 2}
-  - {fileID: 11400000, guid: 21859a08845701842909172a49004033, type: 2}
   totalPoints: 0
   spentPoints: 0
+--- !u!114 &-3121990192987300796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8065591907391604513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf35b49e8fdf4b4a9eb5b86e80a4b39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  availablePointsText: {fileID: 0}
+  tierLockedOverlayPrefab: {fileID: 0}
+  tiers:
+  - tierName: 
+    tierPanel: {fileID: 0}
+    talentButtons: []
+    lockedOverlay: {fileID: 0}
+  - tierName: 
+    tierPanel: {fileID: 0}
+    talentButtons: []
+    lockedOverlay: {fileID: 0}
+  - tierName: 
+    tierPanel: {fileID: 0}
+    talentButtons: []
+    lockedOverlay: {fileID: 0}
+  - tierName: 
+    tierPanel: {fileID: 0}
+    talentButtons: []
+    lockedOverlay: {fileID: 0}
+  - tierName: 
+    tierPanel: {fileID: 0}
+    talentButtons: []
+    lockedOverlay: {fileID: 0}
+  - tierName: 
+    tierPanel: {fileID: 0}
+    talentButtons: []
+    lockedOverlay: {fileID: 0}
 --- !u!4 &8099089328420793622 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3833714410248275113, guid: 4220b79cf5a840543b4a082e92706106, type: 3}

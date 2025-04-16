@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da2c6dd412221e44f88b76b19e1c2893, type: 3}
   m_Name: DefenseBoost
   m_EditorClassIdentifier: 
-  talentName: 
+  talentName: Defense Boost
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 0a0859a18d5c9c74abfaa208425e51c5, type: 3}
   maxDesignatedPoints: 5
   pointsDesignated: 0
   requiredTalents: []

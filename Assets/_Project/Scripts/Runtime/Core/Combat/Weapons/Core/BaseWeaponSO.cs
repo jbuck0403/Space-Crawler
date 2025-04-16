@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -150,6 +151,15 @@ public abstract class BaseWeaponSO : ScriptableObject, IModifiable
     protected void UpdateNextFireTime()
     {
         float modifiedFireRate = fireConfig.fireRate;
+
+        // Add this debug info
+        Debug.Log(
+            $"*** Weapon {name} has {(modifiers.ContainsKey(ModifierType.AUTO_FIRE_RATE_MODIFIER) ? modifiers[ModifierType.AUTO_FIRE_RATE_MODIFIER].Count : 0)} fire rate modifiers"
+        );
+
+        // Print memory address to verify we're using the right instance
+        Debug.Log($"*** Weapon dict memory location: {modifiers.GetHashCode()}");
+
         foreach (
             var modifier in ModifierHelper.GetModifiers<ModifierHelper.FloatInFloatOutModifier>(
                 this,

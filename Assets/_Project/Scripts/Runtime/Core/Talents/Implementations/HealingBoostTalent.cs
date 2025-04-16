@@ -13,15 +13,20 @@ public class HealingBoostTalent : BaseTalent
 
     protected override List<TalentModifierData> GetModifierData(GameObject gameObject)
     {
-        // Return list with single modifier
-        return new List<TalentModifierData>
+        List<TalentModifierData> modifierDataList = new List<TalentModifierData>();
+
+        foreach (IModifiable modifiable in GetModifiable(gameObject))
         {
-            new TalentModifierData(
-                ModifierType.BEFORE_HEALING,
-                ModifyHealingAmountDelegate(),
-                GetModifiable(gameObject)
-            )
-        };
+            modifierDataList.Add(
+                new TalentModifierData(
+                    ModifierType.AUTO_FIRE_RATE_MODIFIER,
+                    ModifyHealingAmountDelegate(),
+                    modifiable
+                )
+            );
+        }
+
+        return modifierDataList;
     }
 
     private Delegate ModifyHealingAmountDelegate()
@@ -31,8 +36,9 @@ public class HealingBoostTalent : BaseTalent
         return fn;
     }
 
-    protected override IModifiable GetModifiable(GameObject gameObject)
+    protected override List<IModifiable> GetModifiable(GameObject gameObject)
     {
-        return gameObject.GetComponent<HealthSystem>();
+        HealthSystem healthSystem = gameObject.GetComponent<HealthSystem>();
+        return new List<IModifiable> { healthSystem };
     }
 }

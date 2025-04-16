@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,75 +9,42 @@ using UnityEngine.UI;
 /// </summary>
 public class TalentTreeInputManager : MonoBehaviour
 {
-    [SerializeField]
-    private TalentTree talentTree;
-
     [Header("UI References")]
     [SerializeField]
-    private Text availablePointsText;
+    private TextMeshProUGUI availablePointsText;
 
-    [SerializeField]
-    private GameObject tierLockedOverlayPrefab;
-
-    [Serializable]
-    public class TierConfig
-    {
-        public string tierName;
-        public GameObject tierPanel;
-        public List<TalentButtonUI> talentButtons;
-
-        [HideInInspector]
-        public GameObject lockedOverlay;
-    }
-
-    [SerializeField]
-    private List<TierConfig> tiers = new List<TierConfig>();
+    private TalentTreeHandler talentTreeHandler;
 
     private void Awake()
     {
-        if (talentTree == null)
+        Debug.Log("%%% TalentTreeInputManager: Awake");
+
+        if (talentTreeHandler == null)
         {
-            talentTree = GetComponent<TalentTree>();
+            talentTreeHandler = GetComponent<TalentTreeHandler>();
         }
 
-        if (talentTree == null)
+        if (talentTreeHandler == null)
         {
-            Debug.LogError("TalentTreeInputManager requires a TalentTree component!");
+            Debug.LogError("%%% TalentTreeInputManager: TalentTreeHandler component is missing!");
             enabled = false;
             return;
         }
 
-        // Initialize tier locked overlays
-        for (int i = 0; i < tiers.Count; i++)
-        {
-            if (tiers[i].tierPanel != null && tierLockedOverlayPrefab != null)
-            {
-                tiers[i].lockedOverlay = Instantiate(
-                    tierLockedOverlayPrefab,
-                    tiers[i].tierPanel.transform
-                );
-                tiers[i].lockedOverlay.SetActive(!IsTierUnlocked(i));
-
-                // Add tier requirement text if available
-                Text requirementText = tiers[i].lockedOverlay.GetComponentInChildren<Text>();
-                if (requirementText != null && i > 0)
-                {
-                    requirementText.text = $"Requires {i * 5} points in previous tiers";
-                }
-            }
-        }
-
         // Initialize all talent buttons
-        for (int i = 0; i < tiers.Count; i++)
+        Debug.Log("%%% TalentTreeInputManager: Initializing talent buttons");
+        var buttons = FindObjectsOfType<TalentButtonUI>();
+        foreach (var button in buttons)
         {
-            foreach (var button in tiers[i].talentButtons)
-            {
-                button.Initialize(talentTree, this, i);
-            }
+            button.Initialize(talentTreeHandler, this);
+            Debug.Log(
+                $"%%% TalentTreeInputManager: Initialized button for talent {button.Talent.name}"
+            );
         }
 
         // Initial UI update
         UpdateUI();
+        Debug.Log("%%% TalentTreeInputManager: Initial UI update completed");
     }
 
     /// <summary>
@@ -84,133 +52,55 @@ public class TalentTreeInputManager : MonoBehaviour
     /// </summary>
     public void UpdateUI()
     {
+        Debug.Log("%%% TalentTreeInputManager: Updating UI");
+
         // Update available points text
         if (availablePointsText != null)
         {
             availablePointsText.text =
-                $"Available Points: {talentTree.AvailablePoints}/{talentTree.TotalPoints}";
-        }
-
-        // Update tier unlocked status
-        for (int i = 0; i < tiers.Count; i++)
-        {
-            bool tierUnlocked = IsTierUnlocked(i);
-            if (tiers[i].lockedOverlay != null)
-            {
-                tiers[i].lockedOverlay.SetActive(!tierUnlocked);
-            }
+                $"Available Points: {talentTreeHandler.AvailablePoints}/{talentTreeHandler.TotalPoints}";
+            Debug.Log(
+                $"%%% TalentTreeInputManager: Updated points text: {talentTreeHandler.AvailablePoints}/{talentTreeHandler.TotalPoints}"
+            );
         }
 
         // Update all talent buttons
-        for (int i = 0; i < tiers.Count; i++)
+        var buttons = FindObjectsOfType<TalentButtonUI>();
+        foreach (var button in buttons)
         {
-            foreach (var button in tiers[i].talentButtons)
-            {
-                button.UpdateVisuals();
-            }
+            button.UpdateButton();
         }
     }
 
     /// <summary>
-    /// Check if a tier is unlocked (requires 5 points per previous tier)
+    /// Try to unlock a talent through the TalentTreeHandler
     /// </summary>
-    public bool IsTierUnlocked(int tierIndex)
+    public bool TryUnlockTalent(BaseTalent talent)
     {
-        if (tierIndex == 0)
-            return true; // First tier is always unlocked
-
-        int requiredPoints = tierIndex * 5;
-        int pointsInPreviousTiers = 0;
-
-        // Count points spent in all previous tiers
-        for (int i = 0; i < tierIndex; i++)
-        {
-            foreach (var button in tiers[i].talentButtons)
-            {
-                BaseTalent runtimeTalent = talentTree.GetRuntimeTalent(button.Talent);
-                if (runtimeTalent != null)
-                {
-                    pointsInPreviousTiers += runtimeTalent.pointsDesignated;
-                }
-            }
-        }
-
-        return pointsInPreviousTiers >= requiredPoints;
+        Debug.Log($"%%% TalentTreeInputManager: Relaying unlock request for {talent.name}");
+        bool result = talentTreeHandler.TryUnlockTalent(talent);
+        UpdateUI();
+        return result;
     }
 
     /// <summary>
-    /// Check if a talent can be activated based on tier rules
+    /// Try to remove a talent through the TalentTreeHandler
     /// </summary>
-    public bool CanActivateTalent(BaseTalent talent, int tierIndex)
+    public bool TryRemoveTalent(BaseTalent talent)
     {
-        // Check if tier is unlocked
-        if (!IsTierUnlocked(tierIndex))
-        {
-            return false;
-        }
-
-        // Check prerequisites
-        if (!talentTree.ArePrerequisitesMet(talent))
-        {
-            return false;
-        }
-
-        // Check if we have available points
-        if (talentTree.AvailablePoints <= 0)
-        {
-            return false;
-        }
-
-        // Check if talent is already at max points
-        BaseTalent runtimeTalent = talentTree.GetRuntimeTalent(talent);
-        if (
-            runtimeTalent != null
-            && runtimeTalent.pointsDesignated >= runtimeTalent.maxDesignatedPoints
-        )
-        {
-            return false;
-        }
-
-        return true;
+        Debug.Log($"%%% TalentTreeInputManager: Relaying remove request for {talent.name}");
+        bool result = talentTreeHandler.TryRemoveTalent(talent);
+        UpdateUI();
+        return result;
     }
 
     /// <summary>
-    /// Get a flat array of all talent buttons
-    /// </summary>
-    public List<TalentButtonUI> GetAllTalentButtons()
-    {
-        List<TalentButtonUI> allButtons = new List<TalentButtonUI>();
-        foreach (var tier in tiers)
-        {
-            allButtons.AddRange(tier.talentButtons);
-        }
-        return allButtons;
-    }
-
-    /// <summary>
-    /// Find the TalentButtonUI for a given talent
-    /// </summary>
-    public TalentButtonUI FindButtonForTalent(BaseTalent talent)
-    {
-        foreach (var tier in tiers)
-        {
-            foreach (var button in tier.talentButtons)
-            {
-                if (button.Talent == talent)
-                {
-                    return button;
-                }
-            }
-        }
-        return null;
-    }
-
-    /// <summary>
-    /// Reset all talents
+    /// Reset all talents through the TalentTreeHandler
     /// </summary>
     public void ResetAllTalents()
     {
-        talentTree.ResetAllTalents();
+        Debug.Log("%%% TalentTreeInputManager: Relaying reset request");
+        talentTreeHandler.ResetAllTalents();
         UpdateUI();
     }
 }

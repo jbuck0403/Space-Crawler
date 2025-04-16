@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d241ec088c8d54747a95eb30a205c9ad, type: 3}
   m_Name: AttackSpeed
   m_EditorClassIdentifier: 
-  talentName: 
+  talentName: Attack Speed
   description: 
-  icon: {fileID: 0}
-  maxDesignatedPoints: 3
+  icon: {fileID: 21300000, guid: 466f07d608e814c4f8dbce5adddc34c3, type: 3}
+  maxDesignatedPoints: 5
   pointsDesignated: 0
   requiredTalents: []
   fireRateReductionPerPoint: 0.1

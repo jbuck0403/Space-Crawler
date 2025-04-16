@@ -13,15 +13,20 @@ public class DamageBoostTalent : BaseTalent
 
     protected override List<TalentModifierData> GetModifierData(GameObject gameObject)
     {
-        // Return list with single modifier
-        return new List<TalentModifierData>
+        List<TalentModifierData> modifierDataList = new List<TalentModifierData>();
+
+        foreach (IModifiable modifiable in GetModifiable(gameObject))
         {
-            new TalentModifierData(
-                ModifierType.WEAPON_DAMAGE_MODIFIER,
-                ModifyDamageDelegate(),
-                GetModifiable(gameObject)
-            )
-        };
+            modifierDataList.Add(
+                new TalentModifierData(
+                    ModifierType.AUTO_FIRE_RATE_MODIFIER,
+                    ModifyDamageDelegate(),
+                    modifiable
+                )
+            );
+        }
+
+        return modifierDataList;
     }
 
     private Delegate ModifyDamageDelegate()
@@ -34,10 +39,9 @@ public class DamageBoostTalent : BaseTalent
         return fn;
     }
 
-    protected override IModifiable GetModifiable(GameObject gameObject)
+    protected override List<IModifiable> GetModifiable(GameObject gameObject)
     {
-        // Weapon handler is the component that handles weapons and damage
         var weaponHandler = gameObject.GetComponent<WeaponHandler>();
-        return weaponHandler as IModifiable;
+        return new List<IModifiable> { weaponHandler };
     }
 }
