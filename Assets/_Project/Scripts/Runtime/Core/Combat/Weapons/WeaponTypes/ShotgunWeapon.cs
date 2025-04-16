@@ -76,7 +76,7 @@ public class ShotgunWeapon : BaseWeaponSO
                 velocityModifier
             );
 
-            UpdateNextAbilityTime();
+            UpdateNextAbilityTime(weaponHandler.gameObject);
         }
     }
 }

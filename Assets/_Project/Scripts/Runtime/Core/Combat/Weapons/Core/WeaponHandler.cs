@@ -34,6 +34,8 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
     public List<BaseWeaponSO> WeaponInstances => weaponInstances;
 
     public FloatEvent OnNextFireTime;
+    public FloatEvent OnChargingWeapon;
+    public FloatEvent OnWeaponAbilityCooldown;
 
     public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> modifiers =
         new Dictionary<ModifierType, List<(object Source, Delegate Modifier)>>();

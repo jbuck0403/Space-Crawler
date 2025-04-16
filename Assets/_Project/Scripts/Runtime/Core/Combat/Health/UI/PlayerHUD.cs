@@ -13,9 +13,15 @@ public class PlayerHUD : MonoBehaviour
     [SerializeField]
     private Image nextShotSlider;
 
+    [SerializeField]
+    private Image weaponAbilityCooldownSlider;
+
     private float fireRate;
     private bool canFire = true;
     private float lastShotTime;
+    private bool isCharging = false;
+    private float weaponAbilityCooldown;
+    private float lastAbilityTime;
 
     private void Awake()
     {
@@ -25,6 +31,7 @@ public class PlayerHUD : MonoBehaviour
     private void Update()
     {
         HandleNextFireTimeBarFill();
+        HandleWeaponAbilityCooldownBarFill();
     }
 
     private void OnHealthPercentChanged(float healthPercent)
@@ -43,24 +50,47 @@ public class PlayerHUD : MonoBehaviour
         nextShotSlider.fillAmount = 0f;
         canFire = false;
         lastShotTime = Time.time;
+        isCharging = false;
+    }
+
+    private void OnChargingWeaponUpdated(float chargeProgress)
+    {
+        isCharging = true;
+        // Invert the charge progress so the bar decreases as charge increases
+        nextShotSlider.fillAmount = 1f - chargeProgress;
     }
 
     private void HandleNextFireTimeBarFill()
     {
-        if (!canFire)
-        {
-            if (nextShotSlider != null && fireRate > 0f)
-            {
-                float elapsedTime = Time.time - lastShotTime;
-                float fillAmount = Mathf.Clamp01(elapsedTime / fireRate);
+        if (nextShotSlider == null || fireRate <= 0f)
+            return;
 
-                nextShotSlider.fillAmount = fillAmount;
-                if (fillAmount >= 1f)
-                {
-                    canFire = true;
-                }
+        if (!isCharging && !canFire)
+        {
+            // Normal fire rate fill
+            float elapsedTime = Time.time - lastShotTime;
+            float fillAmount = Mathf.Clamp01(elapsedTime / fireRate);
+            nextShotSlider.fillAmount = fillAmount;
+
+            if (fillAmount >= 1f)
+            {
+                canFire = true;
             }
         }
+    }
+
+    private void HandleWeaponAbilityCooldownBarFill()
+    {
+        float elapsedTime = Time.time - lastAbilityTime;
+        float fillAmount = Mathf.Clamp01(elapsedTime / weaponAbilityCooldown);
+        weaponAbilityCooldownSlider.fillAmount = fillAmount;
+    }
+
+    private void OnWeaponAbilityCooldownUpdated(float cooldown)
+    {
+        weaponAbilityCooldown = cooldown;
+        lastAbilityTime = Time.time;
+        weaponAbilityCooldownSlider.fillAmount = 0f;
     }
 
     private void OnEnable()
@@ -73,6 +103,11 @@ public class PlayerHUD : MonoBehaviour
         healthSystem.OnHealthPercentChanged.AddListener(gameObject, OnHealthPercentChanged);
         shieldHandler.OnShieldPercentChanged.AddListener(gameObject, OnShieldPercentChanged);
         weaponHandler.OnNextFireTime.AddListener(gameObject, OnNextFireTimeUpdated);
+        weaponHandler.OnChargingWeapon.AddListener(gameObject, OnChargingWeaponUpdated);
+        weaponHandler.OnWeaponAbilityCooldown.AddListener(
+            gameObject,
+            OnWeaponAbilityCooldownUpdated
+        );
     }
 
     private void OnDisable()
@@ -84,5 +119,10 @@ public class PlayerHUD : MonoBehaviour
         healthSystem.OnHealthPercentChanged.RemoveListener(gameObject, OnHealthPercentChanged);
         shieldHandler.OnShieldPercentChanged.RemoveListener(gameObject, OnShieldPercentChanged);
         weaponHandler.OnNextFireTime.RemoveListener(gameObject, OnNextFireTimeUpdated);
+        weaponHandler.OnChargingWeapon.RemoveListener(gameObject, OnChargingWeaponUpdated);
+        weaponHandler.OnWeaponAbilityCooldown.RemoveListener(
+            gameObject,
+            OnWeaponAbilityCooldownUpdated
+        );
     }
 }

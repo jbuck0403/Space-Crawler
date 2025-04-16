@@ -412,6 +412,7 @@ MonoBehaviour:
   rechargeAmount: 0.1
   timeUntilRecharge: 3
   currentShield: 0
+  OnShieldPercentChanged: {fileID: 11400000, guid: 79cb46e407b9b934291cc50ac6ce76a4, type: 2}
 --- !u!114 &1578514298758991178
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,6 +464,9 @@ MonoBehaviour:
   firePoint: {fileID: 8099089328420793622}
   startingWeaponIndex: 0
   OnWeaponSwitched: {fileID: 11400000, guid: c3c5e421a7051704f89e4fe8d790cde0, type: 2}
+  OnNextFireTime: {fileID: 11400000, guid: c3a698d4e0eb16a42a4c5d1815167f67, type: 2}
+  OnChargingWeapon: {fileID: 11400000, guid: 756b667bb2dce264e9bedf292af297ce, type: 2}
+  OnWeaponAbilityCooldown: {fileID: 11400000, guid: 34130b0b08c210041b6fbacf26e0b04d, type: 2}
 --- !u!114 &2635574350697940816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -475,6 +479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4de7de75397fc1643b7fcbb85a581d89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  talentTreeSO: {fileID: 11400000, guid: ed0b7c32b1b193041b0b0bc5ea354274, type: 2}
   totalPoints: 0
   spentPoints: 0
 --- !u!114 &-3121990192987300796
@@ -490,32 +495,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   availablePointsText: {fileID: 0}
-  tierLockedOverlayPrefab: {fileID: 0}
-  tiers:
-  - tierName: 
-    tierPanel: {fileID: 0}
-    talentButtons: []
-    lockedOverlay: {fileID: 0}
-  - tierName: 
-    tierPanel: {fileID: 0}
-    talentButtons: []
-    lockedOverlay: {fileID: 0}
-  - tierName: 
-    tierPanel: {fileID: 0}
-    talentButtons: []
-    lockedOverlay: {fileID: 0}
-  - tierName: 
-    tierPanel: {fileID: 0}
-    talentButtons: []
-    lockedOverlay: {fileID: 0}
-  - tierName: 
-    tierPanel: {fileID: 0}
-    talentButtons: []
-    lockedOverlay: {fileID: 0}
-  - tierName: 
-    tierPanel: {fileID: 0}
-    talentButtons: []
-    lockedOverlay: {fileID: 0}
 --- !u!4 &8099089328420793622 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3833714410248275113, guid: 4220b79cf5a840543b4a082e92706106, type: 3}

@@ -43,6 +43,10 @@ public class SniperWeapon : BaseWeaponSO
             chargeStartTime = Time.time;
             isCharging = true;
             chargeProgress = 0f;
+
+            // Send initial charge progress of 0
+            if (weaponHandler != null)
+                weaponHandler.OnChargingWeapon.Raise(sourceObject, 0f);
         }
 
         return true;
@@ -66,11 +70,25 @@ public class SniperWeapon : BaseWeaponSO
 
         float chargeTime = Time.time - chargeStartTime;
 
-        if (chargeTime >= minChargeTime && chargeTime <= maxChargeTime)
+        // Calculate charge progress for the entire charging period
+        if (chargeTime <= maxChargeTime)
         {
-            chargeProgress = Mathf.Clamp01(
-                (chargeTime - minChargeTime) / (maxChargeTime - minChargeTime)
-            );
+            // If before minChargeTime, progress is 0
+            if (chargeTime < minChargeTime)
+            {
+                chargeProgress = 0f;
+            }
+            // If between min and max, progress goes from 0 to 1
+            else if (chargeTime <= maxChargeTime)
+            {
+                chargeProgress = Mathf.Clamp01(
+                    (chargeTime - minChargeTime) / (maxChargeTime - minChargeTime)
+                );
+            }
+
+            // Send charge progress update regardless of where we are in the charging cycle
+            if (weaponHandler != null)
+                weaponHandler.OnChargingWeapon.Raise(sourceObject, chargeProgress);
         }
 
         if (chargeTime >= autoFireTime)
@@ -95,6 +113,8 @@ public class SniperWeapon : BaseWeaponSO
         if (chargeTime < minChargeTime)
         {
             chargeProgress = 0f;
+            if (weaponHandler != null)
+                weaponHandler.OnChargingWeapon.Raise(sourceObject, chargeProgress);
             return false;
         }
 

@@ -38,6 +38,6 @@ public class PistolWeapon : BaseWeaponSO
 
         movementHandler.ApplyVelocity(dashDirection * dashForce);
 
-        UpdateNextAbilityTime();
+        UpdateNextAbilityTime(weaponHandler.gameObject);
     }
 }

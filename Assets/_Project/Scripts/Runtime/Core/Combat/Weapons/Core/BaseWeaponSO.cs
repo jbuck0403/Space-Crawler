@@ -184,10 +184,13 @@ public abstract class BaseWeaponSO : ScriptableObject, IModifiable
         return Time.time >= nextAbilityTime;
     }
 
-    protected void UpdateNextAbilityTime()
+    protected void UpdateNextAbilityTime(GameObject source)
     {
         // TBI Skill Point Delegate: ABILITY_COOLDOWN_MODIFIER
         nextAbilityTime = Time.time + abilityCooldown;
+
+        if (weaponHandler != null)
+            weaponHandler.OnWeaponAbilityCooldown.Raise(source, abilityCooldown);
     }
 
     /// <summary>
@@ -230,6 +233,7 @@ public abstract class BaseWeaponSO : ScriptableObject, IModifiable
         // TBI Skill Point Delegate: BEFORE_WEAPON_ABILITY
         UniqueAbility(provider);
         // TBI Skill Point Delegate: AFTER_WEAPON_ABILITY
+        UpdateNextAbilityTime(provider.GetWeaponOwnerTransform().gameObject);
     }
 
     protected abstract void UniqueAbility(IWeaponAbilityDataProvider provider);
