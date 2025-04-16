@@ -35,7 +35,6 @@ public class DamageBoostTalent : BaseTalent
 
         ModifierHelper.FloatInFloatOutModifier fn = (damage) =>
         {
-            Debug.Log("***WORKING");
             return damage * damageMultiplier;
         };
         return fn;

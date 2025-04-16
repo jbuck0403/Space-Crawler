@@ -34,7 +34,8 @@ public class ShotgunWeapon : BaseWeaponSO
         bool fired2 = base.FireWeapon(firePoint, direction, source, sourceObject, provider);
         bool fired3 = base.FireWeapon(firePoint, direction, source, sourceObject, provider);
 
-        UpdateNextFireTime();
+        UpdateNextFireTime(sourceObject);
+
         return fired1 && fired2 && fired3;
     }
 

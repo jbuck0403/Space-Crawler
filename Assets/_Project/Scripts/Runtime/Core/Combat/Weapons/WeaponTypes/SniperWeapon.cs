@@ -115,7 +115,7 @@ public class SniperWeapon : BaseWeaponSO
 
         if (fired)
         {
-            UpdateNextFireTime();
+            UpdateNextFireTime(sourceObject);
         }
 
         chargeProgress = 0f;

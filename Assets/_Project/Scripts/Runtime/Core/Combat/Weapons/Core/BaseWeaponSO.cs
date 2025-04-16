@@ -31,6 +31,8 @@ public abstract class BaseWeaponSO : ScriptableObject, IModifiable
     protected float nextFireTime = 0f;
     protected float nextAbilityTime = 0f;
 
+    protected WeaponHandler weaponHandler;
+
     // Properties
     public FireConfig FireConfig => fireConfig;
     public ProjectileTypeSO ProjectileType => projectileType;
@@ -47,6 +49,7 @@ public abstract class BaseWeaponSO : ScriptableObject, IModifiable
     {
         BaseWeaponSO instance = Instantiate(this);
 
+        instance.weaponHandler = weaponHandler;
         instance.nextFireTime = 0f;
         instance.isInitialized = true;
 
@@ -148,18 +151,11 @@ public abstract class BaseWeaponSO : ScriptableObject, IModifiable
         return Time.time >= nextFireTime;
     }
 
-    protected void UpdateNextFireTime()
+    protected float UpdateNextFireTime(GameObject source)
     {
         float modifiedFireRate = fireConfig.fireRate;
 
-        // Add this debug info
-        Debug.Log(
-            $"*** Weapon {name} has {(modifiers.ContainsKey(ModifierType.AUTO_FIRE_RATE_MODIFIER) ? modifiers[ModifierType.AUTO_FIRE_RATE_MODIFIER].Count : 0)} fire rate modifiers"
-        );
-
-        // Print memory address to verify we're using the right instance
-        Debug.Log($"*** Weapon dict memory location: {modifiers.GetHashCode()}");
-
+        // Apply modifiers to fire rate
         foreach (
             var modifier in ModifierHelper.GetModifiers<ModifierHelper.FloatInFloatOutModifier>(
                 this,
@@ -171,6 +167,15 @@ public abstract class BaseWeaponSO : ScriptableObject, IModifiable
         }
 
         nextFireTime = Time.time + modifiedFireRate;
+
+        Debug.Log($"!!!WEAPON: Handler={weaponHandler != null}, FireRate={modifiedFireRate}");
+        if (weaponHandler != null)
+        {
+            Debug.Log("!!!WEAPON: Raising event");
+            weaponHandler.OnNextFireTime.Raise(source, modifiedFireRate);
+        }
+
+        return nextFireTime;
     }
 
     public bool CanActivateAbility()
@@ -219,71 +224,6 @@ public abstract class BaseWeaponSO : ScriptableObject, IModifiable
         // TBI Skill Point Delegate: PRE_WEAPON_FIRE
         return FireProjectile(firePoint, direction, source, sourceObject, provider);
     }
-
-    // /// <summary>
-    // /// Apply velocity to a projectile in the specified direction
-    // /// </summary>
-    // protected virtual void ApplyVelocity(
-    //     GameObject projectile,
-    //     Vector2 direction,
-    //     float velocityOverload = 1f
-    // )
-    // {
-    //     if (projectile == null)
-    //         return;
-
-    //     Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
-    //     if (rb != null)
-    //     {
-    //         float projectileSpeed =
-    //             velocityOverload == 1f
-    //                 ? fireConfig.projectileSpeed * velocityModifier
-    //                 : velocityOverload * velocityModifier;
-
-    //         rb.velocity = projectileSpeed * direction.normalized;
-    //     }
-    //     else
-    //     {
-    //         Debug.LogWarning(
-    //             $"Projectile {projectile.name} has no Rigidbody2D component to apply velocity to"
-    //         );
-    //     }
-    // }
-
-    // /// <summary>
-    // /// Apply accuracy spread to the direction vector
-    // /// </summary>
-    // protected Vector2 ApplyAccuracySpread(Vector2 baseDirection, float spreadDegrees)
-    // {
-    //     if (fireConfig.accuracy >= 1f)
-    //         return baseDirection;
-
-    //     float maxSpreadRadians =
-    //         ConvertSpreadDegreesToRadians(spreadDegrees) * (1f - fireConfig.accuracy);
-
-    //     // Generate a random angle within our spread cone
-    //     float randomSpread = UnityEngine.Random.Range(
-    //         -maxSpreadRadians / 2f,
-    //         maxSpreadRadians / 2f
-    //     );
-
-    //     // Rotate our base direction by the spread amount
-    //     float cos = Mathf.Cos(randomSpread);
-    //     float sin = Mathf.Sin(randomSpread);
-    //     return new Vector2(
-    //         baseDirection.x * cos - baseDirection.y * sin,
-    //         baseDirection.x * sin + baseDirection.y * cos
-    //     );
-    // }
-
-    // private float ConvertSpreadDegreesToRadians(float spreadDegrees)
-    // {
-    //     // Clamp the input to valid range
-    //     spreadDegrees = Mathf.Clamp(spreadDegrees, 0f, 180f);
-
-    //     // 180 degrees = PI radians
-    //     return spreadDegrees * Mathf.PI / 180f;
-    // }
 
     public void UseUniqueAbility(IWeaponAbilityDataProvider provider)
     {

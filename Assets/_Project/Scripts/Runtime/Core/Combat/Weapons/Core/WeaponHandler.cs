@@ -33,6 +33,8 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
     public Transform FirePoint => firePoint;
     public List<BaseWeaponSO> WeaponInstances => weaponInstances;
 
+    public FloatEvent OnNextFireTime;
+
     public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> modifiers =
         new Dictionary<ModifierType, List<(object Source, Delegate Modifier)>>();
     public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> Modifiers =>
@@ -40,6 +42,7 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
 
     private void Awake()
     {
+        Debug.Log($"!!!HANDLER: Event={OnNextFireTime != null}");
         InitializeWeapons();
     }
 

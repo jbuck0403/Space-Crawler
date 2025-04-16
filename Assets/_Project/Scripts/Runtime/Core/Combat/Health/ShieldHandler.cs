@@ -16,11 +16,8 @@ public class ShieldHandler : MonoBehaviour
     [SerializeField]
     private float currentShield;
 
-    // [SerializeField]
-    // private FloatEvent OnShieldChanged;
-
-    // [SerializeField]
-    // private FloatEvent OnShieldPercentChanged;
+    [SerializeField]
+    public FloatEvent OnShieldPercentChanged;
 
     // [SerializeField]
     // private VoidEvent OnShieldDepleted;
@@ -112,13 +109,12 @@ public class ShieldHandler : MonoBehaviour
     // positive amount adds shield, negative amount damages shield
     private void ModifyShield(float amount)
     {
-        // TBI Skill Point Delegate: MODIFY_SHIELD_AMOUNT
         float previousShield = currentShield;
-        // print($"ModifyShield {amount} Current Shield {currentShield}");
         currentShield = Mathf.Min(currentShield + amount, maxShield);
-        // print($"New Shield {currentShield}");
 
-        // Check if shield was just depleted
+        // Raise events
+        OnShieldPercentChanged.Raise(gameObject, currentShield / maxShield);
+
         if (previousShield > 0 && currentShield <= 0)
         {
             // TBI Skill Point Delegate: ON_SHIELD_DEPLETED
@@ -137,7 +133,7 @@ public class ShieldHandler : MonoBehaviour
         currentShield = Mathf.Min(currentShield, maxShield);
 
         // OnShieldChanged?.Raise(gameObject, currentShield);
-        // OnShieldPercentChanged?.Raise(gameObject, currentShield / maxShield);
+        OnShieldPercentChanged.Raise(gameObject, currentShield / maxShield);
     }
 
     public void ModifyMaxShield(float amount)

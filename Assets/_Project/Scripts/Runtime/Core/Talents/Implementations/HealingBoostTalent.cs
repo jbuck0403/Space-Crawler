@@ -19,7 +19,7 @@ public class HealingBoostTalent : BaseTalent
         {
             modifierDataList.Add(
                 new TalentModifierData(
-                    ModifierType.AUTO_FIRE_RATE_MODIFIER,
+                    ModifierType.BEFORE_HEALING,
                     ModifyHealingAmountDelegate(),
                     modifiable
                 )
