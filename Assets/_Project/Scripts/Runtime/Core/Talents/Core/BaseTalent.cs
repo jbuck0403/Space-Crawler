@@ -118,13 +118,19 @@ public abstract class BaseTalent : ScriptableObject
     {
         Debug.Log($"%%% BaseTalent: OnActivate for {talentName}");
 
-        // Apply all modifiers for this talent
-        var modifiables = GetModifiable(owner);
-        var modifierData = GetModifierData(owner);
-
-        foreach (var data in modifierData)
+        foreach (var data in GetModifierData(owner))
         {
-            ModifierHelper.AddModifiers(modifiables, data.ModifierType, this, data.Modifier);
+            if (data.Modifiable != null)
+            {
+                // Add to specific modifiable only
+                ModifierHelper.AddModifier(data.Modifiable, data.ModifierType, this, data.Modifier);
+            }
+            else
+            {
+                // Backwards compatibility - add to all modifiables
+                var modifiables = GetModifiable(owner);
+                ModifierHelper.AddModifiers(modifiables, data.ModifierType, this, data.Modifier);
+            }
         }
     }
 

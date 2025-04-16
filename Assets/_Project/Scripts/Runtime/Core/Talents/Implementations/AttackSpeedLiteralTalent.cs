@@ -12,7 +12,7 @@ public class AttackSpeedLiteralTalent : BaseTalent
     [SerializeField]
     private float fireRateReductionPerPoint = 0.1f; // Seconds to reduce per point
 
-    protected override List<BaseTalent.TalentModifierData> GetModifierData(GameObject owner)
+    protected override List<TalentModifierData> GetModifierData(GameObject owner)
     {
         WeaponHandler weaponHandler = owner.GetComponent<WeaponHandler>();
         if (weaponHandler == null)

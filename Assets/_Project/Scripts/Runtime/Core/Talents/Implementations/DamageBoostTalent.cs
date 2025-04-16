@@ -15,14 +15,12 @@ public class DamageBoostTalent : BaseTalent
     {
         List<TalentModifierData> modifierDataList = new List<TalentModifierData>();
 
-        foreach (IModifiable modifiable in GetModifiable(gameObject))
+        Delegate modifier = ModifyDamageDelegate();
+
+        foreach (IModifiable weapon in GetModifiable(gameObject))
         {
             modifierDataList.Add(
-                new TalentModifierData(
-                    ModifierType.AUTO_FIRE_RATE_MODIFIER,
-                    ModifyDamageDelegate(),
-                    modifiable
-                )
+                new TalentModifierData(ModifierType.WEAPON_DAMAGE_MODIFIER, modifier, weapon)
             );
         }
 
@@ -35,13 +33,22 @@ public class DamageBoostTalent : BaseTalent
         // 1 point = 1.05x, 2 points = 1.10x, etc.
         float damageMultiplier = 1f + (damageIncreasePerPoint * pointsDesignated);
 
-        ModifierHelper.FloatInFloatOutModifier fn = (damage) => damage * damageMultiplier;
+        ModifierHelper.FloatInFloatOutModifier fn = (damage) =>
+        {
+            Debug.Log("***WORKING");
+            return damage * damageMultiplier;
+        };
         return fn;
     }
 
     protected override List<IModifiable> GetModifiable(GameObject gameObject)
     {
-        var weaponHandler = gameObject.GetComponent<WeaponHandler>();
-        return new List<IModifiable> { weaponHandler };
+        WeaponHandler weaponHandler = gameObject.GetComponent<WeaponHandler>();
+        List<IModifiable> weapons = new List<IModifiable>();
+        foreach (var weapon in weaponHandler.WeaponInstances)
+        {
+            weapons.Add(weapon);
+        }
+        return weapons;
     }
 }
