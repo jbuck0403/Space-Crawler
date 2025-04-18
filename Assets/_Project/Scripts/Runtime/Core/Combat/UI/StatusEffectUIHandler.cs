@@ -46,7 +46,13 @@ public class StatusEffectUIHandler : MonoBehaviour
     private Dictionary<string, StatusEffectUIElement> activeUIElements =
         new Dictionary<string, StatusEffectUIElement>();
 
-    private void OnEnable()
+    public void Initialize(GameObject targetEntity)
+    {
+        this.targetEntity = targetEntity;
+        SubscribeToListeners();
+    }
+
+    private void SubscribeToListeners()
     {
         // Subscribe to events
         onStatusEffectApplied.AddListener(targetEntity, OnStatusEffectApplied);
@@ -60,7 +66,7 @@ public class StatusEffectUIHandler : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+    private void UnSubscribeFromListeners()
     {
         // Unsubscribe from events
         onStatusEffectApplied.RemoveListener(targetEntity, OnStatusEffectApplied);
@@ -202,5 +208,10 @@ public class StatusEffectUIHandler : MonoBehaviour
                 currentX += iconSize.x + spacing;
             }
         }
+    }
+
+    private void OnDisable()
+    {
+        UnSubscribeFromListeners();
     }
 }

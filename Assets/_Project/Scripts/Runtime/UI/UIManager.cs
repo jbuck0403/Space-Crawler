@@ -45,8 +45,12 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject preRunSetupPanel;
 
+    [Header("Component References")]
     [SerializeField]
     private PlayerHUD playerHUDComponent;
+
+    [SerializeField]
+    private StatusEffectUIHandler statusEffectUIHandler;
 
     // Dictionary to store all panels for easier access
     private Dictionary<PanelType, GameObject> panels = new Dictionary<PanelType, GameObject>();
@@ -145,18 +149,20 @@ public class UIManager : MonoBehaviour
     }
 
     #region Static Panel Methods
-    public static PlayerHUD ShowPlayerHUD()
+    public static void ShowPlayerHUD(GameObject player)
     {
         if (Instance != null)
         {
             Instance.ShowPanel(PanelType.PlayerHUD);
             if (Instance.playerHUDComponent != null)
             {
-                return Instance.playerHUDComponent;
+                Instance.playerHUDComponent.Initialize(player);
+            }
+            if (Instance.statusEffectUIHandler != null)
+            {
+                Instance.statusEffectUIHandler.Initialize(player);
             }
         }
-
-        return null;
     }
 
     /// <summary>

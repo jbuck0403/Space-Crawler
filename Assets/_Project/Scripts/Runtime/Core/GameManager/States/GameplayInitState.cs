@@ -72,11 +72,8 @@ public class GameplayInitState : GameState
         // Ensure HUD is visible and properly set up
         if (RoomManager.Instance != null && player != null)
         {
-            PlayerHUD playerHUD = UIManager.ShowPlayerHUD();
-            if (playerHUD != null)
-            {
-                playerHUD.Initialize(player);
-            }
+            UIManager.ShowPlayerHUD(player);
+
             // TODO: Configure any player-specific UI elements
         }
     }
