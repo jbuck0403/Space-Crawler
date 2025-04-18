@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public GameData GameData => gameData;
     public CinemachineVirtualCamera VirtualCamera => virtualCamera;
     public GameStateType CurrentStateType { get; private set; }
+    public GameState CurrentState => currentState;
 
     private void Awake()
     {
@@ -66,6 +67,8 @@ public class GameManager : MonoBehaviour
             RoomManager.Instance.CurrentRoomComponent.RemoveEnemyFromSpawnedList(enemy);
         }
     }
+
+    // public void HandleRoomCompleted(Room room) { }
 
     private void InitializeStates()
     {
@@ -149,10 +152,12 @@ public class GameManager : MonoBehaviour
         if (CurrentStateType == GameStateType.GameplayRoom)
         {
             ChangeState(GameStateType.Pause);
+            UIManager.ShowPause();
         }
         else if (CurrentStateType == GameStateType.Pause)
         {
             ChangeState(GameStateType.GameplayRoom);
+            UIManager.ShowPlayerHUD(RoomManager.Instance.Player);
         }
     }
 }

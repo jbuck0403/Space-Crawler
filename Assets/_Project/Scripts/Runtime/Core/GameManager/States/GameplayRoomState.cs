@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -18,6 +20,14 @@ public class GameplayRoomState : GameState
 
     // Event subscriptions
     private bool eventsSubscribed = false;
+
+    private bool roomCompleted = false;
+    public bool RoomCompleted => roomCompleted;
+
+    private bool enemiesCleared = false;
+    private bool roomsSpawned = false;
+
+    private bool currentRoomEntered = false;
 
     public GameplayRoomState(GameManager manager)
         : base(manager, GameStateType.GameplayRoom) { }
@@ -40,9 +50,6 @@ public class GameplayRoomState : GameState
 
         // Subscribe to events
         SubscribeToEvents();
-
-        // Start monitoring current room
-        MonitorCurrentRoom();
     }
 
     public override void UpdateState()
@@ -54,16 +61,14 @@ public class GameplayRoomState : GameState
             return;
         }
 
-        // Check for room completion
-        if (currentRoom != null && enemiesRemainingInRoom <= 0)
-        {
-            HandleRoomCompleted();
-        }
+        // Skip all room processing until the room has been officially entered
+        if (!currentRoomEntered || RoomCompleted || roomManager == null)
+            return;
 
-        // Update enemy count if needed
-        if (roomManager != null && roomManager.CurrentRoom != currentRoom)
+        if (!enemiesCleared && roomManager != null)
         {
             MonitorCurrentRoom();
+            CheckRoomCompletion();
         }
     }
 
@@ -153,13 +158,21 @@ public class GameplayRoomState : GameState
             // Update game data
             gameManager.GameData.currentRunEnemiesKilled++;
 
-            Debug.Log($"Enemy defeated. Remaining: {enemiesRemainingInRoom}");
+            Debug.Log($"#ROOM Enemy defeated. Remaining: {enemiesRemainingInRoom}");
+
+            // Check if all enemies are defeated
+            if (enemiesRemainingInRoom <= 0)
+            {
+                Debug.Log("#ROOM All enemies defeated - marking as cleared");
+                enemiesCleared = true;
+                CheckRoomCompletion();
+            }
         }
     }
 
     private void HandleRoomCompleted()
     {
-        Debug.Log("Room completed - unlocking doors");
+        Debug.Log("#ROOM Room completed - unlocking doors");
 
         // Update game data
         gameManager.GameData.currentRunRoomsCleared++;
@@ -167,8 +180,11 @@ public class GameplayRoomState : GameState
         // Unlock doors in the current room
         if (currentRoom != null)
         {
+            roomCompleted = true;
             // Mark room as completed
             // TODO: Implement room completion (unlock doors, etc)
+            Debug.Log("#ROOM OPENING DOORS WITH ROOMS BEYOND");
+            currentRoom.OpenDoorsWithRoomBeyond();
 
             // Check if this was a boss room
             bool wasBossRoom = false; // TODO: Implement boss room check
@@ -180,7 +196,7 @@ public class GameplayRoomState : GameState
         }
     }
 
-    private void MonitorCurrentRoom()
+    public void MonitorCurrentRoom()
     {
         if (roomManager == null)
             return;
@@ -193,15 +209,31 @@ public class GameplayRoomState : GameState
         if (room == null)
             return;
 
-        // Update current room reference
-        currentRoom = room;
-
         // Get all enemies in the room
         activeEnemies.Clear();
         activeEnemies.AddRange(room.spawnedEnemies);
         enemiesRemainingInRoom = activeEnemies.Count;
 
-        Debug.Log($"Monitoring new room with {enemiesRemainingInRoom} enemies");
+        Debug.Log($"#ROOM Monitoring room with {enemiesRemainingInRoom} enemies");
+
+        // Check if room has no enemies
+        if (enemiesRemainingInRoom <= 0)
+        {
+            Debug.Log(
+                $"#ROOM No enemies in room - marking as cleared {enemiesCleared && roomsSpawned}"
+            );
+            enemiesCleared = true;
+            CheckRoomCompletion();
+        }
+    }
+
+    private void CheckRoomCompletion()
+    {
+        if (enemiesCleared && roomsSpawned && !roomCompleted && currentRoom != null)
+        {
+            Debug.Log("#ROOM Both conditions met - handling room completion");
+            HandleRoomCompleted();
+        }
     }
 
     private void SubscribeToEvents()
@@ -224,5 +256,12 @@ public class GameplayRoomState : GameState
         // TODO: Unsubscribe from all events
 
         eventsSubscribed = false;
+    }
+
+    public void OnRoomsSpawned()
+    {
+        Debug.Log("#ROOM Rooms have been spawned - updating room state");
+        roomsSpawned = true;
+        CheckRoomCompletion();
     }
 }

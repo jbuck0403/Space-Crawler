@@ -69,12 +69,9 @@ public class GameplayInitState : GameState
 
         GameObject player = RoomManager.Instance.Player;
 
-        // Ensure HUD is visible and properly set up
         if (RoomManager.Instance != null && player != null)
         {
             UIManager.ShowPlayerHUD(player);
-
-            // TODO: Configure any player-specific UI elements
         }
     }
 
@@ -86,7 +83,6 @@ public class GameplayInitState : GameState
             return;
         }
 
-        // Initialize the room system with player
         bool success = RoomManager.Instance.Initialize();
 
         if (success)

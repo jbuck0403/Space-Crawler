@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Room : MonoBehaviour
@@ -6,6 +8,12 @@ public class Room : MonoBehaviour
     [Header("Room Setup")]
     [SerializeField]
     private Transform entrancePoint;
+
+    [SerializeField]
+    private DoorData entranceDoor;
+
+    [SerializeField]
+    private List<DoorData> exitDoors;
 
     [Header("Snap Points")]
     [SerializeField]
@@ -22,6 +30,9 @@ public class Room : MonoBehaviour
 
     private Dictionary<Transform, bool> spawnLocationUsed = new Dictionary<Transform, bool>();
 
+    public DoorData EntranceDoor => entranceDoor;
+    public List<DoorData> ExitDoors => exitDoors;
+
     private void OnValidate()
     {
         numEnemiesToSpawn = Mathf.Clamp(numEnemiesToSpawn, 0, maxEnemiesToSpawn);
@@ -31,6 +42,8 @@ public class Room : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            if (entranceDoor != null && entranceDoor.door != null)
+                entranceDoor.door.CloseDoor();
             // Notify RoomManager that player entered this room
             RoomManager.Instance.OnPlayerEnteredRoom(gameObject);
         }
@@ -109,5 +122,73 @@ public class Room : MonoBehaviour
     public GameObject IntsantiateEnemy(GameObject prefab, Transform spawnLocation)
     {
         return Instantiate(prefab, spawnLocation);
+    }
+
+    public void OpenDoorsWithRoomBeyond()
+    {
+        Debug.Log($"#ROOM Room.OpenDoorsWithRoomBeyond called on {gameObject.name}");
+        Debug.Log($"#ROOM Exit doors count: {exitDoors.Count}");
+
+        foreach (DoorData doorData in exitDoors)
+        {
+            if (doorData == null)
+            {
+                Debug.LogError("#ROOM DoorData is null in exitDoors list");
+                continue;
+            }
+
+            Debug.Log(
+                $"#ROOM Checking door on {doorData.doorSide} side, hasRoomBeyond: {doorData.hasRoomBeyond}"
+            );
+
+            if (doorData.door == null)
+            {
+                Debug.LogError($"#ROOM Door handler is null for {doorData.doorSide} door");
+                continue;
+            }
+
+            if (doorData.hasRoomBeyond)
+            {
+                Debug.Log($"#ROOM Opening door on {doorData.doorSide} side - it has a room beyond");
+                doorData.door.OpenDoor();
+            }
+            else
+            {
+                Debug.Log($"#ROOM Not opening door on {doorData.doorSide} side - no room beyond");
+            }
+        }
+    }
+}
+
+[Serializable]
+public enum DoorSide
+{
+    North,
+    South,
+    East,
+    West
+}
+
+[Serializable]
+public class DoorData
+{
+    public DoorHandler door;
+    public GameObject doorObject;
+    public DoorSide doorSide;
+    public Transform roomBeyondSnapPoint;
+    public bool hasRoomBeyond;
+
+    public DoorData(
+        DoorHandler door,
+        GameObject doorObject,
+        Transform roomBeyondSnapPoint,
+        DoorSide doorSide
+    )
+    {
+        this.door = door;
+        this.doorObject = doorObject;
+        this.doorSide = doorSide;
+        this.roomBeyondSnapPoint = roomBeyondSnapPoint;
+        hasRoomBeyond = false;
     }
 }

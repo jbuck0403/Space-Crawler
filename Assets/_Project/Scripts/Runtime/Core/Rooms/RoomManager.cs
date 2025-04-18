@@ -60,6 +60,11 @@ public class RoomManager : MonoBehaviour
     public GameObject CurrentRoom => currentRoom;
     public Room CurrentRoomComponent => currentRoomComponent;
 
+    private bool currentRoomEntered = false;
+    private bool roomCompleted = false;
+    private bool enemiesCleared = false;
+    private bool roomsSpawned = false;
+
     private void Awake()
     {
         if (Instance == null)
@@ -123,6 +128,11 @@ public class RoomManager : MonoBehaviour
             return;
         }
 
+        currentRoomEntered = true;
+        roomCompleted = false;
+        enemiesCleared = false;
+        roomsSpawned = false;
+
         // Mark the room as entered
         allRooms[room] = true;
 
@@ -185,6 +195,31 @@ public class RoomManager : MonoBehaviour
                 treasureRoomPrefab != null ? treasureRoomPrefab : normalRoomPrefab;
             SpawnRoomAtSnapPoint(snapPoints[2], roomPrefab, RoomType.Treasure);
         }
+
+        // After all rooms have been spawned, update state
+        roomsSpawned = true;
+
+        // Check if current room has any enemies
+        if (currentRoomComponent != null && currentRoomComponent.spawnedEnemies.Count == 0)
+        {
+            enemiesCleared = true;
+        }
+
+        // Notify GameplayRoomState
+        if (GameManager.Instance.CurrentStateType == GameStateType.GameplayRoom)
+        {
+            GameplayRoomState gameplayState =
+                GameManager.Instance.CurrentState as GameplayRoomState;
+            if (gameplayState != null)
+            {
+                Debug.Log("#ROOM Notifying GameplayRoomState that rooms have been spawned");
+                gameplayState.OnRoomsSpawned();
+
+                // Also notify about room entry so it can monitor enemies
+                Debug.Log("#ROOM Notifying GameplayRoomState about room entry");
+                gameplayState.MonitorCurrentRoom();
+            }
+        }
     }
 
     // Spawn a specific room prefab at a snap point
@@ -203,9 +238,51 @@ public class RoomManager : MonoBehaviour
         );
         allRooms.Add(newRoom, false); // Add to dictionary as not entered yet
 
-        InstantiateEnemies(newRoom, roomType);
+        // Find which door in the current room this snap point belongs to
+        DoorData exitDoor = FindDoorByCoordsOrSnapPoint(currentRoomComponent, snapPoint);
+        if (exitDoor != null)
+        {
+            Debug.Log($"#ROOM Found exit door in current room: {exitDoor.doorSide}");
+            exitDoor.hasRoomBeyond = true;
 
-        Debug.Log($"Room of type {roomPrefab.name} spawned at: {snapPoint.position}");
+            // Find the opposite door in the new room to set as its entrance
+            Room newRoomComponent = newRoom.GetComponent<Room>();
+            if (newRoomComponent != null && newRoomComponent.EntranceDoor != null)
+            {
+                Debug.Log(
+                    $"#ROOM New room entrance door: {newRoomComponent.EntranceDoor.doorSide}"
+                );
+
+                // Link the entrance door to look back at the current room
+                newRoomComponent.EntranceDoor.hasRoomBeyond = true;
+                newRoomComponent.EntranceDoor.roomBeyondSnapPoint = currentRoom.transform;
+            }
+        }
+        else
+        {
+            Debug.LogError("#ROOM Could not find exit door in current room for given snap point");
+        }
+
+        InstantiateEnemies(newRoom, roomType);
+        Debug.Log($"#ROOM Room of type {roomPrefab.name} spawned at: {snapPoint.position}");
+    }
+
+    // Add helper method to find door by snap point
+    private DoorData FindDoorByCoordsOrSnapPoint(Room room, Transform snapPoint)
+    {
+        if (room == null || snapPoint == null)
+            return null;
+
+        foreach (DoorData doorData in room.ExitDoors)
+        {
+            if (doorData.roomBeyondSnapPoint == snapPoint)
+            {
+                return doorData;
+            }
+        }
+
+        Debug.LogWarning("#ROOM No door found with matching snap point");
+        return null;
     }
 
     private void InstantiateEnemies(GameObject room, RoomType roomType, int numEnemies = 1)
