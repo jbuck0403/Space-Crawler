@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ba8f2198734e184da03d8c008b2b68d, type: 3}
   m_Name: FreezingAmmoDamageProfile
   m_EditorClassIdentifier: 
-  baseDamage: 30
-  critMultiplier: 2
+  baseDamage: 15
+  critMultiplier: 3
   critChance: 15
   damageType: 3
   penetratesShield: 0
   statusEffectsToApply:
-  - {fileID: 11400000, guid: 24c5942bbd313ae4c8de58756ac9da16, type: 2}
+  - {fileID: 11400000, guid: 5b774818c8f0f994f87a7377234a8118, type: 2}

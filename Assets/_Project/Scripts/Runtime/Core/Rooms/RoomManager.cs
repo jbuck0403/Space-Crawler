@@ -36,7 +36,13 @@ public class RoomManager : MonoBehaviour
     private int roomsCompleted = 0;
 
     [SerializeField]
+    GameObject playerPrefab;
+
+    [SerializeField]
     Transform defaultTarget;
+
+    [SerializeField]
+    GameObject startingRoomPrefab;
 
     [SerializeField]
     GameObject[] defaultEnemyPrefabs;
@@ -46,6 +52,10 @@ public class RoomManager : MonoBehaviour
 
     [SerializeField]
     GameObject[] bossEnemyPrefabs;
+
+    private GameObject player;
+    public GameObject Player => player;
+    public GameObject CurrentRoom => currentRoom;
 
     private void Awake()
     {
@@ -57,12 +67,32 @@ public class RoomManager : MonoBehaviour
 
     private void Start()
     {
-        // Spawn initial room
-        currentRoom = Instantiate(normalRoomPrefab, Vector3.zero, Quaternion.identity);
-        allRooms.Add(currentRoom, false); // Initialize as not entered yet
+        // Initialize();
+    }
 
-        // Spawn connecting rooms
-        SpawnConnectingRooms();
+    public bool Initialize()
+    {
+        // Spawn initial room
+        currentRoom = RoomHandler.CreateRoom(
+            startingRoomPrefab,
+            null,
+            default,
+            Quaternion.identity
+        );
+        // currentRoom = Instantiate(startingRoomPrefab, Vector3.zero, Quaternion.identity);
+        Room room = currentRoom.GetComponent<Room>();
+        if (room != null)
+        {
+            player = Instantiate(playerPrefab, null, room.GetEntrancePoint()); // entrance point for starting room is player spawn transform
+            allRooms.Add(currentRoom, false); // Initialize as not entered yet
+
+            // // Spawn connecting rooms
+            // SpawnConnectingRooms();
+
+            return true;
+        }
+
+        return false;
     }
 
     // Called by RoomCollider when player enters a room
@@ -91,7 +121,7 @@ public class RoomManager : MonoBehaviour
         Room roomComponent = currentRoom.GetComponent<Room>();
         if (roomComponent != null)
         {
-            roomComponent.InitializeSpawnedEnemies(defaultTarget);
+            roomComponent.InitializeSpawnedEnemies(player.transform);
         }
 
         // Destroy all other rooms
@@ -152,7 +182,13 @@ public class RoomManager : MonoBehaviour
             return;
 
         // Instantiate the room at the exact position and rotation of the snap point
-        GameObject newRoom = Instantiate(roomPrefab, snapPoint.position, snapPoint.rotation);
+        // GameObject newRoom = Instantiate(roomPrefab, snapPoint.position, snapPoint.rotation);
+        GameObject newRoom = RoomHandler.CreateRoom(
+            roomPrefab,
+            currentRoom,
+            snapPoint.position,
+            snapPoint.rotation
+        );
         allRooms.Add(newRoom, false); // Add to dictionary as not entered yet
 
         InstantiateEnemies(newRoom, roomType);

@@ -9,8 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c80d898860efcc4985fbd2e47ba6b80, type: 3}
-  m_Name: FreezingAmmo
+  m_Script: {fileID: 11500000, guid: 74a70d73f2ddecf48a6b2a9f7278e542, type: 3}
+  m_Name: EliteMovementConfig_Freezer
   m_EditorClassIdentifier: 
-  damageProfile: {fileID: 11400000, guid: 23eac3bc2f300064bbd16ed07a3d5d80, type: 2}
-  shooterDamageProfile: {fileID: 11400000, guid: 23eac3bc2f300064bbd16ed07a3d5d80, type: 2}
+  maxSpeed: 10
+  acceleration: 150
+  deceleration: 30
+  rotationSpeed: 30

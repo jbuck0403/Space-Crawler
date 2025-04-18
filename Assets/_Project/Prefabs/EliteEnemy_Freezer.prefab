@@ -138,7 +138,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 8376dbadb45447d4785b0a94ecf3f57a, type: 2}
     - target: {fileID: 3080204034210999966, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
       propertyPath: m_Name
-      value: Default Enemy
+      value: EliteEnemy_Freezer
       objectReference: {fileID: 0}
     - target: {fileID: 3833714410248275113, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
       propertyPath: m_LocalPosition.y
@@ -233,9 +233,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3080204034210999966, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3611172423121167790}
-    - targetCorrespondingSourceObject: {fileID: 3080204034210999966, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: -5947956238731055698}
   m_SourcePrefab: {fileID: 100100000, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
 --- !u!4 &3052194062319603280 stripped
 Transform:
@@ -271,21 +268,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb9246673f1aa5e4c9a4c7a568bd6f40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementConfig: {fileID: 11400000, guid: c564bd8396d385347a6f3fb00ce28522, type: 2}
+  movementConfig: {fileID: 11400000, guid: 486fe1d530cc00e449b825b5e1f3a115, type: 2}
   obstacleLayers:
     serializedVersion: 2
     m_Bits: 8
   movementStrategies:
   - strategyType: 0
-    strategy: {fileID: 11400000, guid: f64f5b12df108164f8f206d432f56c17, type: 2}
-  - strategyType: 3
-    strategy: {fileID: 11400000, guid: 0caa7228373b1aa4aa3bb5bc7ec1b388, type: 2}
-  - strategyType: 4
-    strategy: {fileID: 11400000, guid: 9a00141614b9ef04eb0e2d7da6ae0600, type: 2}
-  - strategyType: 1
     strategy: {fileID: 11400000, guid: d7d5a5e4445eaa5408ea5f77b7eb5075, type: 2}
-  - strategyType: 2
-    strategy: {fileID: 11400000, guid: d279c5d0ce2719f47bba5c5c78864da4, type: 2}
+  - strategyType: 3
+    strategy: {fileID: 11400000, guid: 9a00141614b9ef04eb0e2d7da6ae0600, type: 2}
   defaultTarget: {fileID: 0}
   defaultStrategy: 0
   combatantLayers:
@@ -306,29 +297,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponDefinitions:
-  - {fileID: 11400000, guid: a7ec9984d9c8a604eaeaa08e85917fc1, type: 2}
+  - {fileID: 11400000, guid: 6fa66bf1bb4a6eb4e9af98e1b5535422, type: 2}
   firePoint: {fileID: 3052194062319603280}
   startingWeaponIndex: 0
   OnWeaponSwitched: {fileID: 11400000, guid: c3c5e421a7051704f89e4fe8d790cde0, type: 2}
   OnNextFireTime: {fileID: 11400000, guid: c3a698d4e0eb16a42a4c5d1815167f67, type: 2}
   OnChargingWeapon: {fileID: 11400000, guid: 756b667bb2dce264e9bedf292af297ce, type: 2}
   OnWeaponAbilityCooldown: {fileID: 11400000, guid: 34130b0b08c210041b6fbacf26e0b04d, type: 2}
---- !u!114 &-5947956238731055698
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3877759371688010855}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 894c48982aeb3104895636fd6dc62901, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onStatusEffectApplied: {fileID: 11400000, guid: ed8210b82b775fa4ea1bfcb3fa36a87e, type: 2}
-  onStatusEffectRemoved: {fileID: 11400000, guid: 64ef481646d3e9e4eabe991f0a6da95d, type: 2}
-  onAllStatusEffectsRemoved: {fileID: 11400000, guid: 7901b194240787944a6e200acd04fda3, type: 2}
-  onStatusEffectTick: {fileID: 11400000, guid: ed8210b82b775fa4ea1bfcb3fa36a87e, type: 2}
 --- !u!4 &8699095912087521350 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7482415228626354879, guid: 4220b79cf5a840543b4a082e92706106, type: 3}

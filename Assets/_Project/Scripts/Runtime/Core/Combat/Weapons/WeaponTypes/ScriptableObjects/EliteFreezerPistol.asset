@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fd84e5b8593ba745ac9e3d0a6d5c1c5, type: 3}
+  m_Name: EliteFreezerPistol
+  m_EditorClassIdentifier: 
+  fireConfig: {fileID: 11400000, guid: cf8f47ba36317ea4980d82639ffcc77c, type: 2}
+  projectileType: {fileID: 11400000, guid: 1d46e757445410247afcacce2ab6f9d6, type: 2}
+  OnFireWeapon: {fileID: 11400000, guid: 223caf201c0b288429a112fd8f959e9b, type: 2}
+  damageModifier: 1.5
+  velocityModifier: 1
+  abilityCooldown: 5
+  dashForce: 20
+  dashDuration: 0.2
