@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Profiling;
 using UnityEngine;
 
 public class RoomManager : MonoBehaviour
@@ -30,32 +31,34 @@ public class RoomManager : MonoBehaviour
 
     // Currently active room
     private GameObject currentRoom;
+    private Room currentRoomComponent;
 
     // Dictionary of all rooms: GameObject -> bool (has been entered)
     private Dictionary<GameObject, bool> allRooms = new Dictionary<GameObject, bool>();
     private int roomsCompleted = 0;
 
     [SerializeField]
-    GameObject playerPrefab;
+    private GameObject playerPrefab;
 
     [SerializeField]
-    Transform defaultTarget;
+    private Transform defaultTarget;
 
     [SerializeField]
-    GameObject startingRoomPrefab;
+    private GameObject startingRoomPrefab;
 
     [SerializeField]
-    GameObject[] defaultEnemyPrefabs;
+    private GameObject[] defaultEnemyPrefabs;
 
     [SerializeField]
-    GameObject[] eliteEnemyPrefabs;
+    private GameObject[] eliteEnemyPrefabs;
 
     [SerializeField]
-    GameObject[] bossEnemyPrefabs;
+    private GameObject[] bossEnemyPrefabs;
 
     private GameObject player;
     public GameObject Player => player;
     public GameObject CurrentRoom => currentRoom;
+    public Room CurrentRoomComponent => currentRoomComponent;
 
     private void Awake()
     {
@@ -63,11 +66,6 @@ public class RoomManager : MonoBehaviour
             Instance = this;
         else
             Destroy(gameObject);
-    }
-
-    private void Start()
-    {
-        // Initialize();
     }
 
     public bool Initialize()
@@ -83,7 +81,15 @@ public class RoomManager : MonoBehaviour
         Room room = currentRoom.GetComponent<Room>();
         if (room != null)
         {
+            currentRoomComponent = room;
+
             player = Instantiate(playerPrefab, null, room.GetEntrancePoint()); // entrance point for starting room is player spawn transform
+            if (player != null)
+            {
+                GameManager.Instance.VirtualCamera.Follow = player.transform;
+                GameManager.Instance.VirtualCamera.LookAt = player.transform;
+            }
+
             allRooms.Add(currentRoom, false); // Initialize as not entered yet
 
             // // Spawn connecting rooms
@@ -121,7 +127,8 @@ public class RoomManager : MonoBehaviour
         Room roomComponent = currentRoom.GetComponent<Room>();
         if (roomComponent != null)
         {
-            roomComponent.InitializeSpawnedEnemies(player.transform);
+            currentRoomComponent = roomComponent;
+            roomComponent.InitializeSpawnedEnemies(defaultTarget);
         }
 
         // Destroy all other rooms
@@ -181,12 +188,12 @@ public class RoomManager : MonoBehaviour
         if (snapPoint == null || roomPrefab == null)
             return;
 
-        // Instantiate the room at the exact position and rotation of the snap point
-        // GameObject newRoom = Instantiate(roomPrefab, snapPoint.position, snapPoint.rotation);
+        Vector3 offset = snapPoint.position - CurrentRoom.transform.position;
+
         GameObject newRoom = RoomHandler.CreateRoom(
             roomPrefab,
             currentRoom,
-            snapPoint.position,
+            offset,
             snapPoint.rotation
         );
         allRooms.Add(newRoom, false); // Add to dictionary as not entered yet

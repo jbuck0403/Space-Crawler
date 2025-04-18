@@ -83,6 +83,11 @@ public class Room : MonoBehaviour
         return null;
     }
 
+    public void RemoveEnemyFromSpawnedList(BaseEnemyController baseEnemyController)
+    {
+        spawnedEnemies.Remove(baseEnemyController);
+    }
+
     public int GetTotalSpawnLocations()
     {
         return enemySpawnLocations.Length;

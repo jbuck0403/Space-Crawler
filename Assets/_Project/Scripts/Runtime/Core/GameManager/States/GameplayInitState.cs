@@ -30,7 +30,7 @@ public class GameplayInitState : GameState
             else
             {
                 // Instantiate new RoomManager if none exists
-                GameObject roomManagerPrefab = Resources.Load<GameObject>("RoomManager");
+                GameObject roomManagerPrefab = gameManager.roomManagerPrefab;
                 if (roomManagerPrefab != null)
                 {
                     Object.Instantiate(roomManagerPrefab);

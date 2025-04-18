@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 /// <summary>
@@ -20,11 +21,18 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameData gameData = new GameData();
 
+    [SerializeField]
+    public GameObject roomManagerPrefab;
+
+    [SerializeField]
+    private CinemachineVirtualCamera virtualCamera;
+
     // Events
     public event Action<GameStateType> OnStateChanged;
 
     // Public properties
     public GameData GameData => gameData;
+    public CinemachineVirtualCamera VirtualCamera => virtualCamera;
     public GameStateType CurrentStateType { get; private set; }
 
     private void Awake()
@@ -55,6 +63,7 @@ public class GameManager : MonoBehaviour
         {
             GameplayRoomState state = (GameplayRoomState)currentState;
             state.HandleEnemyDefeated(enemy);
+            RoomManager.Instance.CurrentRoomComponent.RemoveEnemyFromSpawnedList(enemy);
         }
     }
 
