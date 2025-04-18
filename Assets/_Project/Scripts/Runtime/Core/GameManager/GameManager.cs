@@ -49,6 +49,15 @@ public class GameManager : MonoBehaviour
         ChangeState(GameStateType.GameplayInit);
     }
 
+    public void HandleEnemyDefeated(BaseEnemyController enemy)
+    {
+        if (currentState.GetGameStateType() == GameStateType.GameplayRoom)
+        {
+            GameplayRoomState state = (GameplayRoomState)currentState;
+            state.HandleEnemyDefeated(enemy);
+        }
+    }
+
     private void InitializeStates()
     {
         // Create all game states

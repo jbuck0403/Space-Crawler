@@ -20,7 +20,7 @@ public class GameplayRoomState : GameState
     private bool eventsSubscribed = false;
 
     public GameplayRoomState(GameManager manager)
-        : base(manager) { }
+        : base(manager, GameStateType.GameplayRoom) { }
 
     public override void Enter()
     {
@@ -142,7 +142,7 @@ public class GameplayRoomState : GameState
         gameManager.CompleteRun(true);
     }
 
-    private void HandleEnemyDefeated(BaseEnemyController enemy)
+    public void HandleEnemyDefeated(BaseEnemyController enemy)
     {
         // Update enemy count in current room
         if (activeEnemies.Contains(enemy))

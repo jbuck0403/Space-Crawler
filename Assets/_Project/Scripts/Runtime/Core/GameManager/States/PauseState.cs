@@ -6,7 +6,7 @@ using UnityEngine;
 public class PauseState : GameState
 {
     public PauseState(GameManager manager)
-        : base(manager) { }
+        : base(manager, GameStateType.Pause) { }
 
     public override void Enter()
     {

@@ -207,6 +207,11 @@ public class BaseEnemyController : BaseCharacterController, IProjectileDataProvi
     {
         return movementController.GetMovementHandler();
     }
+
+    private void OnDestroy()
+    {
+        GameManager.Instance.HandleEnemyDefeated(this);
+    }
 }
 
 [Serializable]

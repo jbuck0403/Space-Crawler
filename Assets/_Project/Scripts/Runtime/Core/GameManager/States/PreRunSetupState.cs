@@ -6,7 +6,7 @@ using UnityEngine;
 public class PreRunSetupState : GameState
 {
     public PreRunSetupState(GameManager manager)
-        : base(manager) { }
+        : base(manager, GameStateType.PreRunSetup) { }
 
     public override void Enter()
     {

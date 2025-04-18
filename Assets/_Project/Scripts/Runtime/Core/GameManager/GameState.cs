@@ -6,10 +6,12 @@ using UnityEngine;
 public abstract class GameState
 {
     protected GameManager gameManager;
+    protected GameStateType gameStateType;
 
-    public GameState(GameManager manager)
+    public GameState(GameManager manager, GameStateType gameStateType)
     {
         gameManager = manager;
+        this.gameStateType = gameStateType;
     }
 
     /// <summary>
@@ -34,5 +36,10 @@ public abstract class GameState
     {
         // Default implementation does nothing
         // Override in concrete states as needed
+    }
+
+    public GameStateType GetGameStateType()
+    {
+        return gameStateType;
     }
 }

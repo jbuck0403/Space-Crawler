@@ -6,7 +6,7 @@ using UnityEngine;
 public class MainMenuState : GameState
 {
     public MainMenuState(GameManager manager)
-        : base(manager) { }
+        : base(manager, GameStateType.MainMenu) { }
 
     public override void Enter()
     {

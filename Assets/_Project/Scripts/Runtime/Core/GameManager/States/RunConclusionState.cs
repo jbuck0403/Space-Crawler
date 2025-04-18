@@ -6,7 +6,7 @@ using UnityEngine;
 public class RunConclusionState : GameState
 {
     public RunConclusionState(GameManager manager)
-        : base(manager) { }
+        : base(manager, GameStateType.RunConclusion) { }
 
     public override void Enter()
     {

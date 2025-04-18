@@ -8,7 +8,7 @@ public class GameplayInitState : GameState
     private bool initializationComplete = false;
 
     public GameplayInitState(GameManager manager)
-        : base(manager) { }
+        : base(manager, GameStateType.GameplayInit) { }
 
     public override void Enter()
     {
