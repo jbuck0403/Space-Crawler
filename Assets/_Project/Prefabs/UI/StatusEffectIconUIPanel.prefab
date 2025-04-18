@@ -62,7 +62,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4135032125940052058}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -131,7 +131,7 @@ MonoBehaviour:
   onStatusEffectRemoved: {fileID: 11400000, guid: 64ef481646d3e9e4eabe991f0a6da95d, type: 2}
   onStatusEffectTick: {fileID: 11400000, guid: 9034f57cede95814bb862c4362cbecd2, type: 2}
   targetEntity: {fileID: 0}
-  iconRegistry: {fileID: 0}
+  iconRegistry: {fileID: 11400000, guid: c56df524f84704142a494a486f163b57, type: 2}
   onDeath: {fileID: 11400000, guid: 4dd36339df0b86146adc52f662e8e0e2, type: 2}
   spacing: 5
   iconSize: {x: 128, y: 128}

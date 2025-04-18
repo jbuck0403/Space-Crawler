@@ -23,15 +23,27 @@ public class PlayerHUD : MonoBehaviour
     private float weaponAbilityCooldown;
     private float lastAbilityTime;
 
-    private void Awake()
+    public GameObject player;
+    public bool initialized = false;
+
+    public void Initialize(GameObject player)
     {
         nextShotSlider.fillAmount = 1f;
+        this.player = player;
+
+        SubscribeToEvents();
+
+        initialized = true;
+        UIManager.Instance.playerHUDInitialized = initialized;
     }
 
     private void Update()
     {
-        HandleNextFireTimeBarFill();
-        HandleWeaponAbilityCooldownBarFill();
+        if (initialized)
+        {
+            HandleNextFireTimeBarFill();
+            HandleWeaponAbilityCooldownBarFill();
+        }
     }
 
     private void OnHealthPercentChanged(float healthPercent)
@@ -93,36 +105,48 @@ public class PlayerHUD : MonoBehaviour
         weaponAbilityCooldownSlider.fillAmount = 0f;
     }
 
-    private void OnEnable()
+    private void SubscribeToEvents()
     {
-        HealthSystem healthSystem = GetComponent<HealthSystem>();
-        ShieldHandler shieldHandler = GetComponent<ShieldHandler>();
-        WeaponHandler weaponHandler = GetComponent<WeaponHandler>();
+        if (player == null)
+        {
+            return;
+        }
+
+        HealthSystem healthSystem = player.GetComponent<HealthSystem>();
+        ShieldHandler shieldHandler = player.GetComponent<ShieldHandler>();
+        WeaponHandler weaponHandler = player.GetComponent<WeaponHandler>();
 
         // Subscribe to percentage events
-        healthSystem.OnHealthPercentChanged.AddListener(gameObject, OnHealthPercentChanged);
-        shieldHandler.OnShieldPercentChanged.AddListener(gameObject, OnShieldPercentChanged);
-        weaponHandler.OnNextFireTime.AddListener(gameObject, OnNextFireTimeUpdated);
-        weaponHandler.OnChargingWeapon.AddListener(gameObject, OnChargingWeaponUpdated);
-        weaponHandler.OnWeaponAbilityCooldown.AddListener(
-            gameObject,
+        healthSystem.OnHealthPercentChanged.AddListener(player, OnHealthPercentChanged);
+        shieldHandler.OnShieldPercentChanged.AddListener(player, OnShieldPercentChanged);
+        weaponHandler.OnNextFireTime.AddListener(player, OnNextFireTimeUpdated);
+        weaponHandler.OnChargingWeapon.AddListener(player, OnChargingWeaponUpdated);
+        weaponHandler.OnWeaponAbilityCooldown.AddListener(player, OnWeaponAbilityCooldownUpdated);
+    }
+
+    private void UnSubscribeFromEvents()
+    {
+        if (player == null)
+        {
+            return;
+        }
+
+        HealthSystem healthSystem = player.GetComponent<HealthSystem>();
+        ShieldHandler shieldHandler = player.GetComponent<ShieldHandler>();
+        WeaponHandler weaponHandler = player.GetComponent<WeaponHandler>();
+
+        healthSystem.OnHealthPercentChanged.RemoveListener(player, OnHealthPercentChanged);
+        shieldHandler.OnShieldPercentChanged.RemoveListener(player, OnShieldPercentChanged);
+        weaponHandler.OnNextFireTime.RemoveListener(player, OnNextFireTimeUpdated);
+        weaponHandler.OnChargingWeapon.RemoveListener(player, OnChargingWeaponUpdated);
+        weaponHandler.OnWeaponAbilityCooldown.RemoveListener(
+            player,
             OnWeaponAbilityCooldownUpdated
         );
     }
 
     private void OnDisable()
     {
-        HealthSystem healthSystem = GetComponent<HealthSystem>();
-        ShieldHandler shieldHandler = GetComponent<ShieldHandler>();
-        WeaponHandler weaponHandler = GetComponent<WeaponHandler>();
-
-        healthSystem.OnHealthPercentChanged.RemoveListener(gameObject, OnHealthPercentChanged);
-        shieldHandler.OnShieldPercentChanged.RemoveListener(gameObject, OnShieldPercentChanged);
-        weaponHandler.OnNextFireTime.RemoveListener(gameObject, OnNextFireTimeUpdated);
-        weaponHandler.OnChargingWeapon.RemoveListener(gameObject, OnChargingWeaponUpdated);
-        weaponHandler.OnWeaponAbilityCooldown.RemoveListener(
-            gameObject,
-            OnWeaponAbilityCooldownUpdated
-        );
+        UnSubscribeFromEvents();
     }
 }

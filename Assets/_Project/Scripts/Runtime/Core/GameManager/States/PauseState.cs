@@ -38,7 +38,13 @@ public class PauseState : GameState
     public override void HandleInput()
     {
         // Check for pause button again to unpause
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (
+            Input.GetKeyDown(KeyCode.Escape)
+            && (
+                gameManager.CurrentStateType == GameStateType.GameplayRoom
+                || gameManager.CurrentStateType == GameStateType.Pause
+            )
+        )
         {
             gameManager.TogglePause();
         }

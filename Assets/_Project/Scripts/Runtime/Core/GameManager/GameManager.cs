@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
         // states.Add(GameStateType.PreRunSetup, new PreRunSetupState(this));
         states.Add(GameStateType.GameplayInit, new GameplayInitState(this));
         states.Add(GameStateType.GameplayRoom, new GameplayRoomState(this));
-        // states.Add(GameStateType.Pause, new PauseState(this));
+        states.Add(GameStateType.Pause, new PauseState(this));
         // states.Add(GameStateType.RunConclusion, new RunConclusionState(this));
 
         Debug.Log("Game states initialized");

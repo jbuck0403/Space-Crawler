@@ -14,10 +14,18 @@ public class Room : MonoBehaviour
     [Header("Enemy Spawn Locations")]
     [SerializeField]
     Transform[] enemySpawnLocations;
+    public int numEnemiesToSpawn = 1;
+    public int maxEnemiesToSpawn = 8;
+    public int enemyPopulationIncrement = 1;
 
     public List<BaseEnemyController> spawnedEnemies = new List<BaseEnemyController>();
 
     private Dictionary<Transform, bool> spawnLocationUsed = new Dictionary<Transform, bool>();
+
+    private void OnValidate()
+    {
+        numEnemiesToSpawn = Mathf.Clamp(numEnemiesToSpawn, 0, maxEnemiesToSpawn);
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {

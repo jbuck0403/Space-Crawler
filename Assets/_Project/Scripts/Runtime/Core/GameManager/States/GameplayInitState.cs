@@ -67,10 +67,16 @@ public class GameplayInitState : GameState
     {
         Debug.Log("Exiting Gameplay Initialization State");
 
+        GameObject player = RoomManager.Instance.Player;
+
         // Ensure HUD is visible and properly set up
-        if (RoomManager.Instance != null && RoomManager.Instance.Player != null)
+        if (RoomManager.Instance != null && player != null)
         {
-            // TODO: Initialize player HUD with reference to player
+            PlayerHUD playerHUD = UIManager.ShowPlayerHUD();
+            if (playerHUD != null)
+            {
+                playerHUD.Initialize(player);
+            }
             // TODO: Configure any player-specific UI elements
         }
     }

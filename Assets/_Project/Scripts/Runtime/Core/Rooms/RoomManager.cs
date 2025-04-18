@@ -77,28 +77,33 @@ public class RoomManager : MonoBehaviour
             default,
             Quaternion.identity
         );
-        // currentRoom = Instantiate(startingRoomPrefab, Vector3.zero, Quaternion.identity);
+
         Room room = currentRoom.GetComponent<Room>();
         if (room != null)
         {
             currentRoomComponent = room;
-
-            player = Instantiate(playerPrefab, null, room.GetEntrancePoint()); // entrance point for starting room is player spawn transform
-            if (player != null)
-            {
-                GameManager.Instance.VirtualCamera.Follow = player.transform;
-                GameManager.Instance.VirtualCamera.LookAt = player.transform;
-            }
+            InitPlayer(currentRoomComponent);
 
             allRooms.Add(currentRoom, false); // Initialize as not entered yet
-
-            // // Spawn connecting rooms
-            // SpawnConnectingRooms();
 
             return true;
         }
 
         return false;
+    }
+
+    private void InitPlayer(Room room)
+    {
+        player = Instantiate(
+            playerPrefab,
+            room.GetEntrancePoint().position,
+            room.GetEntrancePoint().rotation
+        );
+        if (player != null)
+        {
+            GameManager.Instance.VirtualCamera.Follow = player.transform;
+            GameManager.Instance.VirtualCamera.LookAt = player.transform;
+        }
     }
 
     // Called by RoomCollider when player enters a room
@@ -128,7 +133,7 @@ public class RoomManager : MonoBehaviour
         if (roomComponent != null)
         {
             currentRoomComponent = roomComponent;
-            roomComponent.InitializeSpawnedEnemies(defaultTarget);
+            roomComponent.InitializeSpawnedEnemies(Player.transform);
         }
 
         // Destroy all other rooms
