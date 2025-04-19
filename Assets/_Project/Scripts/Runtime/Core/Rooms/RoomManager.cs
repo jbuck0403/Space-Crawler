@@ -345,6 +345,7 @@ public class RoomManager : MonoBehaviour
     {
         if (currentRoomComponent != null)
         {
+            Debug.Log($"#ROOM Spawned Enemies {currentRoomComponent.spawnedEnemies.Count}");
             currentRoomComponent.RemoveEnemyFromSpawnedList(enemy);
 
             // Check if all enemies are cleared

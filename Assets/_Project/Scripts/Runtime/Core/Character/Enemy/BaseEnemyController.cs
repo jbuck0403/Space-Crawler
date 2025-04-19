@@ -29,6 +29,14 @@ public class BaseEnemyController : BaseCharacterController, IProjectileDataProvi
         healthSystem = GetComponent<HealthSystem>();
     }
 
+    public void Start()
+    {
+        if (healthSystem != null)
+        {
+            healthSystem.OnDeath.AddListener(gameObject, OnDeath);
+        }
+    }
+
     public virtual bool Initialize(Transform defaultTarget)
     {
         if (movementController != null && defaultTarget != null)
@@ -208,14 +216,18 @@ public class BaseEnemyController : BaseCharacterController, IProjectileDataProvi
         return movementController.GetMovementHandler();
     }
 
-    private void OnDeath()
+    private void OnDeath(Vector2 position)
     {
+        print("#ROOM DEATH");
         RoomManager.Instance.HandleEnemyDefeated(this);
     }
 
     private void OnDestroy()
     {
-        OnDeath();
+        if (healthSystem != null)
+        {
+            healthSystem.OnDeath.RemoveListener(gameObject, OnDeath);
+        }
     }
 }
 
