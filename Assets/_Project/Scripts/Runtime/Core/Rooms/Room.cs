@@ -126,7 +126,9 @@ public class Room : MonoBehaviour
 
     public void OpenDoorsWithRoomBeyond()
     {
-        Debug.Log($"#ROOM Room.OpenDoorsWithRoomBeyond called on {gameObject.name}");
+        Debug.Log(
+            $"#ROOM Room.OpenDoorsWithRoomBeyond called on {gameObject.name} - {System.DateTime.Now.ToString("HH:mm:ss.fff")}"
+        );
         Debug.Log($"#ROOM Exit doors count: {exitDoors.Count}");
 
         foreach (DoorData doorData in exitDoors)

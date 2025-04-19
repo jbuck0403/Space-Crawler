@@ -29,6 +29,9 @@ public class GameplayRoomState : GameState
 
     private bool currentRoomEntered = false;
 
+    // We'll need this flag to track if we've handled this completion already
+    private bool roomCompletionHandled = false;
+
     public GameplayRoomState(GameManager manager)
         : base(manager, GameStateType.GameplayRoom) { }
 
@@ -61,14 +64,24 @@ public class GameplayRoomState : GameState
             return;
         }
 
-        // Skip all room processing until the room has been officially entered
-        if (!currentRoomEntered || RoomCompleted || roomManager == null)
+        // Skip if RoomManager isn't ready
+        if (roomManager == null)
             return;
 
-        if (!enemiesCleared && roomManager != null)
+        // Update game stats if room was just completed
+        if (roomManager.IsRoomCompleted && !roomCompletionHandled)
         {
-            MonitorCurrentRoom();
-            CheckRoomCompletion();
+            // Update game data/stats
+            gameManager.GameData.currentRunRoomsCleared++;
+
+            // Check if this was a boss room
+            bool wasBossRoom = false; // TODO: Implement boss room check
+            if (wasBossRoom)
+            {
+                HandleBossDefeated();
+            }
+
+            roomCompletionHandled = true;
         }
     }
 
@@ -216,8 +229,13 @@ public class GameplayRoomState : GameState
 
         Debug.Log($"#ROOM Monitoring room with {enemiesRemainingInRoom} enemies");
 
+        Debug.Log(
+            $"#ROOM After monitoring - enemiesRemainingInRoom: {enemiesRemainingInRoom}, condition check: {enemiesRemainingInRoom <= 0}"
+        );
+
         // Check if room has no enemies
         if (enemiesRemainingInRoom <= 0)
+        // if (enemiesCleared && roomsSpawned)
         {
             Debug.Log(
                 $"#ROOM No enemies in room - marking as cleared {enemiesCleared && roomsSpawned}"
@@ -229,6 +247,9 @@ public class GameplayRoomState : GameState
 
     private void CheckRoomCompletion()
     {
+        Debug.Log(
+            $"#ROOM CheckRoomCompletion conditions: enemiesCleared={enemiesCleared}, roomsSpawned={roomsSpawned}, !roomCompleted={!roomCompleted}"
+        );
         if (enemiesCleared && roomsSpawned && !roomCompleted && currentRoom != null)
         {
             Debug.Log("#ROOM Both conditions met - handling room completion");
@@ -263,5 +284,11 @@ public class GameplayRoomState : GameState
         Debug.Log("#ROOM Rooms have been spawned - updating room state");
         roomsSpawned = true;
         CheckRoomCompletion();
+    }
+
+    // Reset this flag when player enters a new room
+    public void OnRoomChanged()
+    {
+        roomCompletionHandled = false;
     }
 }

@@ -208,9 +208,14 @@ public class BaseEnemyController : BaseCharacterController, IProjectileDataProvi
         return movementController.GetMovementHandler();
     }
 
+    private void OnDeath()
+    {
+        RoomManager.Instance.HandleEnemyDefeated(this);
+    }
+
     private void OnDestroy()
     {
-        GameManager.Instance.HandleEnemyDefeated(this);
+        OnDeath();
     }
 }
 

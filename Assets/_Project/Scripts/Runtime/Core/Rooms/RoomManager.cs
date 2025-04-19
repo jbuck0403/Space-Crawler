@@ -60,10 +60,13 @@ public class RoomManager : MonoBehaviour
     public GameObject CurrentRoom => currentRoom;
     public Room CurrentRoomComponent => currentRoomComponent;
 
-    private bool currentRoomEntered = false;
+    // Add these public properties
+    public bool IsRoomCompleted { get; private set; } = false;
+    public bool AreEnemiesCleared { get; private set; } = false;
+    public bool AreRoomsSpawned { get; private set; } = false;
+    public bool IsRoomEntered { get; private set; } = false;
+
     private bool roomCompleted = false;
-    private bool enemiesCleared = false;
-    private bool roomsSpawned = false;
 
     private void Awake()
     {
@@ -128,10 +131,10 @@ public class RoomManager : MonoBehaviour
             return;
         }
 
-        currentRoomEntered = true;
-        roomCompleted = false;
-        enemiesCleared = false;
-        roomsSpawned = false;
+        IsRoomEntered = true;
+        IsRoomCompleted = false;
+        AreEnemiesCleared = false;
+        AreRoomsSpawned = false;
 
         // Mark the room as entered
         allRooms[room] = true;
@@ -197,12 +200,13 @@ public class RoomManager : MonoBehaviour
         }
 
         // After all rooms have been spawned, update state
-        roomsSpawned = true;
+        AreRoomsSpawned = true;
 
         // Check if current room has any enemies
         if (currentRoomComponent != null && currentRoomComponent.spawnedEnemies.Count == 0)
         {
-            enemiesCleared = true;
+            AreEnemiesCleared = true;
+            CheckRoomCompletion();
         }
 
         // Notify GameplayRoomState
@@ -333,6 +337,46 @@ public class RoomManager : MonoBehaviour
         {
             Destroy(room);
             allRooms.Remove(room);
+        }
+    }
+
+    // New method to handle enemy death notification
+    public void HandleEnemyDefeated(BaseEnemyController enemy)
+    {
+        if (currentRoomComponent != null)
+        {
+            currentRoomComponent.RemoveEnemyFromSpawnedList(enemy);
+
+            // Check if all enemies are cleared
+            if (currentRoomComponent.spawnedEnemies.Count == 0)
+            {
+                Debug.Log("#ROOM All enemies defeated - room cleared");
+                AreEnemiesCleared = true;
+                CheckRoomCompletion();
+            }
+        }
+    }
+
+    // New method to check for room completion
+    private void CheckRoomCompletion()
+    {
+        if (!IsRoomCompleted && AreEnemiesCleared && AreRoomsSpawned)
+        {
+            Debug.Log("#ROOM Room completion criteria met");
+            CompleteCurrentRoom();
+        }
+    }
+
+    // New method to handle room completion actions
+    private void CompleteCurrentRoom()
+    {
+        IsRoomCompleted = true;
+
+        // Open doors directly
+        if (currentRoomComponent != null)
+        {
+            Debug.Log("#ROOM Opening doors with rooms beyond");
+            currentRoomComponent.OpenDoorsWithRoomBeyond();
         }
     }
 }
