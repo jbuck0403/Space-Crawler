@@ -18,6 +18,8 @@ public class PlayerController
     private bool applyingExternalMovement = false;
     private float externalMovementDisableTime = 0f;
 
+    private bool initialized = false;
+
     protected override void Awake()
     {
         base.Awake();
@@ -50,8 +52,16 @@ public class PlayerController
         }
     }
 
+    public void Initialize()
+    {
+        initialized = true;
+    }
+
     private void Update()
     {
+        if (!initialized)
+            return;
+
         HandleDisablingExternalMovement();
         GetAimDirection();
 

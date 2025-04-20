@@ -5,42 +5,151 @@ using UnityEngine;
 /// </summary>
 public class PreRunSetupState : GameState
 {
+    [SerializeField]
+    private GameObject talentTreeUIPrefab;
+
+    private GameObject player;
+    private TalentTreeHandler playerTalentTree;
+    private TalentTreeUIManager talentUI;
+
     public PreRunSetupState(GameManager manager)
         : base(manager, GameStateType.PreRunSetup) { }
 
     public override void Enter()
     {
         Debug.Log("Entering Pre-Run Setup State");
+        talentUI = GameManager.Instance.TalentTreeUIManager;
 
-        // TODO: Show talent tree and loadout UI
-        // TODO: Load player data (talent points, unlocked items)
-        // TODO: Initialize talent tree with current allocation
+        // Find or initialize player
+        InitializePlayer();
+
+        // Initialize talent tree
+        InitializeTalentTree();
+
+        // Show talent tree UI
+        ShowTalentTreeUI();
+    }
+
+    private void InitializePlayer()
+    {
+        player = RoomManager.Instance.Player;
+
+        if (player == null)
+        {
+            Debug.LogError("PreRunSetupState: Could not find player!");
+            return;
+        }
+
+        Debug.Log("PreRunSetupState: Found player");
+    }
+
+    private void InitializeTalentTree()
+    {
+        if (player == null)
+            return;
+
+        // Get or add TalentTreeHandler component
+        playerTalentTree = player.GetComponent<TalentTreeHandler>();
+
+        if (playerTalentTree == null)
+        {
+            Debug.LogError("PreRunSetupState: Player does not have a TalentTreeHandler component!");
+            return;
+        }
+
+        // Initialize talent tree if not already initialized
+        if (!playerTalentTree.IsInitialized)
+        {
+            playerTalentTree.Initialize();
+
+            // Add default talent points - adjust based on game progression, difficulty, etc.
+            playerTalentTree.AddPoints(10);
+
+            Debug.Log("PreRunSetupState: Initialized talent tree and added starting points");
+        }
+        else
+        {
+            Debug.Log("PreRunSetupState: Talent tree already initialized");
+        }
+
+        talentUI.UpdateUI();
+
+        // Load any previously saved talent configuration
+        // playerTalentTree.LoadConfiguration();
+    }
+
+    private void ShowTalentTreeUI()
+    {
+        if (playerTalentTree == null)
+            return;
+
+        talentUI = GameManager.Instance.TalentTreeUIManager;
+
+        talentUI.Initialize(playerTalentTree);
+        UIManager.ShowPreRunSetup();
+
+        Debug.Log("PreRunSetupState: Showing talent tree UI");
     }
 
     public override void UpdateState()
     {
-        // Typically doesn't need per-frame updates beyond UI interactions
+        // Check for start game input
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
+        {
+            OnStartGameClicked();
+        }
+
+        // Check for back to main menu input
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            OnBackToMainMenuClicked();
+        }
     }
 
     public override void Exit(GameStateType stateTypeToEnter)
     {
         Debug.Log("Exiting Pre-Run Setup State");
 
-        // TODO: Hide talent and loadout UI
-        // TODO: Save talent selections
-        // TODO: Save ammo type selections
+        HideTalentUI();
+        InitPlayerHUD();
     }
 
-    // Example of UI event handlers
+    private void HideTalentUI()
+    {
+        // Hide talent UI
+        if (talentUI != null)
+        {
+            talentUI.Hide();
+        }
+
+        // Save talent configuration
+        if (playerTalentTree != null && playerTalentTree.IsInitialized)
+        {
+            // saving TBI
+            Debug.Log("PreRunSetupState: Saving talent configuration");
+        }
+    }
+
+    private void InitPlayerHUD()
+    {
+        Debug.Log("Exiting Gameplay Initialization State");
+
+        if (RoomManager.Instance != null && player != null)
+        {
+            UIManager.ShowPlayerHUD(player);
+        }
+    }
+
+    // UI event handlers
     private void OnStartGameClicked()
     {
-        // Transition to the gameplay initialization state
-        gameManager.ChangeState(GameStateType.GameplayInit);
+        Debug.Log("PreRunSetupState: Starting game");
+        gameManager.ChangeState(GameStateType.GameplayRoom);
     }
 
     private void OnBackToMainMenuClicked()
     {
-        // Return to the main menu
+        Debug.Log("PreRunSetupState: Returning to main menu");
         gameManager.ChangeState(GameStateType.MainMenu);
     }
 }

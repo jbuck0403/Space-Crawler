@@ -27,8 +27,6 @@ public class GameplayRoomState : GameState
     private bool enemiesCleared = false;
     private bool roomsSpawned = false;
 
-    private bool currentRoomEntered = false;
-
     // We'll need this flag to track if we've handled this completion already
     private bool roomCompletionHandled = false;
 
@@ -53,6 +51,8 @@ public class GameplayRoomState : GameState
 
         // Subscribe to events
         SubscribeToEvents();
+
+        RoomManager.Instance.PlayerController.Initialize();
     }
 
     public override void UpdateState()

@@ -56,6 +56,8 @@ public class RoomManager : MonoBehaviour
     private GameObject[] bossEnemyPrefabs;
 
     private GameObject player;
+    private PlayerController playerController;
+    public PlayerController PlayerController => playerController;
     public GameObject Player => player;
     public GameObject CurrentRoom => currentRoom;
     public Room CurrentRoomComponent => currentRoomComponent;
@@ -109,6 +111,8 @@ public class RoomManager : MonoBehaviour
         );
         if (player != null)
         {
+            playerController = player.GetComponent<PlayerController>();
+
             GameManager.Instance.VirtualCamera.Follow = player.transform;
             GameManager.Instance.VirtualCamera.LookAt = player.transform;
         }

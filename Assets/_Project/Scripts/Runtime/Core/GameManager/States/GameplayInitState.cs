@@ -46,33 +46,24 @@ public class GameplayInitState : GameState
             }
         }
 
-        // Initialize gameplay
         InitializeGameplay();
     }
 
     public override void UpdateState()
     {
-        // Check if initialization is complete and we can transition to gameplay
         if (
             initializationComplete
             && RoomManager.Instance != null
             && RoomManager.Instance.Player != null
         )
         {
-            gameManager.ChangeState(GameStateType.GameplayRoom);
+            gameManager.ChangeState(GameStateType.PreRunSetup);
         }
     }
 
     public override void Exit(GameStateType stateTypeToEnter)
     {
         Debug.Log("Exiting Gameplay Initialization State");
-
-        GameObject player = RoomManager.Instance.Player;
-
-        if (RoomManager.Instance != null && player != null)
-        {
-            UIManager.ShowPlayerHUD(player);
-        }
     }
 
     private void InitializeGameplay()

@@ -145,7 +145,7 @@ GameObject:
   - component: {fileID: 6100913938063404725}
   - component: {fileID: 1453900040015391687}
   - component: {fileID: 2505152400233340478}
-  - component: {fileID: 4614042338320843228}
+  - component: {fileID: 3671899597149090582}
   m_Layer: 5
   m_Name: UITalentImage
   m_TagString: Untagged
@@ -211,7 +211,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4614042338320843228
+--- !u!114 &3671899597149090582
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -220,8 +220,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7497907391209994577}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f873277bbcde10e44b63401ca981f9f1, type: 3}
+  m_Script: {fileID: 11500000, guid: e7260b356403ba24aa7c43eacad3484c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  talent: {fileID: 0}
-  pointsSpentText: {fileID: 2045578766270780855}
+  iconImage: {fileID: 2505152400233340478}
+  pointsText: {fileID: 2045578766270780855}
+  backgroundImage: {fileID: 0}
+  lockedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  availableColor: {r: 1, g: 1, b: 1, a: 1}
+  maxedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

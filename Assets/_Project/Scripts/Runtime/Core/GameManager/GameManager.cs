@@ -27,6 +27,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private CinemachineVirtualCamera virtualCamera;
 
+    [SerializeField]
+    TalentTreeUIManager talentTreeUIManager;
+
     // Events
     public event Action<GameStateType> OnStateChanged;
 
@@ -35,6 +38,7 @@ public class GameManager : MonoBehaviour
     public CinemachineVirtualCamera VirtualCamera => virtualCamera;
     public GameStateType CurrentStateType { get; private set; }
     public GameState CurrentState => currentState;
+    public TalentTreeUIManager TalentTreeUIManager => talentTreeUIManager;
 
     private void Awake()
     {
@@ -74,8 +78,8 @@ public class GameManager : MonoBehaviour
     {
         // Create all game states
         // states.Add(GameStateType.MainMenu, new MainMenuState(this));
-        // states.Add(GameStateType.PreRunSetup, new PreRunSetupState(this));
         states.Add(GameStateType.GameplayInit, new GameplayInitState(this));
+        states.Add(GameStateType.PreRunSetup, new PreRunSetupState(this));
         states.Add(GameStateType.GameplayRoom, new GameplayRoomState(this));
         states.Add(GameStateType.Pause, new PauseState(this));
         // states.Add(GameStateType.RunConclusion, new RunConclusionState(this));
@@ -129,6 +133,11 @@ public class GameManager : MonoBehaviour
     {
         gameData.isNewGame = false;
         ChangeState(GameStateType.PreRunSetup);
+    }
+
+    public void FinishPreRunSetup()
+    {
+        ChangeState(GameStateType.GameplayRoom);
     }
 
     /// <summary>

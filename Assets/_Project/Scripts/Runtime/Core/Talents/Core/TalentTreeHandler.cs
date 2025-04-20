@@ -20,28 +20,62 @@ public class TalentTreeHandler : MonoBehaviour
 
     [SerializeField]
     private int spentPoints = 0;
+    private bool initialized = false;
 
     public int AvailablePoints => totalPoints - spentPoints;
     public int TotalPoints => totalPoints;
     public int SpentPoints => spentPoints;
     public TalentTreeSO TalentTreeSO => talentTreeSO;
+    public bool IsInitialized => initialized;
 
-    private void Awake()
+    // private void Awake()
+    // {
+    //     if (talentTreeSO == null)
+    //     {
+    //         Debug.LogError("%%% TalentTreeHandler: No TalentTreeSO assigned!");
+    //         enabled = false;
+    //         return;
+    //     }
+
+    //     InitializeTalents();
+    // }
+
+    /// <summary>
+    /// Initialize the talent tree with the given TalentTreeSO
+    /// </summary>
+    public void Initialize(TalentTreeSO talentTreeConfig = null)
     {
-        if (talentTreeSO == null)
+        if (initialized)
         {
-            Debug.LogError("%%% TalentTreeHandler: No TalentTreeSO assigned!");
-            enabled = false;
+            Debug.LogWarning("%%% TalentTreeHandler: Already initialized");
             return;
         }
 
-        InitializeTalents();
+        // Use provided config or fall back to serialized one
+        TalentTreeSO configToUse = talentTreeConfig ?? talentTreeSO;
+
+        if (configToUse == null)
+        {
+            Debug.LogError("%%% TalentTreeHandler: No TalentTreeSO available for initialization!");
+            return;
+        }
+
+        // Store reference if using external config
+        if (talentTreeConfig != null)
+        {
+            talentTreeSO = talentTreeConfig;
+        }
+
+        // Initialize runtime instances
+        InitializeTalents(configToUse);
+
+        Debug.Log($"%%% TalentTreeHandler: Initialized with {configToUse.name}");
     }
 
     /// <summary>
     /// Initialize runtime instances of all available talents
     /// </summary>
-    private void InitializeTalents()
+    private void InitializeTalents(TalentTreeSO talentTreeSO)
     {
         Debug.Log("%%% TalentTreeHandler: Initializing talents");
         runtimeTalentInstances.Clear();
@@ -59,6 +93,8 @@ public class TalentTreeHandler : MonoBehaviour
         }
 
         Debug.Log($"%%% TalentTreeHandler: Initialized {runtimeTalentInstances.Count} talents");
+
+        initialized = true;
     }
 
     /// <summary>
@@ -66,6 +102,9 @@ public class TalentTreeHandler : MonoBehaviour
     /// </summary>
     public bool IsTierUnlocked(int tierIndex)
     {
+        if (!initialized)
+            return false;
+
         Debug.Log($"%%% TalentTreeHandler: Checking if tier {tierIndex} is unlocked");
 
         if (tierIndex == 0)
@@ -108,6 +147,9 @@ public class TalentTreeHandler : MonoBehaviour
     /// </summary>
     public bool TryUnlockTalent(BaseTalent talentTemplate)
     {
+        if (!initialized)
+            return false;
+
         Debug.Log($"%%% TalentTreeHandler: Trying to unlock talent {talentTemplate.name}");
 
         // Get runtime instance of the talent
@@ -186,6 +228,9 @@ public class TalentTreeHandler : MonoBehaviour
     /// </summary>
     public bool TryRemoveTalent(BaseTalent talentTemplate)
     {
+        if (!initialized)
+            return false;
+
         // Get runtime instance of the talent
         if (!runtimeTalentInstances.TryGetValue(talentTemplate, out var talent))
         {
@@ -239,6 +284,9 @@ public class TalentTreeHandler : MonoBehaviour
     /// </summary>
     public void AddPoints(int points)
     {
+        if (!initialized)
+            return;
+
         if (points <= 0)
             return;
 
@@ -259,6 +307,9 @@ public class TalentTreeHandler : MonoBehaviour
     /// </summary>
     public BaseTalent GetRuntimeTalent(BaseTalent talentTemplate)
     {
+        if (!initialized)
+            return null;
+
         if (runtimeTalentInstances.TryGetValue(talentTemplate, out var instance))
             return instance;
         return null;
@@ -269,6 +320,9 @@ public class TalentTreeHandler : MonoBehaviour
     /// </summary>
     public bool IsTalentUnlocked(BaseTalent talentTemplate)
     {
+        if (!initialized)
+            return false;
+
         if (!runtimeTalentInstances.TryGetValue(talentTemplate, out var talent))
             return false;
 
@@ -280,6 +334,9 @@ public class TalentTreeHandler : MonoBehaviour
     /// </summary>
     public void ResetAllTalents()
     {
+        if (!initialized)
+            return;
+
         // Get all active talents
         var activeTalents = GetActiveTalents();
 
@@ -292,6 +349,32 @@ public class TalentTreeHandler : MonoBehaviour
         // Reset spent points
         spentPoints = 0;
         Debug.Log($"%%% TalentTreeHandler: All talents reset, points refunded");
+    }
+
+    /// <summary>
+    /// Save the current talent configuration for future use
+    /// </summary>
+    public void SaveConfiguration()
+    {
+        if (!initialized)
+            return;
+
+        // TODO: Implement saving of talent configuration
+        // This would save the current state to PlayerPrefs or a save file
+        Debug.Log("%%% TalentTreeHandler: Configuration saved");
+    }
+
+    /// <summary>
+    /// Load a previously saved talent configuration
+    /// </summary>
+    public void LoadConfiguration()
+    {
+        if (!initialized)
+            return;
+
+        // TODO: Implement loading of talent configuration
+        // This would load the saved state from PlayerPrefs or a save file
+        Debug.Log("%%% TalentTreeHandler: Configuration loaded");
     }
 
     private void OnDestroy()

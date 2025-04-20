@@ -4,80 +4,120 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
-/// Simplified UI component for a talent button
+/// UI component for a talent button in the talent tree
 /// </summary>
 public class TalentButtonUI : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField]
-    private BaseTalent talent;
-
-    private Image talentIcon;
+    private Image iconImage;
 
     [SerializeField]
-    private TextMeshProUGUI pointsSpentText;
+    private TextMeshProUGUI pointsText;
 
+    [SerializeField]
+    private Image backgroundImage;
+
+    [SerializeField]
+    private Color lockedColor = Color.gray;
+
+    [SerializeField]
+    private Color availableColor = Color.white;
+
+    [SerializeField]
+    private Color maxedColor = Color.yellow;
+
+    private BaseTalent talent;
     private TalentTreeHandler talentTreeHandler;
-    private TalentTreeInputManager talentUIManager;
+    private TalentTreeUIManager uiManager;
 
-    public BaseTalent Talent => talent;
-
-    public void Initialize(TalentTreeHandler handler, TalentTreeInputManager manager)
+    /// <summary>
+    /// Initialize the button with required references
+    /// </summary>
+    public void Initialize(
+        BaseTalent talent,
+        TalentTreeHandler handler,
+        TalentTreeUIManager manager
+    )
     {
+        this.talent = talent;
         talentTreeHandler = handler;
-        talentUIManager = manager;
+        uiManager = manager;
 
-        if (talentIcon == null)
+        if (talent != null && talent.icon != null)
         {
-            talentIcon = GetComponent<Image>();
+            iconImage.sprite = talent.icon;
         }
 
-        // Initialize icon if available
-        if (talent != null && talentIcon != null && talent.icon != null)
-        {
-            talentIcon.sprite = talent.icon;
-        }
-
-        UpdateButton();
+        UpdateUI();
     }
 
-    public void UpdateButton()
-    {
-        if (talent == null || talentTreeHandler == null || pointsSpentText == null)
-            return;
-
-        BaseTalent runtimeTalent = talentTreeHandler.GetRuntimeTalent(talent);
-        if (runtimeTalent == null)
-        {
-            Debug.LogWarning($"%%% TalentButtonUI: No runtime talent found for {talent.name}");
-            return;
-        }
-
-        pointsSpentText.text =
-            $"{runtimeTalent.pointsDesignated}/{runtimeTalent.maxDesignatedPoints}";
-
-        Debug.Log(
-            $"%%% TalentButtonUI: Updated UI for {talent.name}: {runtimeTalent.pointsDesignated}/{runtimeTalent.maxDesignatedPoints}"
-        );
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
+    /// <summary>
+    /// Update the button's visual state
+    /// </summary>
+    public void UpdateUI()
     {
         if (talent == null || talentTreeHandler == null)
+            return;
+
+        // Get runtime instance
+        BaseTalent runtimeTalent = talentTreeHandler.GetRuntimeTalent(talent);
+        if (runtimeTalent == null)
+            return;
+
+        // Update points text
+        if (pointsText != null)
+        {
+            pointsText.text =
+                $"{runtimeTalent.pointsDesignated}/{runtimeTalent.maxDesignatedPoints}";
+        }
+
+        // Update visual state
+        if (backgroundImage != null)
+        {
+            if (runtimeTalent.pointsDesignated <= 0)
+            {
+                // Check if tier is unlocked
+                int tierIndex = talentTreeHandler.TalentTreeSO.GetTierIndex(talent);
+                bool tierUnlocked = talentTreeHandler.IsTierUnlocked(tierIndex);
+
+                // Check if prerequisites are met
+                bool prereqsMet = runtimeTalent.ArePrerequisitesMet(
+                    talentTreeHandler.GetActiveTalents()
+                );
+
+                // Talent is locked if tier is locked or prerequisites aren't met
+                backgroundImage.color = (tierUnlocked && prereqsMet) ? availableColor : lockedColor;
+            }
+            else if (runtimeTalent.pointsDesignated >= runtimeTalent.maxDesignatedPoints)
+            {
+                // Talent is maxed out
+                backgroundImage.color = maxedColor;
+            }
+            else
+            {
+                // Talent has points but not maxed
+                backgroundImage.color = availableColor;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handle pointer clicks on the button
+    /// </summary>
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (talent == null || uiManager == null)
             return;
 
         // Left click = add point
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            Debug.Log($"%%% TalentButtonUI: Left click on {talent.name}");
-            bool result = talentUIManager.TryUnlockTalent(talent);
-            Debug.Log($"%%% TalentButtonUI: TryUnlockTalent result: {result}");
+            uiManager.TryUnlockTalent(talent);
         }
         // Right click = remove point
         else if (eventData.button == PointerEventData.InputButton.Right)
         {
-            Debug.Log($"%%% TalentButtonUI: Right click on {talent.name}");
-            bool result = talentUIManager.TryRemoveTalent(talent);
-            Debug.Log($"%%% TalentButtonUI: TryRemoveTalent result: {result}");
+            uiManager.TryRemoveTalent(talent);
         }
     }
 }
