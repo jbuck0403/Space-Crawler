@@ -412,7 +412,7 @@ public class RoomManager : MonoBehaviour
             {
                 Debug.Log("#ROOM BOSS DEFEATED - COMPLETING RUN");
 
-                // GameManager.Instance.CompleteRun(true);
+                GameManager.Instance.SetBossDefeated();
             }
             else
             {

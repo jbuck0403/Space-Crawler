@@ -116,6 +116,18 @@ public class GameManager : MonoBehaviour
         OnStateChanged?.Invoke(newStateType);
     }
 
+    public void SetBossDefeated()
+    {
+        if (currentState.GetGameStateType() == GameStateType.GameplayRoom)
+        {
+            GameplayRoomState gameState = (GameplayRoomState)currentState;
+            if (gameState != null)
+            {
+                gameState.SetBossDefeated();
+            }
+        }
+    }
+
     /// <summary>
     /// Start a new game run
     /// </summary>

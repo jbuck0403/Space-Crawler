@@ -24,6 +24,8 @@ public class GameplayRoomState : GameState
     private bool roomCompleted = false;
     public bool RoomCompleted => roomCompleted;
 
+    public bool bossDefeated = false;
+
     private bool enemiesCleared = false;
     private bool roomsSpawned = false;
 
@@ -55,6 +57,11 @@ public class GameplayRoomState : GameState
         RoomManager.Instance.PlayerController.Initialize();
     }
 
+    public void SetBossDefeated()
+    {
+        bossDefeated = true;
+    }
+
     public override void UpdateState()
     {
         // Check for player death
@@ -74,9 +81,7 @@ public class GameplayRoomState : GameState
             // Update game data/stats
             gameManager.GameData.currentRunRoomsCleared++;
 
-            // Check if this was a boss room
-            bool wasBossRoom = false; // TODO: Implement boss room check
-            if (wasBossRoom)
+            if (bossDefeated)
             {
                 HandleBossDefeated();
             }
