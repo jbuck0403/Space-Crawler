@@ -50,7 +50,7 @@ MonoBehaviour:
   bossRoomPrefab: {fileID: 1971521178485243517, guid: 311a48edcf2c7884f80eebf3051bf6e8, type: 3}
   eliteRoomChance: 0.5
   treasureRoomChance: 0.5
-  roomsBeforeBoss: 10
+  roomsBeforeBoss: 3
   playerPrefab: {fileID: 8065591907391604513, guid: 460338ceeaba0fb4ca9d6afedfe14186, type: 3}
   defaultTarget: {fileID: 0}
   startingRoomPrefab: {fileID: 4317547251407483235, guid: 24a63983eb7839c44a11a9895f8bf642, type: 3}
@@ -58,4 +58,5 @@ MonoBehaviour:
   - {fileID: 3877759371688010855, guid: a3b16577afafb104a83b5a00ff3fee72, type: 3}
   eliteEnemyPrefabs:
   - {fileID: 3877759371688010855, guid: c1f71e52664d6934b905cb1774eab50c, type: 3}
-  bossEnemyPrefabs: []
+  bossEnemyPrefabs:
+  - {fileID: 3877759371688010855, guid: c1f71e52664d6934b905cb1774eab50c, type: 3}

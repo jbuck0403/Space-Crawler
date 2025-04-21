@@ -196,6 +196,8 @@ public class GameplayRoomState : GameState
             roomCompleted = true;
             // Mark room as completed
             // TODO: Implement room completion (unlock doors, etc)
+
+
             Debug.Log("#ROOM OPENING DOORS WITH ROOMS BEYOND");
             currentRoom.OpenDoorsWithRoomBeyond();
 

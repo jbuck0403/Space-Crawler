@@ -274,7 +274,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7962716283331043431}
-  - component: {fileID: 8082715094975050174}
   - component: {fileID: 7803361042834810672}
   m_Layer: 0
   m_Name: NorthSnapPoint
@@ -298,32 +297,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2187286797349649066}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8082715094975050174
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2807343437684062775}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52cb9e9ce3dea714ab42b53c05ea8659, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entrancePoint: {fileID: 0}
-  entranceDoor:
-    door: {fileID: 0}
-    doorObject: {fileID: 0}
-    doorSide: 0
-    roomBeyondSnapPoint: {fileID: 0}
-    hasRoomBeyond: 0
-  exitDoors: []
-  snapPoints: []
-  enemySpawnLocations: []
-  numEnemiesToSpawn: 1
-  maxEnemiesToSpawn: 8
-  enemyPopulationIncrement: 1
-  spawnedEnemies: []
 --- !u!65 &7803361042834810672
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -484,7 +457,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7821009174332282483}
-  - component: {fileID: 5718409202297141224}
   - component: {fileID: 2154555608614379304}
   m_Layer: 0
   m_Name: EastSnapPoint
@@ -508,32 +480,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2187286797349649066}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
---- !u!114 &5718409202297141224
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4923523897136934265}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52cb9e9ce3dea714ab42b53c05ea8659, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entrancePoint: {fileID: 0}
-  entranceDoor:
-    door: {fileID: 0}
-    doorObject: {fileID: 0}
-    doorSide: 0
-    roomBeyondSnapPoint: {fileID: 0}
-    hasRoomBeyond: 0
-  exitDoors: []
-  snapPoints: []
-  enemySpawnLocations: []
-  numEnemiesToSpawn: 1
-  maxEnemiesToSpawn: 8
-  enemyPopulationIncrement: 1
-  spawnedEnemies: []
 --- !u!65 &2154555608614379304
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -564,7 +510,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8018530765503082153}
-  - component: {fileID: 2361048560531625290}
   - component: {fileID: 6386730425281575840}
   m_Layer: 0
   m_Name: WestSnapPoint
@@ -588,32 +533,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2187286797349649066}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
---- !u!114 &2361048560531625290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7485460561325731994}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52cb9e9ce3dea714ab42b53c05ea8659, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entrancePoint: {fileID: 0}
-  entranceDoor:
-    door: {fileID: 0}
-    doorObject: {fileID: 0}
-    doorSide: 0
-    roomBeyondSnapPoint: {fileID: 0}
-    hasRoomBeyond: 0
-  exitDoors: []
-  snapPoints: []
-  enemySpawnLocations: []
-  numEnemiesToSpawn: 1
-  maxEnemiesToSpawn: 8
-  enemyPopulationIncrement: 1
-  spawnedEnemies: []
 --- !u!65 &6386730425281575840
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -55,6 +55,9 @@ public class RoomManager : MonoBehaviour
     [SerializeField]
     private GameObject[] bossEnemyPrefabs;
 
+    private bool bossRoomSpawned = false;
+    private bool bossRoomEntered = false;
+    private bool bossDefeated = false;
     private GameObject player;
     private PlayerController playerController;
     public PlayerController PlayerController => playerController;
@@ -67,8 +70,6 @@ public class RoomManager : MonoBehaviour
     public bool AreEnemiesCleared { get; private set; } = false;
     public bool AreRoomsSpawned { get; private set; } = false;
     public bool IsRoomEntered { get; private set; } = false;
-
-    private bool roomCompleted = false;
 
     private void Awake()
     {
@@ -140,6 +141,11 @@ public class RoomManager : MonoBehaviour
         AreEnemiesCleared = false;
         AreRoomsSpawned = false;
 
+        if (bossRoomSpawned)
+        {
+            bossRoomEntered = true;
+        }
+
         // Mark the room as entered
         allRooms[room] = true;
 
@@ -159,6 +165,12 @@ public class RoomManager : MonoBehaviour
         // Increment counter (this is a new room)
         roomsCompleted++;
 
+        if (bossRoomSpawned)
+        {
+            print($"#BOSS SPAWNED {bossRoomSpawned} ENTERED {bossRoomEntered}");
+            return;
+        }
+
         // Spawn new connecting rooms
         SpawnConnectingRooms();
     }
@@ -177,10 +189,11 @@ public class RoomManager : MonoBehaviour
         // First snap point always gets a normal room or boss room (based on progression)
         if (snapPoints.Length > 0)
         {
-            if (roomsCompleted >= roomsBeforeBoss && bossRoomPrefab != null)
+            if (!bossRoomSpawned && roomsCompleted >= roomsBeforeBoss && bossRoomPrefab != null)
             {
                 SpawnRoomAtSnapPoint(snapPoints[0], bossRoomPrefab, RoomType.Boss);
                 Debug.Log("Boss room spawned!");
+                bossRoomSpawned = true;
             }
             else
             {
@@ -188,19 +201,23 @@ public class RoomManager : MonoBehaviour
             }
         }
 
-        // Second snap point has a chance for elite room
-        if (snapPoints.Length > 1 && Random.value < eliteRoomChance)
+        if (!bossRoomSpawned)
         {
-            GameObject roomPrefab = eliteRoomPrefab != null ? eliteRoomPrefab : normalRoomPrefab;
-            SpawnRoomAtSnapPoint(snapPoints[1], roomPrefab, RoomType.Elite);
-        }
+            // Second snap point has a chance for elite room
+            if (snapPoints.Length > 1 && Random.value < eliteRoomChance)
+            {
+                GameObject roomPrefab =
+                    eliteRoomPrefab != null ? eliteRoomPrefab : normalRoomPrefab;
+                SpawnRoomAtSnapPoint(snapPoints[1], roomPrefab, RoomType.Elite);
+            }
 
-        // Third snap point has a chance for treasure room
-        if (snapPoints.Length > 2 && Random.value < treasureRoomChance)
-        {
-            GameObject roomPrefab =
-                treasureRoomPrefab != null ? treasureRoomPrefab : normalRoomPrefab;
-            SpawnRoomAtSnapPoint(snapPoints[2], roomPrefab, RoomType.Treasure);
+            // Third snap point has a chance for treasure room
+            if (snapPoints.Length > 2 && Random.value < treasureRoomChance)
+            {
+                GameObject roomPrefab =
+                    treasureRoomPrefab != null ? treasureRoomPrefab : normalRoomPrefab;
+                SpawnRoomAtSnapPoint(snapPoints[2], roomPrefab, RoomType.Treasure);
+            }
         }
 
         // After all rooms have been spawned, update state
@@ -359,6 +376,10 @@ public class RoomManager : MonoBehaviour
                 AreEnemiesCleared = true;
                 CheckRoomCompletion();
             }
+
+            Debug.Log(
+                $"#ROOM Enemy defeated - {enemy.name}, remaining: {currentRoomComponent.spawnedEnemies.Count}, in boss room: {bossRoomEntered}"
+            );
         }
     }
 
@@ -370,6 +391,14 @@ public class RoomManager : MonoBehaviour
             Debug.Log("#ROOM Room completion criteria met");
             CompleteCurrentRoom();
         }
+        else if (bossRoomEntered && bossRoomSpawned)
+        {
+            CompleteCurrentRoom();
+        }
+
+        Debug.Log(
+            $"#ROOM Checking completion - enemies cleared: {AreEnemiesCleared}, rooms spawned: {AreRoomsSpawned}, is complete: {IsRoomCompleted}, in boss room: {bossRoomEntered}"
+        );
     }
 
     // New method to handle room completion actions
@@ -377,11 +406,19 @@ public class RoomManager : MonoBehaviour
     {
         IsRoomCompleted = true;
 
-        // Open doors directly
         if (currentRoomComponent != null)
         {
-            Debug.Log("#ROOM Opening doors with rooms beyond");
-            currentRoomComponent.OpenDoorsWithRoomBeyond();
+            if (bossRoomEntered)
+            {
+                Debug.Log("#ROOM BOSS DEFEATED - COMPLETING RUN");
+
+                // GameManager.Instance.CompleteRun(true);
+            }
+            else
+            {
+                Debug.Log("#ROOM Opening doors with rooms beyond");
+                currentRoomComponent.OpenDoorsWithRoomBeyond();
+            }
         }
     }
 }
