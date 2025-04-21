@@ -75,18 +75,20 @@ public class GameplayRoomState : GameState
         if (roomManager == null)
             return;
 
+        Debug.Log($"#ROOM BOSSDEFEATED: {bossDefeated}");
         // Update game stats if room was just completed
         if (roomManager.IsRoomCompleted && !roomCompletionHandled)
         {
             // Update game data/stats
             gameManager.GameData.currentRunRoomsCleared++;
 
-            if (bossDefeated)
-            {
-                HandleBossDefeated();
-            }
-
             roomCompletionHandled = true;
+        }
+
+        if (bossDefeated)
+        {
+            Debug.Log($"#ROOM HANDLEBOSSDEFEATED CALLED");
+            HandleBossDefeated();
         }
     }
 
