@@ -12,9 +12,7 @@ public class RunConclusionState : GameState
     {
         Debug.Log("Entering Run Conclusion State");
 
-        // TODO: Show run conclusion UI
-        // TODO: Display rewards if successful
-        // TODO: Show run statistics
+        UIManager.ShowRunConclusion(true);
 
         // Make sure game is not paused
         Time.timeScale = 1f;

@@ -11,6 +11,7 @@ public class GameplayRoomState : GameState
     // References to key components
     private RoomManager roomManager;
     private GameObject player;
+    private PlayerController playerController;
     private HealthSystem playerHealth;
 
     // Room tracking
@@ -49,7 +50,10 @@ public class GameplayRoomState : GameState
         if (player != null)
         {
             if (RoomManager.Instance.PlayerController is PlayerController playerController)
-                playerController.Initialize(true);
+            {
+                this.playerController = playerController;
+                this.playerController.Initialize(true);
+            }
         }
         else
         {
@@ -101,8 +105,7 @@ public class GameplayRoomState : GameState
 
         if (RoomManager.Instance is RoomManager roomManager)
         {
-            if (roomManager.PlayerController is PlayerController playerController)
-                playerController.Initialize(false);
+            playerController.Initialize(false);
 
             if (stateTypeToEnter == GameStateType.RunConclusion)
             {

@@ -72,8 +72,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // public void HandleRoomCompleted(Room room) { }
-
     private void InitializeStates()
     {
         // Create all game states
