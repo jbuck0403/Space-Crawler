@@ -52,9 +52,9 @@ public class PlayerController
         }
     }
 
-    public void Initialize()
+    public void Initialize(bool initialize)
     {
-        initialized = true;
+        initialized = initialize;
     }
 
     private void Update()

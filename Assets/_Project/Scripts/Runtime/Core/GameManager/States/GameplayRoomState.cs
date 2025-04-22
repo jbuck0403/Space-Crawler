@@ -48,13 +48,16 @@ public class GameplayRoomState : GameState
         // Enable player controls
         if (player != null)
         {
-            // TODO: Enable player input/controls
+            if (RoomManager.Instance.PlayerController is PlayerController playerController)
+                playerController.Initialize(true);
+        }
+        else
+        {
+            Debug.Log("RoomManager Instance of PlayerController is null");
         }
 
         // Subscribe to events
         SubscribeToEvents();
-
-        RoomManager.Instance.PlayerController.Initialize();
     }
 
     public void SetBossDefeated()
@@ -96,18 +99,16 @@ public class GameplayRoomState : GameState
     {
         Debug.Log("Exiting Gameplay Room State");
 
-        // Unsubscribe from events
-        UnsubscribeFromEvents();
+        if (RoomManager.Instance is RoomManager roomManager)
+        {
+            if (roomManager.PlayerController is PlayerController playerController)
+                playerController.Initialize(false);
 
-        // If transitioning to conclusion, clean up gameplay elements
-        if (stateTypeToEnter == GameStateType.RunConclusion)
-        {
-            // TODO: Clean up any gameplay-specific resources
-        }
-        // If pausing, just disable player input but keep everything visible
-        else if (stateTypeToEnter == GameStateType.Pause)
-        {
-            // TODO: Disable player input while paused
+            if (stateTypeToEnter == GameStateType.RunConclusion)
+            {
+                roomManager.DestroyAllRoomsExcept(null);
+                UnsubscribeFromEvents();
+            }
         }
     }
 

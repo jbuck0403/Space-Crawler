@@ -52,6 +52,9 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private StatusEffectUIHandler statusEffectUIHandler;
 
+    [SerializeField]
+    private RunConclusionUI runConclusionUI;
+
     // Dictionary to store all panels for easier access
     private Dictionary<PanelType, GameObject> panels = new Dictionary<PanelType, GameObject>();
 
@@ -186,10 +189,16 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// Show the Run Conclusion panel
     /// </summary>
-    public static void ShowRunConclusion()
+    public static void ShowRunConclusion(bool success)
     {
         if (Instance != null)
+        {
             Instance.ShowPanel(PanelType.RunConclusion);
+            if (Instance.runConclusionUI is RunConclusionUI ui)
+            {
+                ui.ShowRunConclusionText(success);
+            }
+        }
     }
 
     /// <summary>

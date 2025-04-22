@@ -340,7 +340,7 @@ public class RoomManager : MonoBehaviour
     }
 
     // Destroys all rooms except the specified one
-    private void DestroyAllRoomsExcept(GameObject roomToKeep)
+    public void DestroyAllRoomsExcept(GameObject roomToKeep)
     {
         List<GameObject> roomsToRemove = new List<GameObject>();
 
