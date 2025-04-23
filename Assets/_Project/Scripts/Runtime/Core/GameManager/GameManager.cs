@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
     {
         gameData.ResetRunData();
         gameData.isNewGame = true;
-        ChangeState(GameStateType.PreRunSetup);
+        ChangeState(GameStateType.GameplayInit);
     }
 
     /// <summary>
@@ -142,7 +142,7 @@ public class GameManager : MonoBehaviour
     public void ContinueGame()
     {
         gameData.isNewGame = false;
-        ChangeState(GameStateType.PreRunSetup);
+        ChangeState(GameStateType.GameplayInit);
     }
 
     public void FinishPreRunSetup()
@@ -161,6 +161,11 @@ public class GameManager : MonoBehaviour
         }
 
         ChangeState(GameStateType.RunConclusion);
+    }
+
+    public void GoToMainMenu()
+    {
+        ChangeState(GameStateType.MainMenu);
     }
 
     /// <summary>

@@ -56,6 +56,8 @@ public class TalentTreeUIManager : MonoBehaviour
         // Update UI
         UpdateUI();
 
+        gameObject.SetActive(true);
+
         isInitialized = true;
         Debug.Log("TalentTreeUIManager initialized");
     }

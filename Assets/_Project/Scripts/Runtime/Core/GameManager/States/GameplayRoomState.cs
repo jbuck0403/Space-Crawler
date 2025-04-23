@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 /// <summary>
@@ -33,6 +34,16 @@ public class GameplayRoomState : GameState
     // We'll need this flag to track if we've handled this completion already
     private bool roomCompletionHandled = false;
 
+    private void InitState()
+    {
+        eventsSubscribed = false;
+        roomCompleted = false;
+        bossDefeated = false;
+        enemiesCleared = false;
+        roomsSpawned = false;
+        roomCompletionHandled = false;
+    }
+
     public GameplayRoomState(GameManager manager)
         : base(manager, GameStateType.GameplayRoom) { }
 
@@ -40,13 +51,11 @@ public class GameplayRoomState : GameState
     {
         Debug.Log("Entering Gameplay Room State");
 
-        // Ensure game is running at normal speed
         Time.timeScale = 1f;
 
-        // Get references to key objects
+        InitState();
         InitReferences();
 
-        // Enable player controls
         if (player != null)
         {
             if (RoomManager.Instance.PlayerController is PlayerController playerController)
@@ -60,7 +69,6 @@ public class GameplayRoomState : GameState
             Debug.Log("RoomManager Instance of PlayerController is null");
         }
 
-        // Subscribe to events
         SubscribeToEvents();
     }
 
@@ -107,8 +115,12 @@ public class GameplayRoomState : GameState
         {
             playerController.Initialize(false);
 
-            if (stateTypeToEnter == GameStateType.RunConclusion)
+            if (
+                stateTypeToEnter == GameStateType.RunConclusion
+                || stateTypeToEnter == GameStateType.MainMenu
+            )
             {
+                Object.Destroy(player);
                 roomManager.DestroyAllRoomsExcept(null);
                 UnsubscribeFromEvents();
             }

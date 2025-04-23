@@ -57,7 +57,6 @@ public class RoomManager : MonoBehaviour
 
     private bool bossRoomSpawned = false;
     private bool bossRoomEntered = false;
-    private bool bossDefeated = false;
     private GameObject player;
     private PlayerController playerController;
     public PlayerController PlayerController => playerController;
@@ -65,7 +64,6 @@ public class RoomManager : MonoBehaviour
     public GameObject CurrentRoom => currentRoom;
     public Room CurrentRoomComponent => currentRoomComponent;
 
-    // Add these public properties
     public bool IsRoomCompleted { get; private set; } = false;
     public bool AreEnemiesCleared { get; private set; } = false;
     public bool AreRoomsSpawned { get; private set; } = false;
@@ -81,7 +79,8 @@ public class RoomManager : MonoBehaviour
 
     public bool Initialize()
     {
-        // Spawn initial room
+        InitDungeonState();
+
         currentRoom = RoomHandler.CreateRoom(
             startingRoomPrefab,
             null,
@@ -95,12 +94,27 @@ public class RoomManager : MonoBehaviour
             currentRoomComponent = room;
             InitPlayer(currentRoomComponent);
 
-            allRooms.Add(currentRoom, false); // Initialize as not entered yet
+            allRooms.Add(currentRoom, false); // initialize as not entered yet
 
             return true;
         }
 
         return false;
+    }
+
+    private void InitDungeonState()
+    {
+        roomsCompleted = 0;
+        currentRoom = null;
+        currentRoomComponent = null;
+
+        bossRoomSpawned = false;
+        bossRoomEntered = false;
+
+        IsRoomCompleted = false;
+        AreEnemiesCleared = false;
+        AreRoomsSpawned = false;
+        IsRoomEntered = false;
     }
 
     private void InitPlayer(Room room)
@@ -113,9 +127,10 @@ public class RoomManager : MonoBehaviour
         if (player != null)
         {
             playerController = player.GetComponent<PlayerController>();
+            defaultTarget = player.transform;
 
-            GameManager.Instance.VirtualCamera.Follow = player.transform;
-            GameManager.Instance.VirtualCamera.LookAt = player.transform;
+            GameManager.Instance.VirtualCamera.Follow = defaultTarget;
+            GameManager.Instance.VirtualCamera.LookAt = defaultTarget;
         }
     }
 
@@ -156,7 +171,7 @@ public class RoomManager : MonoBehaviour
         if (roomComponent != null)
         {
             currentRoomComponent = roomComponent;
-            roomComponent.InitializeSpawnedEnemies(Player.transform);
+            roomComponent.InitializeSpawnedEnemies(defaultTarget);
         }
 
         // Destroy all other rooms
