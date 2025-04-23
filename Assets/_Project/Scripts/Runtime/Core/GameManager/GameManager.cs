@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         // Start in the main menu state
-        ChangeState(GameStateType.GameplayInit);
+        ChangeState(GameStateType.MainMenu);
     }
 
     public void HandleEnemyDefeated(BaseEnemyController enemy)
@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
     private void InitializeStates()
     {
         // Create all game states
-        // states.Add(GameStateType.MainMenu, new MainMenuState(this));
+        states.Add(GameStateType.MainMenu, new MainMenuState(this));
         states.Add(GameStateType.GameplayInit, new GameplayInitState(this));
         states.Add(GameStateType.PreRunSetup, new PreRunSetupState(this));
         states.Add(GameStateType.GameplayRoom, new GameplayRoomState(this));

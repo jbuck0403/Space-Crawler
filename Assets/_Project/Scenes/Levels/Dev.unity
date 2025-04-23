@@ -1921,6 +1921,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4320966039851388798, guid: e8d7ca8dcaba15d4dadcfc2b8e3f8403, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1725484730}
+    - target: {fileID: 4320966039851388798, guid: e8d7ca8dcaba15d4dadcfc2b8e3f8403, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GoToMainMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 4320966039851388798, guid: e8d7ca8dcaba15d4dadcfc2b8e3f8403, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GameManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4320966039851388798, guid: e8d7ca8dcaba15d4dadcfc2b8e3f8403, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 5129250630308315792, guid: e8d7ca8dcaba15d4dadcfc2b8e3f8403, type: 3}
       propertyPath: m_Name
       value: PreRunSetupPanel
@@ -2016,14 +2032,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 304991767}
     m_Modifications:
+    - target: {fileID: 3040781414545288309, guid: 51197f20209a36d41bd34ca22ffc3764, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1725484730}
+    - target: {fileID: 3040781414545288309, guid: 51197f20209a36d41bd34ca22ffc3764, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ContinueGame
+      objectReference: {fileID: 0}
     - target: {fileID: 4375915862946631606, guid: 51197f20209a36d41bd34ca22ffc3764, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1725484730}
-    - target: {fileID: 4375915862946631606, guid: 51197f20209a36d41bd34ca22ffc3764, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: StartNewGame
-      objectReference: {fileID: 0}
     - target: {fileID: 4845566910788930452, guid: 51197f20209a36d41bd34ca22ffc3764, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2129,7 +2149,19 @@ PrefabInstance:
     - target: {fileID: 748604482385320161, guid: 94f6cd70fdd0a87479bb53ae8481d984, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1725484728}
+      objectReference: {fileID: 1725484730}
+    - target: {fileID: 748604482385320161, guid: 94f6cd70fdd0a87479bb53ae8481d984, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GoToMainMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 748604482385320161, guid: 94f6cd70fdd0a87479bb53ae8481d984, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GameManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 748604482385320161, guid: 94f6cd70fdd0a87479bb53ae8481d984, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 1778318455721876668, guid: 94f6cd70fdd0a87479bb53ae8481d984, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

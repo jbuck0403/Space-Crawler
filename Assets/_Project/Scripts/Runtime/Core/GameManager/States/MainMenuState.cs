@@ -11,9 +11,14 @@ public class MainMenuState : GameState
     public override void Enter()
     {
         Debug.Log("Entering Main Menu State");
-
-        // TODO: Show main menu UI
-        // TODO: Configure UI button events
+        if (
+            RoomManager.Instance is RoomManager roomManager
+            && roomManager.Player is GameObject playerObj
+        )
+        {
+            Object.Destroy(playerObj);
+        }
+        UIManager.ShowMainMenu();
     }
 
     public override void UpdateState()
@@ -24,7 +29,6 @@ public class MainMenuState : GameState
     public override void Exit(GameStateType stateTypeToEnter)
     {
         Debug.Log("Exiting Main Menu State");
-
         // TODO: Hide main menu UI
         // TODO: Clean up any resources
     }
