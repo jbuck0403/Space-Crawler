@@ -34,7 +34,7 @@ public class RunConclusionState : GameState
     private void OnContinueClicked()
     {
         // Go back to talent selection for the next run
-        gameManager.ChangeState(GameStateType.GameplayInit);
+        // gameManager.ChangeState(GameStateType.GameplayInit);
     }
 
     private void OnMainMenuClicked()

@@ -56,7 +56,7 @@ public class DamageNumbersUIHandler : MonoBehaviour
     {
         if (canvasTransform == null)
         {
-            GameObject canvas = GameObject.FindGameObjectWithTag("DamageNumbersUIPanel");
+            GameObject canvas = UIManager.Instance.DamageNumbersUIPanel;
             if (canvas != null)
             {
                 canvasTransform = canvas.transform;

@@ -211,6 +211,38 @@ public class BaseEnemyController : BaseCharacterController, IProjectileDataProvi
         return null;
     }
 
+    public BaseMovementStrategy GetMovementStrategyByAssignedType(MovementStrategyType strategyType)
+    {
+        foreach (MovementStrategyPair strategy in movementStrategies)
+        {
+            if (strategy.strategyType == strategyType)
+            {
+                return strategy.strategy;
+            }
+        }
+
+        return null;
+    }
+
+    // public T GetMovementStrategy<T>(MovementStrategyType strategyType)
+    //     where T : BaseMovementStrategy
+    // {
+    //     foreach (MovementStrategyPair pair in movementStrategies)
+    //     {
+    //         if (pair.strategyType == strategyType)
+    //         {
+    //             if (pair.strategy is T t)
+    //             {
+    //                 return t;
+    //             }
+
+    //             return pair.strategy;
+    //         }
+    //     }
+
+    //     return null;
+    // }
+
     public override MovementHandler GetMovementHandler()
     {
         return movementController.GetMovementHandler();

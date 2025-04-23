@@ -28,6 +28,13 @@ public class PreRunSetupState : GameState
 
         // Show talent tree UI
         ShowTalentTreeUI();
+
+        LoadTalentTree();
+    }
+
+    private void LoadTalentTree()
+    {
+        playerTalentTree.LoadSavedTalents();
     }
 
     private void InitializePlayer()
@@ -109,6 +116,7 @@ public class PreRunSetupState : GameState
     public override void Exit(GameStateType stateTypeToEnter)
     {
         Debug.Log("Exiting Pre-Run Setup State");
+        GameManager.Instance.GameData.SaveGameData();
 
         HideTalentUI();
         InitPlayerHUD();

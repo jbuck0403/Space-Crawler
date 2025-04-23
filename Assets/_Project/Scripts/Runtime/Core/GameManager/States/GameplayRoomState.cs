@@ -178,6 +178,8 @@ public class GameplayRoomState : GameState
     private void HandleBossDefeated()
     {
         Debug.Log("Boss defeated - successful run!");
+        GameManager.Instance.IncreaseTalentPoints();
+        GameManager.Instance.GameData.SaveRunRewards();
 
         // Complete run with success
         gameManager.CompleteRun(true);

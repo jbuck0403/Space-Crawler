@@ -72,6 +72,28 @@ public class TalentTreeHandler : MonoBehaviour
         Debug.Log($"%%% TalentTreeHandler: Initialized with {configToUse.name}");
     }
 
+    public void LoadSavedTalents()
+    {
+        GameData gameData = GameData.LoadGameData();
+
+        foreach (TalentTreeSaveData saveData in gameData.allocatedTalents)
+        {
+            foreach (BaseTalent baseTalent in runtimeTalentInstances.Values)
+            {
+                if (baseTalent.ToString() == saveData.talent)
+                {
+                    print(
+                        $"^^^{baseTalent.ToString()} == {saveData.talent} : {baseTalent.ToString() == saveData.talent}"
+                    );
+                    for (int i = 0; i < saveData.pointsAllocated; i++)
+                    {
+                        baseTalent.TryActivate(gameObject);
+                    }
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// Initialize runtime instances of all available talents
     /// </summary>

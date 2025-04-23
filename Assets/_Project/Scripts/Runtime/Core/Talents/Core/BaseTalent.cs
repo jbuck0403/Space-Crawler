@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -21,10 +22,10 @@ public abstract class BaseTalent : ScriptableObject
     public List<TalentPreRequisiteData> requiredTalents;
 
     // Runtime state - not serialized
-    [System.NonSerialized]
+    [NonSerialized]
     protected GameObject currentOwner;
 
-    [System.NonSerialized]
+    [NonSerialized]
     protected MonoBehaviour coroutineRunner;
 
     /// <summary>
@@ -77,6 +78,7 @@ public abstract class BaseTalent : ScriptableObject
         if (maxDesignatedPoints > pointsDesignated)
         {
             pointsDesignated++;
+            GameManager.Instance.GameData.ModifyAllocatedTalents(this, pointsDesignated);
 
             if (pointsDesignated > 1)
             {
@@ -98,6 +100,7 @@ public abstract class BaseTalent : ScriptableObject
 
     protected virtual void OnPointRemoved(GameObject owner)
     {
+        int pointsDesignatedBefore = pointsDesignated;
         if (pointsDesignated > 1)
         {
             OnDeactivate(owner);
@@ -108,6 +111,11 @@ public abstract class BaseTalent : ScriptableObject
         {
             OnDeactivate(owner);
             pointsDesignated = 0;
+        }
+
+        if (pointsDesignatedBefore != pointsDesignated)
+        {
+            GameManager.Instance.GameData.ModifyAllocatedTalents(this, pointsDesignated);
         }
     }
 

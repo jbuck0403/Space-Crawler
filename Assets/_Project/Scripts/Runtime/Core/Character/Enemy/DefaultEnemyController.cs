@@ -32,11 +32,21 @@ public class DefaultEnemyController : BaseEnemyController
 
     private bool InitializeRetreat()
     {
-        retreatStrategy = GetMovementStrategy<RetreatMovementStrategy>();
-        if (retreatStrategy != null)
+        BaseMovementStrategy baseMovementStrategy = GetMovementStrategyByAssignedType(
+            MovementStrategyType.Retreat
+        );
+        if (baseMovementStrategy is RetreatMovementStrategy retreatMovementStrategy)
         {
+            retreatStrategy = retreatMovementStrategy;
+        }
+
+        if (baseMovementStrategy != null)
+        {
+            if (retreatStrategy != null)
+            {
+                healthSystem.SetLowHealthPercent(retreatStrategy.RetreatHealthThreshold);
+            }
             retreatInitialized = true;
-            healthSystem.SetLowHealthPercent(retreatStrategy.RetreatHealthThreshold);
             healthSystem.OnLowHealth.AddListener(gameObject, TriggerRetreat);
 
             return true;
@@ -82,7 +92,10 @@ public class DefaultEnemyController : BaseEnemyController
 
     public void TriggerRetreat()
     {
-        if (retreatStrategy.canRetreat)
+        if (
+            (retreatStrategy != null && retreatStrategy.canRetreat)
+            || HasMovementStrategy(MovementStrategyType.Retreat)
+        )
         {
             HandleRetreat();
         }

@@ -30,6 +30,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     TalentTreeUIManager talentTreeUIManager;
 
+    [Header("")]
+    [SerializeField]
+    private int pointsAwardedOnSuccess = 2;
+
     // Events
     public event Action<GameStateType> OnStateChanged;
 
@@ -39,6 +43,13 @@ public class GameManager : MonoBehaviour
     public GameStateType CurrentStateType { get; private set; }
     public GameState CurrentState => currentState;
     public TalentTreeUIManager TalentTreeUIManager => talentTreeUIManager;
+
+    public void ClearGameDataTalents()
+    {
+        gameData.allocatedTalents = new List<TalentTreeSaveData>();
+    }
+
+    public void LoadSavedTalents() { }
 
     private void Awake()
     {
@@ -124,6 +135,16 @@ public class GameManager : MonoBehaviour
                 gameState.SetBossDefeated();
             }
         }
+    }
+
+    public void IncreaseTalentPoints(int numPoints = 0)
+    {
+        int pointsToAdd = numPoints;
+        if (numPoints <= 0)
+        {
+            pointsToAdd = pointsAwardedOnSuccess;
+        }
+        gameData.currentRunTalentPoints += pointsToAdd;
     }
 
     /// <summary>

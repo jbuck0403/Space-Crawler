@@ -55,6 +55,11 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private RunConclusionUI runConclusionUI;
 
+    [SerializeField]
+    private GameObject damageNumbersUIPanel;
+
+    public GameObject DamageNumbersUIPanel => damageNumbersUIPanel;
+
     // Dictionary to store all panels for easier access
     private Dictionary<PanelType, GameObject> panels = new Dictionary<PanelType, GameObject>();
 
