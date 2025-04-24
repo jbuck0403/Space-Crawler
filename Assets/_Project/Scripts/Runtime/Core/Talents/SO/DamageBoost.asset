@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DamageBoost
   m_EditorClassIdentifier: 
   talentName: Damage Boost
-  description: 
+  description: Increases all damage dealt by 5% per point
   icon: {fileID: 21300000, guid: 673da70531bbca045aa18ddd4b018575, type: 3}
   maxDesignatedPoints: 5
   pointsDesignated: 0
