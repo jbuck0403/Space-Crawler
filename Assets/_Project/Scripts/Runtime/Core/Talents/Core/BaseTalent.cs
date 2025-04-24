@@ -72,12 +72,14 @@ public abstract class BaseTalent : ScriptableObject
     protected virtual void OnPointAdded(GameObject owner)
     {
         Debug.Log(
-            $"%%% BaseTalent: OnPointAdded for {talentName}, current points: {pointsDesignated}"
+            $"%%% BaseTalent: OnPointAdded for {talentName}, current points: {pointsDesignated}, max: {maxDesignatedPoints}"
         );
 
         if (maxDesignatedPoints > pointsDesignated)
         {
+            int oldPoints = pointsDesignated;
             pointsDesignated++;
+            Debug.Log($"%%% POINTS CHANGED: {talentName} from {oldPoints} to {pointsDesignated}");
             GameManager.Instance.GameData.ModifyAllocatedTalents(this, pointsDesignated);
 
             if (pointsDesignated > 1)
@@ -91,6 +93,12 @@ public abstract class BaseTalent : ScriptableObject
                 Debug.Log($"%%% BaseTalent: First activation of talent {talentName}");
                 OnActivate(owner);
             }
+        }
+        else
+        {
+            Debug.Log(
+                $"%%% NOT ADDING POINT: {talentName} at max {pointsDesignated}/{maxDesignatedPoints}"
+            );
         }
 
         Debug.Log(

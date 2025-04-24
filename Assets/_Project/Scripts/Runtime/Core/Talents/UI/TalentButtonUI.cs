@@ -70,6 +70,9 @@ public class TalentButtonUI : MonoBehaviour, IPointerClickHandler
         {
             pointsText.text =
                 $"{runtimeTalent.pointsDesignated}/{runtimeTalent.maxDesignatedPoints}";
+            Debug.Log(
+                $"^^^ UI UPDATE: {runtimeTalent.talentName} points={runtimeTalent.pointsDesignated}/{runtimeTalent.maxDesignatedPoints}"
+            );
         }
 
         // Update visual state

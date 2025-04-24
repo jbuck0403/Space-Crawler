@@ -75,6 +75,7 @@ public class TalentTreeHandler : MonoBehaviour
     public void LoadSavedTalents()
     {
         GameData gameData = GameData.LoadGameData();
+        totalPoints = gameData.totalTalentPoints;
 
         foreach (TalentTreeSaveData saveData in gameData.allocatedTalents)
         {
@@ -82,12 +83,11 @@ public class TalentTreeHandler : MonoBehaviour
             {
                 if (baseTalent.ToString() == saveData.talent)
                 {
-                    print(
-                        $"^^^{baseTalent.ToString()} == {saveData.talent} : {baseTalent.ToString() == saveData.talent}"
-                    );
                     for (int i = 0; i < saveData.pointsAllocated; i++)
                     {
-                        baseTalent.TryActivate(gameObject);
+                        bool success = baseTalent.TryActivate(gameObject);
+                        if (success)
+                            spentPoints++;
                     }
                 }
             }
@@ -313,6 +313,7 @@ public class TalentTreeHandler : MonoBehaviour
             return;
 
         totalPoints += points;
+
         Debug.Log($"%%% TalentTreeHandler: Added {points} points, total: {totalPoints}");
     }
 

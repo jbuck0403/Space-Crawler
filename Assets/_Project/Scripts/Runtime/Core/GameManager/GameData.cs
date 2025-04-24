@@ -57,12 +57,31 @@ public class GameData
     /// </summary>
     public void SaveRunRewards()
     {
-        // totalTalentPoints += currentRunTalentPoints;
-        // totalEnemiesKilled += currentRunEnemiesKilled;
-        // totalRoomsCleared += currentRunRoomsCleared;
-        // runsCompleted++;
+        // Debug.Log($"^^^POINTS ON SAVE{totalTalentPoints}");
+
+        // Get current talent points from TalentTreeHandler
+        if (
+            GameManager.Instance != null
+            && RoomManager.Instance != null
+            && RoomManager.Instance.Player != null
+        )
+        {
+            TalentTreeHandler talentTreeHandler =
+                RoomManager.Instance.Player.GetComponent<TalentTreeHandler>();
+            if (talentTreeHandler != null)
+            {
+                // Sync points data with TalentTreeHandler
+                totalTalentPoints = talentTreeHandler.TotalPoints;
+                Debug.Log($"^^^POINTS SYNCED FROM TALENT TREE: {totalTalentPoints}");
+            }
+        }
 
         SaveGameData();
+    }
+
+    public void AddTalentPoint(int numToAdd = 1)
+    {
+        currentRunTalentPoints += Mathf.Abs(numToAdd);
     }
 
     public void ModifyAllocatedTalents(BaseTalent talent, int pointsAllocated)

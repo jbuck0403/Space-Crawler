@@ -160,6 +160,7 @@ MonoBehaviour:
   playerHUDComponent: {fileID: 71377586}
   statusEffectUIHandler: {fileID: 235037049}
   runConclusionUI: {fileID: 244426450}
+  talentTreeUIManager: {fileID: 560371975}
   damageNumbersUIPanel: {fileID: 529092563}
   playerHUDInitialized: 0
 --- !u!4 &7405830
@@ -955,16 +956,10 @@ MonoBehaviour:
   gameData:
     totalTalentPoints: 0
     allocatedTalents: []
-    totalEnemiesKilled: 0
-    totalRoomsCleared: 0
-    runsCompleted: 0
-    currentRunTalentPoints: 0
-    currentRunEnemiesKilled: 0
-    currentRunRoomsCleared: 0
-    isNewGame: 1
   roomManagerPrefab: {fileID: 5361614079928192084, guid: 0dd4c457af6577d459ffd19e45d640fe, type: 3}
   virtualCamera: {fileID: 1416168893}
   talentTreeUIManager: {fileID: 560371975}
+  pointsAwardedOnSuccess: 2
 --- !u!1 &2019037370
 GameObject:
   m_ObjectHideFlags: 0

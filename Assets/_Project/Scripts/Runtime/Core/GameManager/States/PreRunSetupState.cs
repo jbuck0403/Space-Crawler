@@ -30,6 +30,8 @@ public class PreRunSetupState : GameState
         ShowTalentTreeUI();
 
         LoadTalentTree();
+
+        UIManager.Instance.TalentTreeUIManager.UpdateUI();
     }
 
     private void LoadTalentTree()
@@ -64,13 +66,11 @@ public class PreRunSetupState : GameState
             return;
         }
 
-        // Initialize talent tree if not already initialized
         if (!playerTalentTree.IsInitialized)
         {
             playerTalentTree.Initialize();
 
-            // Add default talent points - adjust based on game progression, difficulty, etc.
-            playerTalentTree.AddPoints(10);
+            // playerTalentTree.AddPoints(10);
 
             Debug.Log("PreRunSetupState: Initialized talent tree and added starting points");
         }
@@ -116,7 +116,7 @@ public class PreRunSetupState : GameState
     public override void Exit(GameStateType stateTypeToEnter)
     {
         Debug.Log("Exiting Pre-Run Setup State");
-        GameManager.Instance.GameData.SaveGameData();
+        GameManager.Instance.GameData.SaveRunRewards();
 
         HideTalentUI();
         InitPlayerHUD();

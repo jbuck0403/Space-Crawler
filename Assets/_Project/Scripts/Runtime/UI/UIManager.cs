@@ -56,9 +56,14 @@ public class UIManager : MonoBehaviour
     private RunConclusionUI runConclusionUI;
 
     [SerializeField]
+    private TalentTreeUIManager talentTreeUIManager;
+
+    [SerializeField]
     private GameObject damageNumbersUIPanel;
 
     public GameObject DamageNumbersUIPanel => damageNumbersUIPanel;
+
+    public TalentTreeUIManager TalentTreeUIManager => talentTreeUIManager;
 
     // Dictionary to store all panels for easier access
     private Dictionary<PanelType, GameObject> panels = new Dictionary<PanelType, GameObject>();
