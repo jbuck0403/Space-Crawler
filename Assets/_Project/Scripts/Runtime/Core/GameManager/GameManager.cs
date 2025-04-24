@@ -44,13 +44,6 @@ public class GameManager : MonoBehaviour
     public GameState CurrentState => currentState;
     public TalentTreeUIManager TalentTreeUIManager => talentTreeUIManager;
 
-    public void ClearGameDataTalents()
-    {
-        gameData.allocatedTalents = new List<TalentTreeSaveData>();
-    }
-
-    public void LoadSavedTalents() { }
-
     private void Awake()
     {
         // Singleton pattern
@@ -144,7 +137,8 @@ public class GameManager : MonoBehaviour
         {
             pointsToAdd = pointsAwardedOnSuccess;
         }
-        gameData.currentRunTalentPoints += pointsToAdd;
+        print($"^^^ADDING TALENT POINTS {pointsToAdd}");
+        gameData.AddTalentPoint(pointsToAdd);
     }
 
     /// <summary>

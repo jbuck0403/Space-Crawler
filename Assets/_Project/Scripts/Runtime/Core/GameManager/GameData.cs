@@ -71,7 +71,9 @@ public class GameData
             if (talentTreeHandler != null)
             {
                 // Sync points data with TalentTreeHandler
-                totalTalentPoints = talentTreeHandler.TotalPoints;
+                totalTalentPoints = talentTreeHandler.TotalPoints + currentRunTalentPoints;
+                currentRunTalentPoints = 0;
+
                 Debug.Log($"^^^POINTS SYNCED FROM TALENT TREE: {totalTalentPoints}");
             }
         }
