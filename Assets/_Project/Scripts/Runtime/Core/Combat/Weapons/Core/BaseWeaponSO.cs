@@ -236,5 +236,10 @@ public abstract class BaseWeaponSO : ScriptableObject, IModifiable
         UpdateNextAbilityTime(provider.GetWeaponOwnerTransform().gameObject);
     }
 
+    public void SetProjectileType(ProjectileTypeSO projectileTypeSO)
+    {
+        projectileType = projectileTypeSO;
+    }
+
     protected abstract void UniqueAbility(IWeaponAbilityDataProvider provider);
 }

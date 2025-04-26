@@ -10,6 +10,9 @@ public abstract class ProjectileTypeSO : ScriptableObject
     [SerializeField]
     public DamageProfile damageProfile;
 
+    [Header("VFX")]
+    public ProjectileVFXPrefabs projectileVFXPrefabs;
+
     /// <summary>
     /// Spawns a projectile with the given parameters and configures it using the data provider
     /// </summary>
@@ -20,12 +23,22 @@ public abstract class ProjectileTypeSO : ScriptableObject
     )
     {
         // Use ProjectileSpawner for core spawning functionality
-        Projectile projectile = ProjectileSpawner.SpawnProjectile(firePoint, damageProfile, source);
+        Projectile projectile = ProjectileSpawner.SpawnProjectile(
+            firePoint,
+            damageProfile,
+            source,
+            projectileVFXPrefabs
+        );
 
         if (projectile != null)
         {
             // Let derived classes configure the projectile with their specific behavior
             ConfigureProjectile(projectile, dataProvider);
+            WeaponVFXHandler.HandleMuzzleFlare(
+                projectileVFXPrefabs.muzzleFlashPrefab,
+                firePoint,
+                source
+            );
         }
 
         return projectile;

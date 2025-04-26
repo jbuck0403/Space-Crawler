@@ -13,4 +13,9 @@ MonoBehaviour:
   m_Name: BurningAmmo_Player
   m_EditorClassIdentifier: 
   damageProfile: {fileID: 11400000, guid: 23eac3bc2f300064bbd16ed07a3d5d80, type: 2}
+  projectileVFXPrefabs:
+    projectilePrefab: {fileID: 1881642356963322, guid: 7d56a4d7304cf8f43a69b4f2059515b4, type: 3}
+    muzzleFlashPrefab: {fileID: 1888054744919094, guid: 945204ad0bb6c1d4a8d248d2215013c8, type: 3}
+    targetHitPrefab: {fileID: 1262490536792160, guid: 11412f4713f89d742a7474883205cb64, type: 3}
   shooterDamageProfile: {fileID: 11400000, guid: 23eac3bc2f300064bbd16ed07a3d5d80, type: 2}
+  shooterStatusEffects: []

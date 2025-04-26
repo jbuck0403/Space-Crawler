@@ -13,11 +13,12 @@ public class Projectile : MonoBehaviour
 
     public bool hasDealtDamage;
 
-    private PoolBase pool;
+    // private PoolBase pool;
 
     private int behaviorsCleanedUp = 0;
     private int totalBehaviors = 0;
     private IProjectileBehavior[] behaviors;
+    private GameObject onHitVFXPrefab;
 
     protected virtual IEnumerator SelfDestruct()
     {
@@ -26,9 +27,9 @@ public class Projectile : MonoBehaviour
         DestroyProjectile();
     }
 
-    public virtual void Initialize(PoolBase pool, DamageData damageData = default)
+    public virtual void Initialize(GameObject onHitVFXPrefab, DamageData damageData = default)
     {
-        this.pool = pool;
+        this.onHitVFXPrefab = onHitVFXPrefab;
         this.damageData = damageData;
     }
 
@@ -89,20 +90,13 @@ public class Projectile : MonoBehaviour
             }
         }
 
+        WeaponVFXHandler.HandleOnHitEffect(onHitVFXPrefab, transform);
+
         hasDealtDamage = true;
     }
 
     private void HandleDestroyProjectile()
     {
-        if (pool != null)
-        {
-            hasDealtDamage = false;
-            damageData = new DamageData();
-            pool.ReturnToPool(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        Destroy(gameObject);
     }
 }

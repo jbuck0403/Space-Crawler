@@ -63,6 +63,7 @@ public class ShotgunWeapon : BaseWeaponSO
                 firePoint,
                 grenadeProjectileDamageProfile,
                 source,
+                projectileType.projectileVFXPrefabs,
                 parameters
             );
 

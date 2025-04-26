@@ -13,3 +13,7 @@ MonoBehaviour:
   m_Name: EliteEnemyAmmo_Freezer
   m_EditorClassIdentifier: 
   damageProfile: {fileID: 11400000, guid: c8f398890e073a44bb2b265d258acb77, type: 2}
+  projectileVFXPrefabs:
+    projectilePrefab: {fileID: 1962646870923850, guid: fbf7c88d7b78bd24ba7f7560497397aa, type: 3}
+    muzzleFlashPrefab: {fileID: 1779451694322954, guid: 6e7171471c62c4e4a8c345484bbb1938, type: 3}
+    targetHitPrefab: {fileID: 1423167456353516, guid: 078ce1bd1fe8a70409f4236269738369, type: 3}

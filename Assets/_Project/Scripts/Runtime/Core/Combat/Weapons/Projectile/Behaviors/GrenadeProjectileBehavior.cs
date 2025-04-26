@@ -10,6 +10,7 @@ public class GrenadeProjectileBehavior : BaseProjectileBehavior
     private FireConfig fireConfig;
 
     private Projectile grenadeProjectile;
+    private ProjectileTypeSO grenadeProjectileTypeSO;
 
     protected override void InitializeFromParams(object[] parameters)
     {
@@ -56,7 +57,8 @@ public class GrenadeProjectileBehavior : BaseProjectileBehavior
                 Projectile projectile = ProjectileSpawner.SpawnProjectile(
                     transform,
                     damageProfile,
-                    source
+                    source,
+                    grenadeProjectileTypeSO.projectileVFXPrefabs
                 );
                 Vector2[] projectileDirections = GetProjectileDirections();
 

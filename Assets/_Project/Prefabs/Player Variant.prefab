@@ -426,6 +426,7 @@ MonoBehaviour:
   obstacleLayers:
     serializedVersion: 2
     m_Bits: 8
+  initialized: 0
 --- !u!114 &1578222438979382884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -458,6 +459,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a7ec9984d9c8a604eaeaa08e85917fc1, type: 2}
   - {fileID: 11400000, guid: d45879d49c9afee4398238c7a8f9871f, type: 2}
   - {fileID: 11400000, guid: 32ab956cac535ce45b46841a6a03c439, type: 2}
+  projectileTypes:
+  - {fileID: 11400000, guid: 2ae3f0555f5cae74080e5f6308ab8d07, type: 2}
+  - {fileID: 11400000, guid: 8b140c9e724fe554ea09c3db1d60cbf6, type: 2}
   firePoint: {fileID: 8099089328420793622}
   startingWeaponIndex: 0
   OnWeaponSwitched: {fileID: 11400000, guid: c3c5e421a7051704f89e4fe8d790cde0, type: 2}

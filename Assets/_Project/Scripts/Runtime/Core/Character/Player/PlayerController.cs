@@ -18,6 +18,7 @@ public class PlayerController
     private bool applyingExternalMovement = false;
     private float externalMovementDisableTime = 0f;
 
+    [SerializeField]
     private bool initialized = false;
 
     protected override void Awake()
@@ -87,22 +88,33 @@ public class PlayerController
 
         HandleShooting();
         HandleWeaponSwap();
+        HandleProjectileSwap();
         HandleWeaponAbility();
     }
 
     private bool HandleWeaponSwap()
     {
-        if (Input.GetKeyDown(KeyCode.F1))
+        if (Input.GetKeyDown(KeyCode.G))
         {
-            return weaponHandler.SwitchToWeapon(0);
+            return weaponHandler.SwitchToPreviousWeapon();
         }
-        else if (Input.GetKeyDown(KeyCode.F2))
+        else if (Input.GetKeyDown(KeyCode.F))
         {
-            return weaponHandler.SwitchToWeapon(1);
+            return weaponHandler.SwitchToNextWeapon();
         }
-        else if (Input.GetKeyDown(KeyCode.F3))
+
+        return false;
+    }
+
+    private bool HandleProjectileSwap()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            return weaponHandler.SwitchToWeapon(2);
+            return weaponHandler.SwitchToPreviousProjectile();
+        }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            return weaponHandler.SwitchToNextProjectile();
         }
 
         return false;

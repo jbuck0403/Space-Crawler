@@ -13,6 +13,9 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
     private List<BaseWeaponSO> weaponDefinitions = new List<BaseWeaponSO>();
 
     [SerializeField]
+    private List<ProjectileTypeSO> projectileTypes = new List<ProjectileTypeSO>();
+
+    [SerializeField]
     private Transform firePoint;
 
     [SerializeField]
@@ -24,6 +27,7 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
 
     private List<BaseWeaponSO> weaponInstances = new List<BaseWeaponSO>();
     private int currentWeaponIndex;
+    private int currentProjectileIndex;
     private BaseWeaponSO currentWeapon;
     private bool isFiring = false;
     private Transform currentTarget;
@@ -89,6 +93,32 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
         SwitchToWeapon(currentWeaponIndex);
     }
 
+    public bool SwitchToProjectile(int index)
+    {
+        if (index < 0)
+        {
+            return false;
+        }
+
+        currentProjectileIndex = index;
+        currentWeapon.SetProjectileType(projectileTypes[index]);
+
+        return true;
+    }
+
+    public bool SwitchToNextProjectile()
+    {
+        int nextIndex = (currentProjectileIndex + 1) % projectileTypes.Count;
+        return SwitchToProjectile(nextIndex);
+    }
+
+    public bool SwitchToPreviousProjectile()
+    {
+        int prevIndex =
+            (currentProjectileIndex - 1 + projectileTypes.Count) % projectileTypes.Count;
+        return SwitchToProjectile(prevIndex);
+    }
+
     public bool SwitchToWeapon(int index)
     {
         if (index < weaponInstances.Count)
@@ -109,16 +139,16 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
         return true;
     }
 
-    public void SwitchToNextWeapon()
+    public bool SwitchToNextWeapon()
     {
         int nextIndex = (currentWeaponIndex + 1) % weaponInstances.Count;
-        SwitchToWeapon(nextIndex);
+        return SwitchToWeapon(nextIndex);
     }
 
-    public void SwitchToPreviousWeapon()
+    public bool SwitchToPreviousWeapon()
     {
         int prevIndex = (currentWeaponIndex - 1 + weaponInstances.Count) % weaponInstances.Count;
-        SwitchToWeapon(prevIndex);
+        return SwitchToWeapon(prevIndex);
     }
 
     public void StartFiring()

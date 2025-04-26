@@ -1,4 +1,5 @@
-using Unity.VisualScripting;
+// using System;
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -12,33 +13,51 @@ public static class ProjectileSpawner
     public static Projectile SpawnProjectile(
         Transform firePoint,
         DamageProfile damageProfile,
-        Transform source
+        Transform source,
+        ProjectileVFXPrefabs prefabs
     )
     {
-        ProjectilePool pool = ProjectilePool.Instance;
-        if (pool == null)
-        {
-            Debug.LogError($"No projectile pool found");
-            return null;
-        }
+        // ProjectilePool pool = ProjectilePool.Instance;
+        // if (pool == null)
+        // {
+        //     Debug.LogError($"No projectile pool found");
+        //     return null;
+        // }
 
         // Get projectile from pool and initialize it
-        GameObject projectileObject = pool.GetProjectile(firePoint);
+        // GameObject projectileObject = pool.GetProjectile(firePoint);
 
-        // Get or add the component
+        GameObject muzzleFlash = GameObject.Instantiate(
+            prefabs.muzzleFlashPrefab,
+            firePoint.position,
+            firePoint.rotation
+        );
+
+        float timeUntilNextShot = source
+            .GetComponent<WeaponHandler>()
+            .CurrentWeapon.FireConfig.fireRate;
+        GameObject.Destroy(muzzleFlash, timeUntilNextShot);
+
+        GameObject projectileObject = GameObject.Instantiate(
+            prefabs.projectilePrefab,
+            firePoint.position,
+            firePoint.rotation
+        );
+
         Projectile projectile = projectileObject.GetComponent<Projectile>();
-        if (projectile == null)
-        {
-            Debug.LogError($"Pool returned object without required Projectile component");
-            pool.ReturnToPool(projectileObject);
-            return null;
-        }
 
-        // Set damage data
+        // // Get or add the component
+        // Projectile projectile = projectileObject.GetComponent<Projectile>();
+        // if (projectile == null)
+        // {
+        //     Debug.LogError($"Pool returned object without required Projectile component");
+        //     pool.ReturnToPool(projectileObject);
+        //     return null;
+        // }
+
         DamageData damageData = damageProfile.CreateDamageData(source);
 
-        // Initialize the projectile
-        projectile.Initialize(pool, damageData);
+        projectile.Initialize(prefabs.targetHitPrefab, damageData);
 
         return projectile;
     }
@@ -50,12 +69,13 @@ public static class ProjectileSpawner
         Transform firePoint,
         DamageProfile damageProfile,
         Transform source,
+        ProjectileVFXPrefabs prefabs,
         params object[] behaviorParams
     )
         where T : MonoBehaviour, IProjectileBehavior
     {
         // Spawn the base projectile
-        Projectile projectile = SpawnProjectile(firePoint, damageProfile, source);
+        Projectile projectile = SpawnProjectile(firePoint, damageProfile, source, prefabs);
         if (projectile == null)
             return null;
 
@@ -81,6 +101,7 @@ public static class ProjectileSpawner
         Transform firePoint,
         DamageProfile damageProfile,
         Transform source,
+        ProjectileVFXPrefabs prefabs,
         Transform target,
         float turnSpeed,
         MovementConfig config
@@ -91,6 +112,7 @@ public static class ProjectileSpawner
             firePoint,
             damageProfile,
             source,
+            prefabs,
             target,
             turnSpeed,
             config
@@ -103,6 +125,7 @@ public static class ProjectileSpawner
         Transform firePoint,
         DamageProfile damageProfile,
         Transform source,
+        ProjectileVFXPrefabs prefabs,
         object[] parameters
     )
     {
@@ -111,6 +134,7 @@ public static class ProjectileSpawner
             firePoint,
             damageProfile,
             source,
+            prefabs,
             parameters
         );
 
@@ -140,6 +164,10 @@ public static class ProjectileSpawner
                     : velocityOverload * velocityModifier;
 
             rb.velocity = projectileSpeed * direction.normalized;
+
+            // update the projectile's rotation to match its travel direction
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+            projectile.transform.rotation = Quaternion.Euler(0, 0, angle);
         }
         else
         {
@@ -160,7 +188,8 @@ public static class ProjectileSpawner
         float maxSpreadRadians =
             ConvertSpreadDegreesToRadians(fireConfig.spread) * (1f - fireConfig.accuracy);
 
-        float randomSpread = Random.Range(-maxSpreadRadians / 2f, maxSpreadRadians / 2f);
+        // float randomSpread = Random.Range(-maxSpreadRadians / 2f, maxSpreadRadians / 2f);
+        float randomSpread = RandomUtils.Range(-maxSpreadRadians / 2f, maxSpreadRadians / 2f);
 
         float cos = Mathf.Cos(randomSpread);
         float sin = Mathf.Sin(randomSpread);
@@ -178,4 +207,12 @@ public static class ProjectileSpawner
         // 180 degrees = PI radians
         return spreadDegrees * Mathf.PI / 180f;
     }
+}
+
+[Serializable]
+public class ProjectileVFXPrefabs
+{
+    public GameObject projectilePrefab;
+    public GameObject muzzleFlashPrefab;
+    public GameObject targetHitPrefab;
 }

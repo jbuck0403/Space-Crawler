@@ -13,3 +13,7 @@ MonoBehaviour:
   m_Name: PlayerBasicProjectile
   m_EditorClassIdentifier: 
   damageProfile: {fileID: 11400000, guid: dd031c7fc87e285409574368d7eea2aa, type: 2}
+  projectileVFXPrefabs:
+    projectilePrefab: {fileID: 1678767144466112, guid: ab8f968bdfc8df54f81b4e6c3363ae34, type: 3}
+    muzzleFlashPrefab: {fileID: 1696487207369030, guid: 7714188903e6c4a42aeab5cc44ae010a, type: 3}
+    targetHitPrefab: {fileID: 1591689192499646, guid: 9ce3933b9e1bd504db5ef084c5beef96, type: 3}
