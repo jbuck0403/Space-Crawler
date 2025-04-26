@@ -298,12 +298,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponDefinitions:
   - {fileID: 11400000, guid: 6fa66bf1bb4a6eb4e9af98e1b5535422, type: 2}
+  projectileTypes: []
   firePoint: {fileID: 3052194062319603280}
   startingWeaponIndex: 0
   OnWeaponSwitched: {fileID: 11400000, guid: c3c5e421a7051704f89e4fe8d790cde0, type: 2}
   OnNextFireTime: {fileID: 11400000, guid: c3a698d4e0eb16a42a4c5d1815167f67, type: 2}
   OnChargingWeapon: {fileID: 11400000, guid: 756b667bb2dce264e9bedf292af297ce, type: 2}
   OnWeaponAbilityCooldown: {fileID: 11400000, guid: 34130b0b08c210041b6fbacf26e0b04d, type: 2}
+  OnHitFX: {fileID: 11400000, guid: 2173ec269946ff0478e8cd24117163b4, type: 2}
+  OnMuzzleFlareFX: {fileID: 11400000, guid: c6fe7dcbf8f8a2b429030b167ee8b83b, type: 2}
 --- !u!4 &8699095912087521350 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7482415228626354879, guid: 4220b79cf5a840543b4a082e92706106, type: 3}

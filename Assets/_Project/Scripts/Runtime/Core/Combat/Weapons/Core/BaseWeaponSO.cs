@@ -72,7 +72,12 @@ public abstract class BaseWeaponSO : ScriptableObject, IModifiable
         }
 
         // Get the projectile from the ProjectileSpawner
-        Projectile projectile = projectileType.SpawnProjectile(firePoint, source, provider);
+        Projectile projectile = projectileType.SpawnProjectile(
+            weaponHandler,
+            firePoint,
+            source,
+            provider
+        );
 
         if (projectile != null)
         {
@@ -133,8 +138,15 @@ public abstract class BaseWeaponSO : ScriptableObject, IModifiable
                 velocityModifier
             );
 
-            // Raise event on the source object
             OnFireWeapon.Raise(sourceObject);
+            MuzzleFlareFXData fxData = new MuzzleFlareFXData(
+                projectileType.projectileVFXPrefabs.muzzleFlashPrefab,
+                source,
+                firePoint
+            );
+
+            if (weaponHandler != null && weaponHandler.OnMuzzleFlareFX != null)
+                weaponHandler.OnMuzzleFlareFX.Raise(sourceObject, fxData);
             // TBI Skill Point Delegate: AFTER_WEAPON_FIRE
 
             return true;

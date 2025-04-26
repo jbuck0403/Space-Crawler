@@ -22,12 +22,18 @@ public class SharedEffectProjectileTypeSO : ProjectileTypeSO
     private StatusEffectData[] shooterStatusEffects;
 
     public override Projectile SpawnProjectile(
+        WeaponHandler weaponHandler,
         Transform firePoint,
         Transform source,
         IProjectileDataProvider dataProvider
     )
     {
-        Projectile projectile = base.SpawnProjectile(firePoint, source, dataProvider);
+        Projectile projectile = base.SpawnProjectile(
+            weaponHandler,
+            firePoint,
+            source,
+            dataProvider
+        );
 
         if (source != null)
         {

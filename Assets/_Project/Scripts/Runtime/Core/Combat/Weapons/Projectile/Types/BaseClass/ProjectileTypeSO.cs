@@ -17,6 +17,7 @@ public abstract class ProjectileTypeSO : ScriptableObject
     /// Spawns a projectile with the given parameters and configures it using the data provider
     /// </summary>
     public virtual Projectile SpawnProjectile(
+        WeaponHandler weaponHandler,
         Transform firePoint,
         Transform source,
         IProjectileDataProvider dataProvider
@@ -24,6 +25,7 @@ public abstract class ProjectileTypeSO : ScriptableObject
     {
         // Use ProjectileSpawner for core spawning functionality
         Projectile projectile = ProjectileSpawner.SpawnProjectile(
+            weaponHandler,
             firePoint,
             damageProfile,
             source,
@@ -34,11 +36,11 @@ public abstract class ProjectileTypeSO : ScriptableObject
         {
             // Let derived classes configure the projectile with their specific behavior
             ConfigureProjectile(projectile, dataProvider);
-            WeaponVFXHandler.HandleMuzzleFlare(
-                projectileVFXPrefabs.muzzleFlashPrefab,
-                firePoint,
-                source
-            );
+            // WeaponVFXHandler.HandleMuzzleFlare(
+            //     projectileVFXPrefabs.muzzleFlashPrefab,
+            //     firePoint,
+            //     source
+            // );
         }
 
         return projectile;

@@ -40,6 +40,8 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
     public FloatEvent OnNextFireTime;
     public FloatEvent OnChargingWeapon;
     public FloatEvent OnWeaponAbilityCooldown;
+    public OnHitFXEvent OnHitFX;
+    public MuzzleFlareFXEvent OnMuzzleFlareFX;
 
     public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> modifiers =
         new Dictionary<ModifierType, List<(object Source, Delegate Modifier)>>();

@@ -11,6 +11,7 @@ public static class ProjectileSpawner
     /// Core projectile spawning method that interfaces with the appropriate pool
     /// </summary>
     public static Projectile SpawnProjectile(
+        WeaponHandler weaponHandler,
         Transform firePoint,
         DamageProfile damageProfile,
         Transform source,
@@ -27,16 +28,16 @@ public static class ProjectileSpawner
         // Get projectile from pool and initialize it
         // GameObject projectileObject = pool.GetProjectile(firePoint);
 
-        GameObject muzzleFlash = GameObject.Instantiate(
-            prefabs.muzzleFlashPrefab,
-            firePoint.position,
-            firePoint.rotation
-        );
+        // GameObject muzzleFlash = GameObject.Instantiate(
+        //     prefabs.muzzleFlashPrefab,
+        //     firePoint.position,
+        //     firePoint.rotation
+        // );
 
-        float timeUntilNextShot = source
-            .GetComponent<WeaponHandler>()
-            .CurrentWeapon.FireConfig.fireRate;
-        GameObject.Destroy(muzzleFlash, timeUntilNextShot);
+        // float timeUntilNextShot = source
+        //     .GetComponent<WeaponHandler>()
+        //     .CurrentWeapon.FireConfig.fireRate;
+        // GameObject.Destroy(muzzleFlash, timeUntilNextShot);
 
         GameObject projectileObject = GameObject.Instantiate(
             prefabs.projectilePrefab,
@@ -57,7 +58,12 @@ public static class ProjectileSpawner
 
         DamageData damageData = damageProfile.CreateDamageData(source);
 
-        projectile.Initialize(prefabs.targetHitPrefab, damageData);
+        projectile.Initialize(
+            weaponHandler,
+            prefabs.targetHitPrefab,
+            weaponHandler.OnHitFX,
+            damageData
+        );
 
         return projectile;
     }
@@ -66,6 +72,7 @@ public static class ProjectileSpawner
     /// Spawns a projectile with a specific behavior
     /// </summary>
     public static Projectile SpawnProjectileWithBehavior<T>(
+        WeaponHandler weaponHandler,
         Transform firePoint,
         DamageProfile damageProfile,
         Transform source,
@@ -75,7 +82,13 @@ public static class ProjectileSpawner
         where T : MonoBehaviour, IProjectileBehavior
     {
         // Spawn the base projectile
-        Projectile projectile = SpawnProjectile(firePoint, damageProfile, source, prefabs);
+        Projectile projectile = SpawnProjectile(
+            weaponHandler,
+            firePoint,
+            damageProfile,
+            source,
+            prefabs
+        );
         if (projectile == null)
             return null;
 
@@ -98,6 +111,7 @@ public static class ProjectileSpawner
     /// Spawns a homing projectile that tracks a target
     /// </summary>
     public static Projectile SpawnHomingProjectile(
+        WeaponHandler weaponHandler,
         Transform firePoint,
         DamageProfile damageProfile,
         Transform source,
@@ -109,6 +123,7 @@ public static class ProjectileSpawner
     {
         // Spawn a projectile with the homing behavior and pass the target as a parameter
         Projectile projectile = SpawnProjectileWithBehavior<HomingProjectileBehavior>(
+            weaponHandler,
             firePoint,
             damageProfile,
             source,
@@ -122,6 +137,7 @@ public static class ProjectileSpawner
     }
 
     public static Projectile SpawnGrenadeProjectile(
+        WeaponHandler weaponHandler,
         Transform firePoint,
         DamageProfile damageProfile,
         Transform source,
@@ -131,6 +147,7 @@ public static class ProjectileSpawner
     {
         // Spawn a projectile with the Grenade behavior and pass the target as a parameter
         Projectile projectile = SpawnProjectileWithBehavior<GrenadeProjectileBehavior>(
+            weaponHandler,
             firePoint,
             damageProfile,
             source,

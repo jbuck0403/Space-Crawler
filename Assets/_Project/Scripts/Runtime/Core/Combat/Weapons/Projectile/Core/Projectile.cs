@@ -19,6 +19,9 @@ public class Projectile : MonoBehaviour
     private int totalBehaviors = 0;
     private IProjectileBehavior[] behaviors;
     private GameObject onHitVFXPrefab;
+    private OnHitFXEvent OnHitFXEvent;
+
+    public WeaponHandler weaponHandler;
 
     protected virtual IEnumerator SelfDestruct()
     {
@@ -27,9 +30,16 @@ public class Projectile : MonoBehaviour
         DestroyProjectile();
     }
 
-    public virtual void Initialize(GameObject onHitVFXPrefab, DamageData damageData = default)
+    public virtual void Initialize(
+        WeaponHandler weaponHandler,
+        GameObject onHitVFXPrefab,
+        OnHitFXEvent OnHitFXEvent,
+        DamageData damageData = default
+    )
     {
+        this.weaponHandler = weaponHandler;
         this.onHitVFXPrefab = onHitVFXPrefab;
+        this.OnHitFXEvent = OnHitFXEvent;
         this.damageData = damageData;
     }
 
@@ -90,7 +100,18 @@ public class Projectile : MonoBehaviour
             }
         }
 
-        WeaponVFXHandler.HandleOnHitEffect(onHitVFXPrefab, transform);
+        // Debug.LogWarning("***!OnHitFXEvent is null in Projectile.OnHit");
+        // WeaponVFXHandler.HandleOnHitEffect(onHitVFXPrefab, transform);
+        if (OnHitFXEvent != null)
+        {
+            Debug.Log($"***!Raising event. Prefab: {onHitVFXPrefab}, Source: {transform}");
+            OnHitFXData fxData = new OnHitFXData(onHitVFXPrefab, transform);
+            OnHitFXEvent.Raise(weaponHandler.gameObject, fxData);
+        }
+        else
+        {
+            Debug.LogWarning("***!2OnHitFXEvent is null in Projectile.OnHit");
+        }
 
         hasDealtDamage = true;
     }

@@ -60,6 +60,7 @@ public class ShotgunWeapon : BaseWeaponSO
 
         Projectile grenadeProjectile =
             ProjectileSpawner.SpawnProjectileWithBehavior<GrenadeProjectileBehavior>(
+                weaponHandler,
                 firePoint,
                 grenadeProjectileDamageProfile,
                 source,

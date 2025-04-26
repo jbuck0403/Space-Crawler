@@ -55,6 +55,7 @@ public class GrenadeProjectileBehavior : BaseProjectileBehavior
             for (int i = 0; i < numProjectiles; i++)
             {
                 Projectile projectile = ProjectileSpawner.SpawnProjectile(
+                    grenadeProjectile.weaponHandler,
                     transform,
                     damageProfile,
                     source,
