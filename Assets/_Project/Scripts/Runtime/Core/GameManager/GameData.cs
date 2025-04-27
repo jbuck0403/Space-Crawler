@@ -25,7 +25,6 @@ public class GameData
     [NonSerialized]
     public int totalRoomsCleared;
 
-    [NonSerialized]
     public int runsCompleted;
 
     // Current run data (reset each run)

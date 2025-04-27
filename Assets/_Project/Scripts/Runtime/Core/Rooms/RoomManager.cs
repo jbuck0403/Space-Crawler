@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Unity.Profiling;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class RoomManager : MonoBehaviour
@@ -26,7 +27,7 @@ public class RoomManager : MonoBehaviour
     [SerializeField]
     private float treasureRoomChance = 0.2f;
 
-    [SerializeField]
+    [DoNotSerialize]
     private int roomsBeforeBoss = 10;
 
     [SerializeField]
@@ -443,7 +444,7 @@ public class RoomManager : MonoBehaviour
                 Debug.Log("#ROOM BOSS DEFEATED - COMPLETING RUN");
 
                 GameManager.Instance.SetBossDefeated();
-                GameManager.Instance.GameData.IncrementRunsCompleted();
+                // GameManager.Instance.GameData.IncrementRunsCompleted();
             }
             else
             {
