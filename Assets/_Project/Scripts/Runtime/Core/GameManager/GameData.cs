@@ -53,6 +53,7 @@ public class GameData
 
     public void StartNewGame()
     {
+        DeleteSaveData();
         isNewGame = true;
 
         ResetRunData();
@@ -131,15 +132,19 @@ public class GameData
         return false;
     }
 
+    public void DeleteSaveData(string filePath = null)
+    {
+        if (filePath == null)
+        {
+            filePath = Path.Combine(Application.persistentDataPath, "gamedata.json");
+        }
+
+        File.Delete(filePath);
+    }
+
     public void SaveGameData()
     {
         string filePath = Path.Combine(Application.persistentDataPath, "gamedata.json");
-
-        // if (File.Exists(filePath) && IsDefault())
-        // {
-        //     File.Delete(filePath);
-        //     return;
-        // }
 
         string json = JsonUtility.ToJson(this, true);
         File.WriteAllText(filePath, json);

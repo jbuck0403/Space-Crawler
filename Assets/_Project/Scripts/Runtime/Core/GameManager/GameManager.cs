@@ -67,11 +67,11 @@ public class GameManager : MonoBehaviour
         ChangeState(GameStateType.MainMenu);
     }
 
-    public void LoadSavedGameData()
+    public static void LoadSavedGameData()
     {
         GameData loadedGameData = GameData.LoadGameData();
 
-        gameData = loadedGameData;
+        Instance.gameData = loadedGameData;
     }
 
     public void HandleEnemyDefeated(BaseEnemyController enemy)

@@ -74,8 +74,9 @@ public class TalentTreeHandler : MonoBehaviour
 
     public void LoadSavedTalents()
     {
-        // GameData gameData = GameData.LoadGameData();
-        GameData gameData = GameManager.Instance.GameData;
+        GameData gameData = GameData.LoadGameData();
+        // GameManager.LoadSavedGameData();
+        // GameData gameData = GameManager.Instance.GameData;
         totalPoints = gameData.totalTalentPoints;
 
         foreach (TalentTreeSaveData saveData in gameData.allocatedTalents)

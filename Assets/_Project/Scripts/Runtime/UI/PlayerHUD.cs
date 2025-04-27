@@ -28,7 +28,10 @@ public class PlayerHUD : MonoBehaviour
 
     public void Initialize(GameObject player)
     {
+        healthSlider.fillAmount = 1f;
+        shieldSlider.fillAmount = 1f;
         nextShotSlider.fillAmount = 1f;
+        weaponAbilityCooldownSlider.fillAmount = 1f;
         this.player = player;
 
         SubscribeToEvents();
