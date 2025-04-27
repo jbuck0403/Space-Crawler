@@ -51,6 +51,7 @@ MonoBehaviour:
   eliteRoomChance: 0.5
   treasureRoomChance: 0.5
   roomsBeforeBoss: 3
+  baseRoomsBeforeBoss: 1
   playerPrefab: {fileID: 8065591907391604513, guid: 460338ceeaba0fb4ca9d6afedfe14186, type: 3}
   defaultTarget: {fileID: 0}
   startingRoomPrefab: {fileID: 4317547251407483235, guid: 24a63983eb7839c44a11a9895f8bf642, type: 3}

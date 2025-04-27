@@ -128,6 +128,7 @@ public class GameData
             {
                 GameData loadedData = JsonUtility.FromJson<GameData>(json);
                 Debug.Log($"Game data loaded from: {filePath}");
+
                 return loadedData;
             }
             catch (Exception e)
@@ -141,6 +142,14 @@ public class GameData
             Debug.Log("No saved game data found. Creating new game data.");
             return new GameData();
         }
+    }
+
+    public void IncrementRunsCompleted()
+    {
+        runsCompleted++;
+
+        AddTalentPoint(2);
+        SaveGameData();
     }
 }
 

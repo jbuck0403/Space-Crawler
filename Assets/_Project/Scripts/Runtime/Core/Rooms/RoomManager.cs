@@ -29,6 +29,9 @@ public class RoomManager : MonoBehaviour
     [SerializeField]
     private int roomsBeforeBoss = 10;
 
+    [SerializeField]
+    private int baseRoomsBeforeBoss = 1; // Just start and boss initially
+
     // Currently active room
     private GameObject currentRoom;
     private Room currentRoomComponent;
@@ -80,6 +83,8 @@ public class RoomManager : MonoBehaviour
     public bool Initialize()
     {
         InitDungeonState();
+
+        roomsBeforeBoss = baseRoomsBeforeBoss + GameManager.Instance.GameData.runsCompleted;
 
         currentRoom = RoomHandler.CreateRoom(
             startingRoomPrefab,
@@ -268,6 +273,7 @@ public class RoomManager : MonoBehaviour
         if (snapPoint == null || roomPrefab == null)
             return;
 
+        Room newRoomComponent = null;
         Vector3 offset = snapPoint.position - CurrentRoom.transform.position;
 
         GameObject newRoom = RoomHandler.CreateRoom(
@@ -286,7 +292,7 @@ public class RoomManager : MonoBehaviour
             exitDoor.hasRoomBeyond = true;
 
             // Find the opposite door in the new room to set as its entrance
-            Room newRoomComponent = newRoom.GetComponent<Room>();
+            newRoomComponent = newRoom.GetComponent<Room>();
             if (newRoomComponent != null && newRoomComponent.EntranceDoor != null)
             {
                 Debug.Log(
@@ -302,9 +308,22 @@ public class RoomManager : MonoBehaviour
         {
             Debug.LogError("#ROOM Could not find exit door in current room for given snap point");
         }
-
-        InstantiateEnemies(newRoom, roomType);
+        InstantiateEnemies(newRoomComponent, roomType);
         Debug.Log($"#ROOM Room of type {roomPrefab.name} spawned at: {snapPoint.position}");
+    }
+
+    private int HowManyEnemiesToSpawn(Room roomComponent)
+    {
+        int totalSpawnLocations = roomComponent.GetTotalSpawnLocations();
+
+        // Calculate progression ratio (how far we are in the current run)
+        float progressionRatio = Mathf.Min(1.0f, (float)roomsCompleted / roomsBeforeBoss);
+
+        // Calculate max enemies based on progression (round up to nearest int)
+        int maxEnemies = Mathf.Max(1, Mathf.CeilToInt(totalSpawnLocations * progressionRatio));
+
+        // Use RandomUtils to get a number between 1 and maxEnemies
+        return RandomUtils.Range(1, maxEnemies);
     }
 
     // Add helper method to find door by snap point
@@ -325,17 +344,13 @@ public class RoomManager : MonoBehaviour
         return null;
     }
 
-    private void InstantiateEnemies(GameObject room, RoomType roomType, int numEnemies = 1)
+    private void InstantiateEnemies(Room room, RoomType roomType)
     {
-        Room roomComponent = room.GetComponent<Room>();
-        int maxEnemies = roomComponent.GetTotalSpawnLocations();
-
-        numEnemies = Mathf.Max(1, numEnemies);
-        int enemiesToSpawn = Mathf.Min(numEnemies, maxEnemies);
+        int enemiesToSpawn = HowManyEnemiesToSpawn(room);
 
         for (int i = 0; i < enemiesToSpawn; i++)
         {
-            roomComponent.AddEnemyToSpawnedEnemies(GetCorrectEnemyType(roomType));
+            room.AddEnemyToSpawnedEnemies(GetCorrectEnemyType(roomType));
         }
     }
 
@@ -428,6 +443,7 @@ public class RoomManager : MonoBehaviour
                 Debug.Log("#ROOM BOSS DEFEATED - COMPLETING RUN");
 
                 GameManager.Instance.SetBossDefeated();
+                GameManager.Instance.GameData.IncrementRunsCompleted();
             }
             else
             {

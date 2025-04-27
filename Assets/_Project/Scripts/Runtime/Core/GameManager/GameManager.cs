@@ -62,8 +62,16 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        LoadSavedGameData();
         // Start in the main menu state
         ChangeState(GameStateType.MainMenu);
+    }
+
+    public void LoadSavedGameData()
+    {
+        GameData loadedGameData = GameData.LoadGameData();
+
+        gameData = loadedGameData;
     }
 
     public void HandleEnemyDefeated(BaseEnemyController enemy)
@@ -172,7 +180,8 @@ public class GameManager : MonoBehaviour
     {
         if (success)
         {
-            gameData.SaveRunRewards();
+            gameData.IncrementRunsCompleted();
+            // gameData.SaveRunRewards();
         }
 
         ChangeState(GameStateType.RunConclusion);
