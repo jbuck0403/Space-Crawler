@@ -209,4 +209,13 @@ public class GameManager : MonoBehaviour
             UIManager.ShowPlayerHUD(RoomManager.Instance.Player);
         }
     }
+
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
 }

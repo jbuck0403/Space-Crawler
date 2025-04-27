@@ -233,6 +233,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3080204034210999966, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3611172423121167790}
+    - targetCorrespondingSourceObject: {fileID: 3080204034210999966, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -1961733163375840337}
   m_SourcePrefab: {fileID: 100100000, guid: 4220b79cf5a840543b4a082e92706106, type: 3}
 --- !u!4 &3052194062319603280 stripped
 Transform:
@@ -307,6 +310,18 @@ MonoBehaviour:
   OnWeaponAbilityCooldown: {fileID: 11400000, guid: 34130b0b08c210041b6fbacf26e0b04d, type: 2}
   OnHitFX: {fileID: 11400000, guid: 2173ec269946ff0478e8cd24117163b4, type: 2}
   OnMuzzleFlareFX: {fileID: 11400000, guid: c6fe7dcbf8f8a2b429030b167ee8b83b, type: 2}
+--- !u!114 &-1961733163375840337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3877759371688010855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5747ec32883e6a046bb0141c090167ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &8699095912087521350 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7482415228626354879, guid: 4220b79cf5a840543b4a082e92706106, type: 3}

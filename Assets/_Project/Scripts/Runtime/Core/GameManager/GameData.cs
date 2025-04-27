@@ -70,9 +70,6 @@ public class GameData
     /// </summary>
     public void SaveRunRewards()
     {
-        // Debug.Log($"^^^POINTS ON SAVE{totalTalentPoints}");
-
-        // Get current talent points from TalentTreeHandler
         if (
             GameManager.Instance != null
             && RoomManager.Instance != null
@@ -83,7 +80,7 @@ public class GameData
                 RoomManager.Instance.Player.GetComponent<TalentTreeHandler>();
             if (talentTreeHandler != null)
             {
-                // Sync points data with TalentTreeHandler
+                // sync points data with TalentTreeHandler
                 totalTalentPoints = talentTreeHandler.TotalPoints + currentRunTalentPoints;
                 currentRunTalentPoints = 0;
 
@@ -122,10 +119,29 @@ public class GameData
         allocatedTalents.Add(talentSaveData);
     }
 
+    private bool IsDefault()
+    {
+        if (totalTalentPoints == 0)
+            return true;
+        if (allocatedTalents.Count == 0)
+            return true;
+        if (runsCompleted == 0)
+            return true;
+
+        return false;
+    }
+
     public void SaveGameData()
     {
-        string json = JsonUtility.ToJson(this, true);
         string filePath = Path.Combine(Application.persistentDataPath, "gamedata.json");
+
+        // if (File.Exists(filePath) && IsDefault())
+        // {
+        //     File.Delete(filePath);
+        //     return;
+        // }
+
+        string json = JsonUtility.ToJson(this, true);
         File.WriteAllText(filePath, json);
         Debug.Log($"Game data saved to: {filePath}");
     }
@@ -157,12 +173,22 @@ public class GameData
         }
     }
 
+    /// <summary>
+    /// Checks if save data exists without loading the full file
+    /// </summary>
+    /// <returns>True if save data exists, false otherwise</returns>
+    public static bool HasSaveData()
+    {
+        string filePath = Path.Combine(Application.persistentDataPath, "gamedata.json");
+        return File.Exists(filePath);
+    }
+
     public void IncrementRunsCompleted()
     {
         runsCompleted++;
 
         AddTalentPoint(2);
-        SaveGameData();
+        SaveRunRewards();
     }
 }
 

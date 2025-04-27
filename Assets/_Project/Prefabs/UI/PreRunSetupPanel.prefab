@@ -258,12 +258,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: GoToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -391,12 +391,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: FinishPreRunSetup
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -471,7 +471,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 2
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -642,6 +642,10 @@ PrefabInstance:
       propertyPath: m_TextStyleHashCode
       value: 97690656
       objectReference: {fileID: 0}
+    - target: {fileID: 975445837610191902, guid: 210b27879c423a24bbc3e853c9b1729a, type: 3}
+      propertyPath: m_enableWordWrapping
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3049485783851728295, guid: 210b27879c423a24bbc3e853c9b1729a, type: 3}
       propertyPath: m_Name
       value: TalentTreeUIPanel
@@ -725,6 +729,14 @@ PrefabInstance:
     - target: {fileID: 3096237930711539246, guid: 210b27879c423a24bbc3e853c9b1729a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4542042715758108147, guid: 210b27879c423a24bbc3e853c9b1729a, type: 3}
+      propertyPath: tierVerticalSpacing
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 4542042715758108147, guid: 210b27879c423a24bbc3e853c9b1729a, type: 3}
+      propertyPath: talentHorizontalSpacing
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 6274966197600524888, guid: 210b27879c423a24bbc3e853c9b1729a, type: 3}
       propertyPath: m_AnchoredPosition.x

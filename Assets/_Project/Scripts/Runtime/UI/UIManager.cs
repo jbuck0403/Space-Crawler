@@ -59,6 +59,9 @@ public class UIManager : MonoBehaviour
     private TalentTreeUIManager talentTreeUIManager;
 
     [SerializeField]
+    private MainMenuUI mainMenuUI;
+
+    [SerializeField]
     private GameObject damageNumbersUIPanel;
 
     public GameObject DamageNumbersUIPanel => damageNumbersUIPanel;
@@ -184,7 +187,10 @@ public class UIManager : MonoBehaviour
     public static void ShowMainMenu()
     {
         if (Instance != null)
+        {
+            Instance.mainMenuUI.Initialize();
             Instance.ShowPanel(PanelType.MainMenu);
+        }
     }
 
     /// <summary>
