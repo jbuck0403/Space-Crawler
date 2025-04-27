@@ -16,8 +16,13 @@ public class RetreatMovementStrategy : BaseMovementStrategy
     [SerializeField]
     public float timeToStopRetreating = 5f;
 
+    [SerializeField]
+    private float movementDifferenceThreshold = 0.05f;
+
     public bool canRetreat = true;
     public bool retreating = false;
+
+    private Coroutine retreatEndCoroutine;
 
     public override BaseMovementStrategy Initialize(
         MovementConfig config,
@@ -37,7 +42,7 @@ public class RetreatMovementStrategy : BaseMovementStrategy
         if (canRetreat)
         {
             canRetreat = false;
-            enemyController.StartCoroutine(StopRetreatAfterTime());
+            retreatEndCoroutine = enemyController.StartCoroutine(StopRetreatAfterTime());
         }
     }
 
@@ -61,30 +66,27 @@ public class RetreatMovementStrategy : BaseMovementStrategy
         Vector2 targetDirection =
             distanceFromTarget < retreatDistance ? directionFromTarget : Vector2.zero;
 
-        // Apply obstacle avoidance if needed
-        if (movementHandler is CollisionAwareMovementHandler collisionHandler)
+        if (targetDirection != Vector2.zero)
         {
-            Vector2 hitPoint;
-            Vector2 hitNormal;
-            bool wouldCollide = collisionHandler.WouldCollide(
-                self,
-                target.gameObject,
-                out hitPoint,
-                out hitNormal
+            // Check if movement would be blocked by a collision
+            Vector2 currentPosition = self.position;
+            Vector2 intendedPosition =
+                currentPosition
+                + (targetDirection * movementHandler.GetModifiedConfig().maxSpeed * Time.deltaTime);
+            Vector2 actualPosition = movementHandler.CalculateMovement(
+                targetDirection,
+                currentPosition,
+                Time.deltaTime
             );
 
-            if (wouldCollide)
-            {
-                targetDirection = CalculateObstacleAvoidanceDirection(
-                    self.position,
-                    targetDirection,
-                    collisionHandler,
-                    null // No target position bias - we're retreating away
-                );
+            float movementDifference = Vector2.Distance(intendedPosition, actualPosition);
 
-                Debug.Log(
-                    $"[RetreatMovementStrategy] Adjusted direction to avoid obstacle: {targetDirection}"
-                );
+            // If the actual position is significantly different from intended position, a collision was prevented
+            if (movementDifference > movementDifferenceThreshold)
+            {
+                StopRetreatingNow();
+
+                return;
             }
         }
 
@@ -104,6 +106,17 @@ public class RetreatMovementStrategy : BaseMovementStrategy
         }
 
         base.OnStrategyComplete();
+    }
+
+    public void StopRetreatingNow()
+    {
+        if (retreatEndCoroutine != null)
+        {
+            enemyController.StopCoroutine(retreatEndCoroutine);
+        }
+        isComplete = true;
+        retreating = false;
+        enemyController.EnableShooting(true);
     }
 
     public IEnumerator StopRetreatAfterTime()

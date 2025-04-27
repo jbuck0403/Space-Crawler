@@ -100,17 +100,10 @@ public class Projectile : MonoBehaviour
             }
         }
 
-        // Debug.LogWarning("***!OnHitFXEvent is null in Projectile.OnHit");
-        // WeaponVFXHandler.HandleOnHitEffect(onHitVFXPrefab, transform);
         if (OnHitFXEvent != null)
         {
-            Debug.Log($"***!Raising event. Prefab: {onHitVFXPrefab}, Source: {transform}");
             OnHitFXData fxData = new OnHitFXData(onHitVFXPrefab, transform);
             OnHitFXEvent.Raise(weaponHandler.gameObject, fxData);
-        }
-        else
-        {
-            Debug.LogWarning("***!2OnHitFXEvent is null in Projectile.OnHit");
         }
 
         hasDealtDamage = true;

@@ -152,89 +152,89 @@ public class CollisionAwareMovementHandler : MovementHandler
     /// <summary>
     /// Overrides the CalculateRotation method to prevent rotation into obstacles
     /// </summary>
-    public override float CalculateRotation(
-        Vector2 targetDirection,
-        float currentRotation,
-        float rotationSpeed,
-        float deltaTime
-    )
-    {
-        if (!collisionDetectionEnabled || collisionLayers == 0 || targetDirection == Vector2.zero)
-        {
-            return base.CalculateRotation(
-                targetDirection,
-                currentRotation,
-                rotationSpeed,
-                deltaTime
-            );
-        }
+    // public override float CalculateRotation(
+    //     Vector2 targetDirection,
+    //     float currentRotation,
+    //     float rotationSpeed,
+    //     float deltaTime
+    // )
+    // {
+    //     if (!collisionDetectionEnabled || collisionLayers == 0 || targetDirection == Vector2.zero)
+    //     {
+    //         return base.CalculateRotation(
+    //             targetDirection,
+    //             currentRotation,
+    //             rotationSpeed,
+    //             deltaTime
+    //         );
+    //     }
 
-        // If transform is not set, use base rotation
-        if (transform == null)
-        {
-            return base.CalculateRotation(
-                targetDirection,
-                currentRotation,
-                rotationSpeed,
-                deltaTime
-            );
-        }
+    //     // If transform is not set, use base rotation
+    //     if (transform == null)
+    //     {
+    //         return base.CalculateRotation(
+    //             targetDirection,
+    //             currentRotation,
+    //             rotationSpeed,
+    //             deltaTime
+    //         );
+    //     }
 
-        float lookAheadDistance = 1.0f + GetCurrentVelocity().magnitude * 0.5f;
+    //     float lookAheadDistance = 1.0f + GetCurrentVelocity().magnitude * 0.5f;
 
-        Vector2 currentPosition = transform.position;
+    //     Vector2 currentPosition = transform.position;
 
-        if (currentPosition == Vector2.zero)
-        {
-            return base.CalculateRotation(
-                targetDirection,
-                currentRotation,
-                rotationSpeed,
-                deltaTime
-            );
-        }
+    //     if (currentPosition == Vector2.zero)
+    //     {
+    //         return base.CalculateRotation(
+    //             targetDirection,
+    //             currentRotation,
+    //             rotationSpeed,
+    //             deltaTime
+    //         );
+    //     }
 
-        // Check for collisions in the direction of rotation
-        bool collisionDetected = false;
-        for (int i = 0; i < raycastCount; i++)
-        {
-            float angle = (i * 2 * Mathf.PI) / raycastCount;
-            Vector2 offset = new Vector2(
-                Mathf.Cos(angle) * collisionRadius,
-                Mathf.Sin(angle) * collisionRadius
-            );
-            Vector2 rayOrigin = currentPosition + offset;
+    //     // Check for collisions in the direction of rotation
+    //     bool collisionDetected = false;
+    //     for (int i = 0; i < raycastCount; i++)
+    //     {
+    //         float angle = (i * 2 * Mathf.PI) / raycastCount;
+    //         Vector2 offset = new Vector2(
+    //             Mathf.Cos(angle) * collisionRadius,
+    //             Mathf.Sin(angle) * collisionRadius
+    //         );
+    //         Vector2 rayOrigin = currentPosition + offset;
 
-            RaycastHit2D hit = Physics2D.Raycast(
-                rayOrigin,
-                targetDirection,
-                lookAheadDistance,
-                collisionLayers
-            );
+    //         RaycastHit2D hit = Physics2D.Raycast(
+    //             rayOrigin,
+    //             targetDirection,
+    //             lookAheadDistance,
+    //             collisionLayers
+    //         );
 
-            hit = SkipTriggerColliders(hit, targetDirection, lookAheadDistance, 0);
+    //         hit = SkipTriggerColliders(hit, targetDirection, lookAheadDistance, 0);
 
-            if (hit.collider != null)
-            {
-                float adjustedDistance =
-                    hit.distance
-                    - (offset.magnitude * Vector2.Dot(targetDirection, offset.normalized));
+    //         if (hit.collider != null)
+    //         {
+    //             float adjustedDistance =
+    //                 hit.distance
+    //                 - (offset.magnitude * Vector2.Dot(targetDirection, offset.normalized));
 
-                if (adjustedDistance < collisionRadius + collisionBuffer)
-                {
-                    collisionDetected = true;
-                    break;
-                }
-            }
-        }
+    //             if (adjustedDistance < collisionRadius + collisionBuffer)
+    //             {
+    //                 collisionDetected = true;
+    //                 break;
+    //             }
+    //         }
+    //     }
 
-        if (collisionDetected)
-        {
-            return currentRotation;
-        }
+    //     if (collisionDetected)
+    //     {
+    //         return currentRotation;
+    //     }
 
-        return base.CalculateRotation(targetDirection, currentRotation, rotationSpeed, deltaTime);
-    }
+    //     return base.CalculateRotation(targetDirection, currentRotation, rotationSpeed, deltaTime);
+    // }
 
     /// <summary>
     /// Performs collision-aware rotation calculation with an explicit current position
