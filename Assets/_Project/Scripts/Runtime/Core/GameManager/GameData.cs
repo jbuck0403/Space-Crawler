@@ -51,6 +51,20 @@ public class GameData
         currentRunRoomsCleared = 0;
     }
 
+    public void StartNewGame()
+    {
+        isNewGame = true;
+
+        ResetRunData();
+
+        totalEnemiesKilled = 0;
+        totalRoomsCleared = 0;
+        totalTalentPoints = 0;
+
+        runsCompleted = 0;
+        allocatedTalents = new List<TalentTreeSaveData>();
+    }
+
     /// <summary>
     /// Save rewards from current run to persistent data
     /// </summary>

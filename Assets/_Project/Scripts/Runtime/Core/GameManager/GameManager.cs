@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        LoadSavedGameData();
+        // LoadSavedGameData();
         // Start in the main menu state
         ChangeState(GameStateType.MainMenu);
     }
@@ -154,8 +154,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void StartNewGame()
     {
-        gameData.ResetRunData();
-        gameData.isNewGame = true;
+        gameData.StartNewGame();
+
         ChangeState(GameStateType.GameplayInit);
     }
 
@@ -164,6 +164,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void ContinueGame()
     {
+        LoadSavedGameData();
         gameData.isNewGame = false;
         ChangeState(GameStateType.GameplayInit);
     }
