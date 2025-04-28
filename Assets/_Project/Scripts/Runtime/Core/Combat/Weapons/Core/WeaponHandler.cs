@@ -56,11 +56,18 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
 
     private void Update()
     {
-        if (isFiring && currentWeapon != null)
+        if (currentWeapon != null)
         {
-            Vector2 direction = transform.up;
+            if (isFiring)
+            {
+                Vector2 direction = transform.up;
 
-            currentWeapon.UpdateFireWeapon(firePoint, direction, transform, gameObject, this);
+                currentWeapon.UpdateFireWeapon(firePoint, direction, transform, gameObject, this);
+            }
+            else if (!isFiring)
+            {
+                currentWeapon.NotifyWeaponStoppedFiring();
+            }
         }
     }
 

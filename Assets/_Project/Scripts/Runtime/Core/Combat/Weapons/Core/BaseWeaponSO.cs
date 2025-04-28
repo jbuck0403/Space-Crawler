@@ -56,6 +56,8 @@ public abstract class BaseWeaponSO : ScriptableObject, IModifiable
         return instance;
     }
 
+    public virtual void NotifyWeaponStoppedFiring() { }
+
     /// <summary>
     /// Get a projectile from the pool using the weapon's projectile type
     /// </summary>

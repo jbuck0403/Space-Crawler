@@ -5,31 +5,17 @@ public class SniperWeapon : BaseWeaponSO
 {
     [Header("Charge Settings")]
     [SerializeField]
-    private float minChargeTime = 2f;
+    private float minFullChargeTime = 2f; // Time to reach 100% charge
 
     [SerializeField]
-    private float maxChargeTime = 4f;
+    private float maxChargeTime = 4f; // Time to reach max charge (300%)
 
-    [SerializeField]
-    private float autoFireTime = 6f;
-
-    [SerializeField]
-    private float maxDamageModifier = 3f;
-
-    [SerializeField]
-    private float maxVelocityModifier = 3f;
-
-    private float chargeStartTime = 0f;
+    // State tracking
     private bool isCharging = false;
-    private float chargeProgress = 0f;
+    private float chargeStartTime = 0f;
+    private float chargePercent = 0f;
 
-    private float originalDamageModifier;
-    private float originalVelocityModifier;
-    private float originalAccuracy;
-
-    // public delegate void ChargeUpdatedHandler(float chargePercent);
-    // public event ChargeUpdatedHandler OnChargeUpdated;
-
+    // Called on initial mouse press
     public override bool FireWeapon(
         Transform firePoint,
         Vector2 direction,
@@ -38,20 +24,14 @@ public class SniperWeapon : BaseWeaponSO
         IProjectileDataProvider provider
     )
     {
-        if (!isCharging)
-        {
-            chargeStartTime = Time.time;
-            isCharging = true;
-            chargeProgress = 0f;
-
-            // Send initial charge progress of 0
-            if (weaponHandler != null)
-                weaponHandler.OnChargingWeapon.Raise(sourceObject, 0f);
-        }
-
+        // Start charging
+        isCharging = true;
+        chargeStartTime = Time.time;
+        Debug.Log("SNIPER: Started charging");
         return true;
     }
 
+    // Called each frame while mouse button is held
     public override bool UpdateFireWeapon(
         Transform firePoint,
         Vector2 direction,
@@ -63,84 +43,81 @@ public class SniperWeapon : BaseWeaponSO
         if (!isCharging)
             return false;
 
-        if (Input.GetMouseButtonUp(0))
+        float chargeDuration = Time.time - chargeStartTime;
+        chargePercent = CalculateChargePercent(chargeDuration);
+
+        if (weaponHandler != null && weaponHandler.OnChargingWeapon != null)
         {
-            return FireChargedShot(firePoint, direction, source, sourceObject, provider);
+            float uiCharge = Mathf.Clamp01(chargeDuration / maxChargeTime);
+            weaponHandler.OnChargingWeapon.Raise(sourceObject, uiCharge);
         }
 
-        float chargeTime = Time.time - chargeStartTime;
-
-        // Calculate charge progress for the entire charging period
-        if (chargeTime <= maxChargeTime)
-        {
-            // If before minChargeTime, progress is 0
-            if (chargeTime < minChargeTime)
-            {
-                chargeProgress = 0f;
-            }
-            // If between min and max, progress goes from 0 to 1
-            else if (chargeTime <= maxChargeTime)
-            {
-                chargeProgress = Mathf.Clamp01(
-                    (chargeTime - minChargeTime) / (maxChargeTime - minChargeTime)
-                );
-            }
-
-            // Send charge progress update regardless of where we are in the charging cycle
-            if (weaponHandler != null)
-                weaponHandler.OnChargingWeapon.Raise(sourceObject, chargeProgress);
-        }
-
-        if (chargeTime >= autoFireTime)
-        {
-            return FireChargedShot(firePoint, direction, source, sourceObject, provider);
-        }
-
-        return false;
+        Debug.Log($"SNIPER: Charging... {chargePercent * 100:0}%");
+        return false; // We never fire during update
     }
 
-    private bool FireChargedShot(
-        Transform firePoint,
-        Vector2 direction,
-        Transform source,
-        GameObject sourceObject,
-        IProjectileDataProvider provider
-    )
+    // Simple charge calculation
+    private float CalculateChargePercent(float chargeDuration)
     {
-        float chargeTime = Time.time - chargeStartTime;
-        isCharging = false;
-
-        if (chargeTime < minChargeTime)
+        if (chargeDuration < minFullChargeTime)
         {
-            chargeProgress = 0f;
-            if (weaponHandler != null)
-                weaponHandler.OnChargingWeapon.Raise(sourceObject, chargeProgress);
-            return false;
+            // Always 100% for the first minFullChargeTime seconds
+            return 1.0f;
         }
-
-        originalDamageModifier = damageModifier;
-        originalVelocityModifier = velocityModifier;
-        originalAccuracy = fireConfig.accuracy;
-
-        damageModifier = originalDamageModifier * (1f + chargeProgress * (maxDamageModifier - 1f));
-        velocityModifier =
-            originalVelocityModifier * (1f + chargeProgress * (maxVelocityModifier - 1f));
-        fireConfig.accuracy = Mathf.Lerp(originalAccuracy, 1f, chargeProgress);
-
-        bool fired = base.FireWeapon(firePoint, direction, source, sourceObject, provider);
-
-        damageModifier = originalDamageModifier;
-        velocityModifier = originalVelocityModifier;
-        fireConfig.accuracy = originalAccuracy;
-
-        if (fired)
+        else if (chargeDuration < maxChargeTime)
         {
-            UpdateNextFireTime(sourceObject);
+            // 100% to 300% between minFullChargeTime and maxChargeTime
+            float overchargePercent =
+                (chargeDuration - minFullChargeTime) / (maxChargeTime - minFullChargeTime);
+            return 1.0f + 2.0f * overchargePercent;
         }
-
-        chargeProgress = 0f;
-        return fired;
+        else
+        {
+            // Max at 300%
+            return 3.0f;
+        }
     }
 
-    protected override void UniqueAbility(IWeaponAbilityDataProvider provider) { }
+    public override void NotifyWeaponStoppedFiring()
+    {
+        if (isCharging && weaponHandler != null)
+        {
+            Debug.Log($"SNIPER: FIRED with charge {chargePercent * 100:0}%");
+
+            // Store original modifiers
+            float originalDamageModifier = damageModifier;
+            float originalVelocityModifier = velocityModifier;
+
+            // Apply charge-based modifiers
+            damageModifier *= chargePercent;
+            velocityModifier *= chargePercent;
+
+            Debug.Log(
+                $"SNIPER: Damage multiplier: {damageModifier:0.00}x, Velocity multiplier: {velocityModifier:0.00}x"
+            );
+
+            // Fire the projectile with modified damage/velocity
+            Transform firePoint = weaponHandler.FirePoint;
+            Vector2 direction = weaponHandler.transform.up;
+            Transform source = weaponHandler.transform;
+            GameObject sourceObject = weaponHandler.gameObject;
+
+            base.FireWeapon(firePoint, direction, source, sourceObject, weaponHandler);
+
+            // Restore original modifiers
+            damageModifier = originalDamageModifier;
+            velocityModifier = originalVelocityModifier;
+
+            // Set cooldown
+            UpdateNextFireTime(sourceObject);
+
+            // Reset charging state
+            isCharging = false;
+        }
+    }
+
+    protected override void UniqueAbility(IWeaponAbilityDataProvider provider)
+    {
+        Debug.Log("SNIPER: Ability triggered");
+    }
 }
