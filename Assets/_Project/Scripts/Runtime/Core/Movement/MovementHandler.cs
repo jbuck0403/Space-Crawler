@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovementHandler
+public class MovementHandler : IModifiable
 {
     // Delegate type for modifying movement config
     public delegate MovementConfig MovementConfigModifier(MovementConfig config);
@@ -12,6 +13,9 @@ public class MovementHandler
     // Single instance of modified config that gets updated when modifiers change
     private MovementConfig modifiedConfig;
 
+    // Global movement multiplier that affects all movement calculations
+    private float movementMultiplier = 1f;
+
     public float maxSpeed;
     public float rotationSpeed;
     public float acceleration;
@@ -21,6 +25,18 @@ public class MovementHandler
     public MovementConfig prevConfig;
 
     private Vector2 currentVelocity;
+
+    public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> modifiers =
+        new Dictionary<ModifierType, List<(object Source, Delegate Modifier)>>();
+    public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> Modifiers =>
+        modifiers;
+
+    // Property to get/set the movement multiplier
+    public float MovementMultiplier
+    {
+        get { return movementMultiplier; }
+        set { movementMultiplier = Mathf.Max(value, 0.25f); } // Prevent complete immobilization
+    }
 
     public void Initialize(MovementConfig config)
     {
@@ -47,6 +63,9 @@ public class MovementHandler
         float deltaTime
     )
     {
+        // Apply movement multiplier modifiers at the beginning
+        float calculatedMultiplier = CalculateMovementMultiplier();
+
         // TBI Skill Point Delegate: BEFORE_MOVEMENT_CALCULATION
         // Get the modified config for this frame
         MovementConfig modifiedConfig = GetModifiedConfig();
@@ -58,8 +77,8 @@ public class MovementHandler
             // Accelerate towards target direction
             currentVelocity = Vector2.MoveTowards(
                 currentVelocity,
-                targetDirection * modifiedConfig.maxSpeed,
-                modifiedConfig.acceleration * deltaTime
+                targetDirection * modifiedConfig.maxSpeed * calculatedMultiplier,
+                modifiedConfig.acceleration * deltaTime * calculatedMultiplier
             );
         }
         else
@@ -72,6 +91,16 @@ public class MovementHandler
                 modifiedConfig.deceleration * deltaTime
             );
         }
+
+        // foreach (
+        //     var modifier in ModifierHelper.GetModifiers<ModifierHelper.Vector2InVector2Out>(
+        //         this,
+        //         ModifierType.AFTER_MOVEMENT_CALCULATION
+        //     )
+        // )
+        // {
+        //     currentVelocity = modifier(currentVelocity);
+        // }
 
         // TBI Skill Point Delegate: AFTER_MOVEMENT_CALCULATION
         return currentPosition + (currentVelocity * deltaTime);
@@ -125,6 +154,9 @@ public class MovementHandler
     {
         if (targetDirection != Vector2.zero)
         {
+            // Apply movement multiplier modifiers
+            float calculatedMultiplier = CalculateMovementMultiplier();
+
             // TBI Skill Point Delegate: BEFORE_ROTATION_CALCULATION
             // Calculate target angle in degrees
             float targetAngle =
@@ -132,9 +164,35 @@ public class MovementHandler
 
             // Smoothly rotate towards target angle
             // TBI Skill Point Delegate: ROTATION_SPEED_MODIFIER
-            return Mathf.LerpAngle(currentRotation, targetAngle, rotationSpeed * deltaTime);
+            // Apply the movement multiplier to rotation speed as well
+            return Mathf.LerpAngle(
+                currentRotation,
+                targetAngle,
+                rotationSpeed * deltaTime * calculatedMultiplier
+            );
         }
         return currentRotation;
+    }
+
+    // Calculate the current movement multiplier by applying all modifiers
+    private float CalculateMovementMultiplier()
+    {
+        // Start with the base value
+        float result = movementMultiplier;
+
+        // Apply all MOVEMENT_MULTIPLIER modifiers
+        foreach (
+            var modifier in ModifierHelper.GetModifiers<ModifierHelper.FloatInFloatOutModifier>(
+                this,
+                ModifierType.MOVEMENT_MULTIPLIER
+            )
+        )
+        {
+            result = modifier(result);
+        }
+
+        // Ensure we don't go below minimum
+        return Mathf.Max(result, 0.25f);
     }
 
     public void ResetVelocity()

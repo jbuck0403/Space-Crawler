@@ -12,6 +12,7 @@ public static class ModifierHelper
     public delegate void FloatInModifier(float value);
     public delegate void GameObjectInModifier(GameObject gameObject);
     public delegate GameObject GameObjectInGameObjectOutModifier(GameObject gameObject);
+    public delegate Vector2 Vector2InVector2Out(Vector2 vector);
     public delegate void TriggerModifier();
 
     /// <summary>

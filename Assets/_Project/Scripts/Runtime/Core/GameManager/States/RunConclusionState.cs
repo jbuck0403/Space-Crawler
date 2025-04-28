@@ -22,16 +22,11 @@ public class RunConclusionState : GameState
         Time.timeScale = 1f;
     }
 
-    public override void UpdateState()
-    {
-        // Minimal updates needed in this state
-    }
+    public override void UpdateState() { }
 
     public override void Exit(GameStateType stateTypeToEnter)
     {
         Debug.Log("Exiting Run Conclusion State");
-
-        // TODO: Hide run conclusion UI
     }
 
     // Example of UI event handlers

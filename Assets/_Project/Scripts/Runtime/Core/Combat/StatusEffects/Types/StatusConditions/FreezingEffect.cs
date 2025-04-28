@@ -3,38 +3,17 @@ using UnityEngine;
 public class FreezingEffect : BaseStatusConditionEffect
 {
     private MovementHandler movementHandler;
-    private MovementHandler.MovementConfigModifier freezeModifier;
+    private const float SPEED_REDUCTION_PER_STACK = 0.1f; // 10% per stack
 
     public FreezingEffect(StatusEffectData data, GameObject target, Transform source)
         : base(data, target, source)
     {
-        // Get the MovementHandler from the BaseCharacterController
-        BaseCharacterController characterController =
+        // Get the BaseCharacterController
+        BaseCharacterController baseCharacterController =
             target.GetComponent<BaseCharacterController>();
-        if (characterController != null)
-        {
-            movementHandler = characterController.GetMovementHandler();
 
-            // Create the modifier delegate
-            freezeModifier = (config) =>
-            {
-                MovementConfig modifiedConfig = ScriptableObject.CreateInstance<MovementConfig>();
-                modifiedConfig.maxSpeed = config.maxSpeed;
-                modifiedConfig.acceleration = config.acceleration;
-                modifiedConfig.deceleration = config.deceleration;
-                modifiedConfig.rotationSpeed = config.rotationSpeed;
-
-                // Apply freeze effect based on current stacks
-                float stackRatio = (float)currentStacks / data.MaxStacks;
-                modifiedConfig.acceleration *= (1 - stackRatio);
-                modifiedConfig.deceleration *= (1 + stackRatio);
-                modifiedConfig.maxSpeed *= (1 - stackRatio);
-                modifiedConfig.rotationSpeed *= (1 - stackRatio);
-
-                return modifiedConfig;
-            };
-        }
-        else
+        movementHandler = baseCharacterController.GetMovementHandler();
+        if (movementHandler == null)
         {
             Debug.LogWarning(
                 $"FreezingEffect: Target {target.name} doesn't have a BaseCharacterController component."
@@ -46,7 +25,8 @@ public class FreezingEffect : BaseStatusConditionEffect
     {
         if (movementHandler != null)
         {
-            movementHandler.AddMovementModifier(freezeModifier);
+            // Apply freezing modifier to movement multiplier
+            ApplyFreezeModifier();
         }
     }
 
@@ -54,7 +34,8 @@ public class FreezingEffect : BaseStatusConditionEffect
     {
         if (movementHandler != null)
         {
-            movementHandler.RemoveMovementModifier(freezeModifier);
+            // Remove the freezing modifier
+            ModifierHelper.RemoveModifiersFromSource(movementHandler, this);
         }
     }
 
@@ -63,28 +44,38 @@ public class FreezingEffect : BaseStatusConditionEffect
         base.OnStack();
         if (movementHandler != null)
         {
-            // Create a new modifier with updated stack count
-            MovementHandler.MovementConfigModifier newModifier = (config) =>
-            {
-                MovementConfig modifiedConfig = ScriptableObject.CreateInstance<MovementConfig>();
-                modifiedConfig.maxSpeed = config.maxSpeed;
-                modifiedConfig.acceleration = config.acceleration;
-                modifiedConfig.deceleration = config.deceleration;
-                modifiedConfig.rotationSpeed = config.rotationSpeed;
-
-                // Apply freeze effect based on current stacks
-                float stackRatio = (float)currentStacks / data.MaxStacks;
-                modifiedConfig.acceleration *= (1 - stackRatio);
-                modifiedConfig.deceleration *= (1 + stackRatio);
-                modifiedConfig.maxSpeed *= (1 - stackRatio);
-                modifiedConfig.rotationSpeed *= (1 - stackRatio);
-
-                return modifiedConfig;
-            };
-
-            // Update the modifier
-            movementHandler.UpdateMovementModifier(freezeModifier, newModifier);
-            freezeModifier = newModifier;
+            // Update freeze modifier with new stack count
+            ModifierHelper.RemoveModifiersFromSource(movementHandler, this);
+            ApplyFreezeModifier();
         }
+    }
+
+    private void ApplyFreezeModifier()
+    {
+        // Create a movement multiplier modifier that reduces speed by 10% per stack (min 50%)
+        ModifierHelper.FloatInFloatOutModifier freezeModifier = (float baseMultiplier) =>
+        {
+            // Apply stack-based reduction to whatever the current multiplier is
+            float reduction = SPEED_REDUCTION_PER_STACK * currentStacks;
+
+            // Ensure we don't reduce below 50% of the original value
+            reduction = Mathf.Min(reduction, 0.5f);
+
+            float finalMultiplier = baseMultiplier * (1f - reduction);
+
+            Debug.Log(
+                $"FreezingEffect: Applied with {currentStacks} stacks, reduction = {reduction}, final multiplier = {finalMultiplier}"
+            );
+
+            return finalMultiplier;
+        };
+
+        // Add the modifier to affect the movement multiplier
+        ModifierHelper.AddModifier(
+            movementHandler,
+            ModifierType.MOVEMENT_MULTIPLIER,
+            this,
+            freezeModifier
+        );
     }
 }

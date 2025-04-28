@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa38b35ea6b31a44c9f7e8ac2181d5d8, type: 3}
   m_Name: FreezingStatusEffectData
   m_EditorClassIdentifier: 
-  effectType: 0
-  duration: 5
+  effectType: 1
+  duration: 2
   tickRate: 1
-  isStackable: 0
-  maxStacks: 1
+  isStackable: 1
+  maxStacks: 5
   description: 
   icon: {fileID: 0}
