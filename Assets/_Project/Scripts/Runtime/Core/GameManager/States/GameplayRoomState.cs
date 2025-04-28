@@ -80,11 +80,11 @@ public class GameplayRoomState : GameState
     public override void UpdateState()
     {
         // Check for player death
-        if (CheckForPlayerDeath())
-        {
-            HandlePlayerDeath();
-            return;
-        }
+        // if (CheckForPlayerDeath())
+        // {
+        //     HandlePlayerDeath();
+        //     return;
+        // }
 
         // Skip if RoomManager isn't ready
         if (roomManager == null)
@@ -158,21 +158,20 @@ public class GameplayRoomState : GameState
         }
     }
 
-    private bool CheckForPlayerDeath()
-    {
-        if (playerHealth != null)
-        {
-            return playerHealth.IsDead;
-        }
-        return false;
-    }
-
-    private void HandlePlayerDeath()
+    private void HandlePlayerDeath(Vector2 position)
     {
         Debug.Log("Player has died - ending run");
 
+        // Add extra debugging
+        Debug.LogWarning("!!@ PLAYER DEATH DETECTED - About to call CompleteRun(false)");
+
         // Complete run with failure
         gameManager.CompleteRun(false);
+
+        // Check if state changed successfully
+        Debug.LogWarning(
+            $"!!@ After CompleteRun call - Current state is: {gameManager.CurrentStateType}"
+        );
     }
 
     private void HandleBossDefeated()
@@ -289,8 +288,7 @@ public class GameplayRoomState : GameState
         if (eventsSubscribed)
             return;
 
-        // Subscribe to enemy death events
-        // TODO: Subscribe to OnEnemyDefeated event
+        playerHealth.OnDeath.AddListener(player, HandlePlayerDeath);
 
         eventsSubscribed = true;
     }
@@ -300,8 +298,7 @@ public class GameplayRoomState : GameState
         if (!eventsSubscribed)
             return;
 
-        // Unsubscribe from events
-        // TODO: Unsubscribe from all events
+        playerHealth.OnDeath.RemoveListener(player, HandlePlayerDeath);
 
         eventsSubscribed = false;
     }

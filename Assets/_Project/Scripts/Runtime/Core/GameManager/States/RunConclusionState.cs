@@ -11,8 +11,12 @@ public class RunConclusionState : GameState
     public override void Enter()
     {
         Debug.Log("Entering Run Conclusion State");
+        Debug.LogWarning("RunConclusionState.Enter - About to show RunConclusion UI");
 
-        UIManager.ShowRunConclusion(true);
+        UIManager.ShowRunConclusion(!gameManager.playerDied);
+        gameManager.playerDied = false;
+
+        Debug.LogWarning("RunConclusionState.Enter - Called UIManager.ShowRunConclusion");
 
         // Make sure game is not paused
         Time.timeScale = 1f;

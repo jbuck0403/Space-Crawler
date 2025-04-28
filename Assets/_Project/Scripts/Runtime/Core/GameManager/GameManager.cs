@@ -10,14 +10,13 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    // Current active game state
     private GameState currentState;
 
-    // Dictionary of all available states
+    // dictionary of all available states
     private Dictionary<GameStateType, GameState> states =
         new Dictionary<GameStateType, GameState>();
 
-    // Game data that persists between states and runs
+    // game data that persists between states and runs
     [SerializeField]
     private GameData gameData = new GameData();
 
@@ -43,6 +42,7 @@ public class GameManager : MonoBehaviour
     public GameStateType CurrentStateType { get; private set; }
     public GameState CurrentState => currentState;
     public TalentTreeUIManager TalentTreeUIManager => talentTreeUIManager;
+    public bool playerDied = false;
 
     private void Awake()
     {
@@ -62,8 +62,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        // LoadSavedGameData();
-        // Start in the main menu state
+        playerDied = false;
         ChangeState(GameStateType.MainMenu);
     }
 
@@ -86,7 +85,7 @@ public class GameManager : MonoBehaviour
 
     private void InitializeStates()
     {
-        // Create all game states
+        // create all game states
         states.Add(GameStateType.MainMenu, new MainMenuState(this));
         states.Add(GameStateType.GameplayInit, new GameplayInitState(this));
         states.Add(GameStateType.PreRunSetup, new PreRunSetupState(this));
@@ -99,7 +98,6 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        // Handle input and update for current state
         if (currentState != null)
         {
             currentState.HandleInput();
@@ -179,13 +177,25 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void CompleteRun(bool success)
     {
+        Debug.LogWarning(
+            $"!!@ CompleteRun called with success={success}, current state: {CurrentStateType}"
+        );
+
         if (success)
         {
             gameData.IncrementRunsCompleted();
             // gameData.SaveRunRewards();
         }
+        else
+        {
+            playerDied = true;
+        }
 
         ChangeState(GameStateType.RunConclusion);
+
+        Debug.LogWarning(
+            $"!!@ After state change in CompleteRun - current state: {CurrentStateType}"
+        );
     }
 
     public void GoToMainMenu()

@@ -129,9 +129,16 @@ public class UIManager : MonoBehaviour
     /// <param name="panelType">The panel to show</param>
     private void ShowPanel(PanelType panelType)
     {
+        Debug.LogWarning(
+            $"!!@ UIManager.ShowPanel called with panelType={panelType}, current panel is {currentPanel}"
+        );
+
         // Don't do anything if the panel is already active
         if (currentPanel == panelType)
+        {
+            Debug.LogWarning($"!!@ Panel {panelType} is already active - no change needed");
             return;
+        }
 
         // Hide all panels
         foreach (var panel in panels.Values)
@@ -145,13 +152,16 @@ public class UIManager : MonoBehaviour
         // Show the requested panel if it exists
         if (panels.TryGetValue(panelType, out GameObject targetPanel) && targetPanel != null)
         {
+            Debug.LogWarning($"!!@ Found panel {panelType}, activating it");
             targetPanel.SetActive(true);
             currentPanel = panelType;
             Debug.Log($"Showing panel: {panelType}");
         }
         else
         {
-            Debug.LogWarning($"Panel {panelType} not found or not assigned!");
+            Debug.LogError(
+                $"!!@ Panel {panelType} not found or not assigned in panels dictionary! Available panels: {string.Join(", ", panels.Keys)}"
+            );
             currentPanel = PanelType.None;
         }
     }
@@ -207,13 +217,26 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public static void ShowRunConclusion(bool success)
     {
+        Debug.LogWarning($"!!@ UIManager.ShowRunConclusion called with success={success}");
+
         if (Instance != null)
         {
+            Debug.LogWarning($"!!@ UIManager instance exists, showing RunConclusion panel");
             Instance.ShowPanel(PanelType.RunConclusion);
+
             if (Instance.runConclusionUI is RunConclusionUI ui)
             {
+                Debug.LogWarning($"!!@ RunConclusionUI component found, showing text");
                 ui.ShowRunConclusionText(success);
             }
+            else
+            {
+                Debug.LogError($"!!@ RunConclusionUI component is null or not of correct type");
+            }
+        }
+        else
+        {
+            Debug.LogError($"!!@ UIManager.Instance is null when attempting to show RunConclusion");
         }
     }
 

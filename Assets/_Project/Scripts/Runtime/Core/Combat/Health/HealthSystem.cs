@@ -70,7 +70,7 @@ public class HealthSystem : MonoBehaviour, IModifiable
 
         if (currentHealth <= 0)
         {
-            isDead = true;
+            // isDead = true;
             // TBI Skill Point Delegate: BEFORE_DEATH
             Die();
         }
@@ -109,6 +109,7 @@ public class HealthSystem : MonoBehaviour, IModifiable
 
     public void Die()
     {
+        isDead = true;
         OnDeath.Raise(gameObject, transform.position);
         // TBI Skill Point Delegate: ON_DEATH
         Destroy(gameObject);
