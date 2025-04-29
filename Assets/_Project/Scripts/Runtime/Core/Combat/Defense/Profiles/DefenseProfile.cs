@@ -36,7 +36,6 @@ public class DefenseProfile : ScriptableObject
     {
         UpdateElementalResistanceData();
 
-        // create a new DefenseData with our values
         DefenseData data = new DefenseData(
             physicalResistance,
             critResistance,

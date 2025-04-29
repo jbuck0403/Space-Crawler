@@ -15,13 +15,6 @@ public class DefaultEnemyController : BaseEnemyController
     protected RetreatMovementStrategy retreatStrategy;
     private bool retreatInitialized;
 
-    // protected override void Start()
-    // {
-    //     base.Start();
-
-    //     InitializeRetreat();
-    // }
-
     public override bool Initialize(Transform defaultTarget)
     {
         bool baseInitialized = base.Initialize(defaultTarget);

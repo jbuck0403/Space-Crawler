@@ -1,9 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Data class containing all relevant information about a status effect for UI and event subscribers.
-/// This ensures complete decoupling between status effect processing and UI display.
-/// </summary>
 public class StatusEffectEventData
 {
     public StatusEffectData EffectData { get; private set; }

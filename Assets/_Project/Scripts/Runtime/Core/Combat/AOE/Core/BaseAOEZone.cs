@@ -22,7 +22,6 @@ public abstract class BaseAOEZone : MonoBehaviour
     protected virtual void Start()
     {
         Initialize(transform, transform.position, aoeProfile);
-        // InitCollider();
 
         CheckExistingTargetsInZone();
     }
@@ -44,8 +43,6 @@ public abstract class BaseAOEZone : MonoBehaviour
         var zoneObject = new GameObject($"AOE_{typeof(T).Name}");
         var zone = zoneObject.AddComponent<T>();
         zone.Initialize(owner, position, aoeProfile, customRadius, customDuration);
-
-        // zone.AddAOEComponents(zoneObject);
 
         return zone;
     }

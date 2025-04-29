@@ -5,7 +5,6 @@ public class AmmoDropSO : CollectibleDropSO
 {
     public override void HandleCollection()
     {
-        // add ammo to weaponhandler.projectiletypes
-        // refer to weapondrop for filtering
+        // TBI
     }
 }

@@ -22,9 +22,9 @@ public class DamageAOEZone : BaseAOEZone
             {
                 aoeProfile.onAOETick.Raise(gameObject, damageData.Type);
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
-                // Exception handling
+                Debug.LogError($"Error raising AOE tick event: {e.Message}");
             }
 
             try
@@ -35,9 +35,9 @@ public class DamageAOEZone : BaseAOEZone
                 if (aoeData.applyEffects)
                     damageData.ApplyAllStatusEffects(target.gameObject);
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
-                // Exception handling
+                Debug.LogError($"Error Applying Damage/StatusEffects: {e.Message}");
             }
         }
     }

@@ -1075,11 +1075,11 @@ MonoBehaviour:
   musicSource: {fileID: 0}
   sfxSource: {fileID: 0}
   uiSource: {fileID: 0}
-  weaponFiringSound: {fileID: 8300000, guid: 56f52a11fcbb343b48e572e0b5c65a05, type: 3}
+  weaponFiringSound: {fileID: 8300000, guid: 3ddb8e1f79378c8489cb5cb93c776057, type: 3}
   mainMenuBGM: {fileID: 8300000, guid: 033ac2f3711826d48b1a72c60b0d2474, type: 3}
   gameplayBGM: {fileID: 8300000, guid: 15d930af8bc2da94ba72e1fd41a33fc0, type: 3}
-  buttonClickedSound: {fileID: 8300000, guid: a34b1abfdb0aad34898392ad53675a0d, type: 3}
-  buttonHoveredSound: {fileID: 8300000, guid: f4d8d43f1ca877b49adb9c662e11f8d0, type: 3}
+  buttonClickedSound: {fileID: 8300000, guid: 1b0ff940c636f364f85019371693726a, type: 3}
+  buttonHoveredSound: {fileID: 8300000, guid: 8e6d13817638e164f8aa5ab26dd0e419, type: 3}
   pitchFlex: 0.1
 --- !u!4 &2140997339
 Transform:

@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Windows.Speech;
 
 [Serializable]
 public class DefenseData
@@ -18,15 +16,11 @@ public class DefenseData
     [SerializeField]
     private ElementalResistanceData elementalResistanceData;
 
-    // properties with public getters
     public float PhysicalResistance => physicalResistance;
     public float CritResistance => critResistance;
     public float DefaultElementalResistance => defaultElementalResistance;
 
-    public DefenseData()
-    {
-        // default values already set in field initialization
-    }
+    public DefenseData() { }
 
     // constructor with parameters
     public DefenseData(
@@ -42,7 +36,6 @@ public class DefenseData
         this.elementalResistanceData = elementalResistanceData;
     }
 
-    // methods to modify values
     public void SetPhysicalResistance(float value)
     {
         physicalResistance = Mathf.Clamp01(value);
@@ -63,7 +56,6 @@ public class DefenseData
         critResistance = Mathf.Clamp(critResistance + amount, 0f, 100f);
     }
 
-    // Direct methods for elemental resistances
     public float GetElementalResistance(DamageType type)
     {
         return elementalResistanceData.GetResistance(type);

@@ -110,14 +110,11 @@ public class ElementalResistanceData
         {
             foreach (DamageType damageType in Enum.GetValues(typeof(DamageType)))
             {
-                // Skip non-elemental types
                 if (damageType == DamageType.Physical || damageType == DamageType.True)
                     continue;
 
-                // Check if this type already exists in the list
                 if (!HasResistance(damageType))
                 {
-                    // If not, add it with the default resistance value
                     SetResistance(damageType, defaultElementalResistance);
                 }
             }
@@ -143,7 +140,6 @@ public class ElementalResistanceData
     }
 }
 
-// helper struct to pair damage type with resistance value
 [Serializable]
 public struct ElementalResistance
 {

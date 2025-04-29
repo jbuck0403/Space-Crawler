@@ -78,12 +78,6 @@ public class BaseEnemyController : BaseCharacterController, IProjectileDataProvi
         }
     }
 
-    // protected virtual void Start()
-    // {
-    //     InitializeStrategies();
-    //     ChangeToDefaultStrategy();
-    // }
-
     public void UpdateTarget(Transform target, bool setDefault = false)
     {
         if (movementController != null)
@@ -223,25 +217,6 @@ public class BaseEnemyController : BaseCharacterController, IProjectileDataProvi
 
         return null;
     }
-
-    // public T GetMovementStrategy<T>(MovementStrategyType strategyType)
-    //     where T : BaseMovementStrategy
-    // {
-    //     foreach (MovementStrategyPair pair in movementStrategies)
-    //     {
-    //         if (pair.strategyType == strategyType)
-    //         {
-    //             if (pair.strategy is T t)
-    //             {
-    //                 return t;
-    //             }
-
-    //             return pair.strategy;
-    //         }
-    //     }
-
-    //     return null;
-    // }
 
     public override MovementHandler GetMovementHandler()
     {

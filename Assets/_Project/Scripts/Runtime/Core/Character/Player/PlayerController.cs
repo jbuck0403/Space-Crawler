@@ -14,7 +14,6 @@ public class PlayerController
 
     private Transform currentTarget;
 
-    // Add dash timer variables
     private bool applyingExternalMovement = false;
     private float externalMovementDisableTime = 0f;
 
@@ -145,7 +144,6 @@ public class PlayerController
 
     private void MoveAndFaceTarget()
     {
-        // calculate new position and rotation
         Vector2 newPosition = movementHandler.CalculateMovement(
             moveInput,
             transform.position,

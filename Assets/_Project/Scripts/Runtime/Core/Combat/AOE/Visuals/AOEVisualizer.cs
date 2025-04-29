@@ -13,29 +13,23 @@ public class AOEVisualizer : MonoBehaviour
     {
         circleCollider = GetComponent<CircleCollider2D>();
 
-        // Create or get sprite renderer for visualization
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
         {
             spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
         }
 
-        // Create the circle sprite
         spriteRenderer.sprite = CreateCircleSprite();
 
-        // Set default color (red)
         spriteRenderer.color = new Color(1f, 0f, 0f, 0.3f);
 
-        // Set the sprite below other game elements
         spriteRenderer.sortingOrder = -1;
 
-        // Update the size to match the collider
         UpdateSize(circleCollider.radius);
     }
 
     private Sprite CreateCircleSprite()
     {
-        // Create a simple circle texture
         int resolution = 256;
         Texture2D texture = new Texture2D(resolution, resolution);
 
@@ -74,9 +68,6 @@ public class AOEVisualizer : MonoBehaviour
         );
     }
 
-    /// <summary>
-    /// Updates the visual size to match the specified radius
-    /// </summary>
     public void UpdateSize(float radius)
     {
         if (spriteRenderer == null)
@@ -86,9 +77,6 @@ public class AOEVisualizer : MonoBehaviour
         transform.localScale = new Vector3(diameter, diameter, 1);
     }
 
-    /// <summary>
-    /// Sets the color of the AOE visualization
-    /// </summary>
     public void SetColor(Color color)
     {
         if (spriteRenderer == null)
@@ -97,9 +85,6 @@ public class AOEVisualizer : MonoBehaviour
         spriteRenderer.color = new Color(color.r, color.g, color.b, 0.3f);
     }
 
-    /// <summary>
-    /// Sets the alpha transparency of the AOE visualization
-    /// </summary>
     public void SetAlpha(float alpha)
     {
         if (spriteRenderer == null)
@@ -114,9 +99,6 @@ public class AOEVisualizer : MonoBehaviour
         );
     }
 
-    /// <summary>
-    /// Pulses the AOE visualization by fading in and out
-    /// </summary>
     public void StartPulsing(float minAlpha = 0.1f, float maxAlpha = 0.4f, float pulseSpeed = 1f)
     {
         StartCoroutine(PulseCoroutine(minAlpha, maxAlpha, pulseSpeed));

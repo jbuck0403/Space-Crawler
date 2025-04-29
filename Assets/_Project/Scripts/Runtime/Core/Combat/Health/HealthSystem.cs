@@ -70,7 +70,6 @@ public class HealthSystem : MonoBehaviour, IModifiable
 
         if (currentHealth <= 0)
         {
-            // isDead = true;
             // TBI Skill Point Delegate: BEFORE_DEATH
             Die();
         }
@@ -98,10 +97,8 @@ public class HealthSystem : MonoBehaviour, IModifiable
             modifiedAmount = modifier(modifiedAmount);
         }
 
-        // Ensure healing is positive
         modifiedAmount = Mathf.Max(0, modifiedAmount);
 
-        // Apply healing through existing system
         OnHealingReceived.Raise(gameObject, modifiedAmount);
         ModifyHealth(modifiedAmount);
         // TBI Skill Point Delegate: AFTER_HEALING

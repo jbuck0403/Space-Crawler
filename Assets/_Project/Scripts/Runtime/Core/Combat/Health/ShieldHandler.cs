@@ -19,9 +19,6 @@ public class ShieldHandler : MonoBehaviour
     [SerializeField]
     public FloatEvent OnShieldPercentChanged;
 
-    // [SerializeField]
-    // private VoidEvent OnShieldDepleted;
-
     private HealthSystem healthSystem;
     private bool recharging = false;
     private Coroutine rechargeCountdown;
@@ -106,13 +103,12 @@ public class ShieldHandler : MonoBehaviour
         rechargeCountdown = StartCoroutine(CountdownToShieldRecharge());
     }
 
-    // positive amount adds shield, negative amount damages shield
+    // positive amount adds to shield, negative amount damages shield
     private void ModifyShield(float amount)
     {
         float previousShield = currentShield;
         currentShield = Mathf.Min(currentShield + amount, maxShield);
 
-        // Raise events
         OnShieldPercentChanged.Raise(gameObject, currentShield / maxShield);
 
         if (previousShield > 0 && currentShield <= 0)
@@ -132,7 +128,6 @@ public class ShieldHandler : MonoBehaviour
         maxShield = Mathf.Max(0, newMax);
         currentShield = Mathf.Min(currentShield, maxShield);
 
-        // OnShieldChanged?.Raise(gameObject, currentShield);
         OnShieldPercentChanged.Raise(gameObject, currentShield / maxShield);
     }
 

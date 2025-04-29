@@ -46,7 +46,6 @@ public class CollectibleManager : MonoBehaviour
         this.weaponHandler = weaponHandler;
     }
 
-    // Static methods for other systems to use
     public static void SpawnRandomWeapon(Transform location)
     {
         Instance.SpawnWeaponCollectible(location);
@@ -62,7 +61,6 @@ public class CollectibleManager : MonoBehaviour
         Instance.SpawnTalentPointCollectible(location);
     }
 
-    // Internal spawn methods
     private void SpawnWeaponCollectible(Transform location)
     {
         weaponDropSO.SpawnCollectible(location, weaponCollectVFX);
@@ -78,7 +76,6 @@ public class CollectibleManager : MonoBehaviour
         talentPointDropSO.SpawnCollectible(location, talentPointCollectVFX);
     }
 
-    // Collection handling methods
     public void HandleWeaponCollection()
     {
         weaponDropSO.HandleCollection();

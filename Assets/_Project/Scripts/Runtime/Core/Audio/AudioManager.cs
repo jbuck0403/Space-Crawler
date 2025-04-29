@@ -1,9 +1,6 @@
 using UnityEngine;
 using UnityEngine.Audio;
 
-/// <summary>
-/// Manages all audio playback in the game using a singleton pattern
-/// </summary>
 public class AudioManager : MonoBehaviour
 {
     #region Singleton
@@ -61,7 +58,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField, Range(0f, 1f)]
     private float pitchFlex = 0.1f;
 
-    // Channel names for the mixer
+    // channel names for the mixer
     public const string CHANNEL_MASTER = "Master";
     public const string CHANNEL_MUSIC = "Music";
     public const string CHANNEL_SFX = "SFX";

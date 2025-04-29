@@ -69,4 +69,17 @@ Thumbs.db
 # MD
 **/*.md
 
-Assets/ThirdParty
+# Ignore all ThirdParty but allow Required folder
+Assets/ThirdParty/*
+!Assets/ThirdParty/Required/
+!Assets/ThirdParty/Required/**
+
+# Ignore all prefabs in UniqueToonProjectilesVol_1 except Modified folder
+Assets/ThirdParty/Required/GabrielAguiarProductions/UniqueToonProjectilesVol_1/Prefabs/*
+!Assets/ThirdParty/Required/GabrielAguiarProductions/UniqueToonProjectilesVol_1/Prefabs/Modified/
+!Assets/ThirdParty/Required/GabrielAguiarProductions/UniqueToonProjectilesVol_1/Prefabs/Modified/**
+
+# Ignore all prefabs in UniqueLootItemDropsVol_1 except Modified folder
+Assets/ThirdParty/Required/GabrielAguiarProductions/UniqueLootDropsVol_1/UniqueLootItemDropsVol_1/Prefabs/*
+!Assets/ThirdParty/Required/GabrielAguiarProductions/UniqueLootDropsVol_1/UniqueLootItemDropsVol_1/Prefabs/Modified/
+!Assets/ThirdParty/Required/GabrielAguiarProductions/UniqueLootDropsVol_1/UniqueLootItemDropsVol_1/Prefabs/Modified/**
