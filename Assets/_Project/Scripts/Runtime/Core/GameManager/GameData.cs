@@ -120,17 +120,17 @@ public class GameData
         allocatedTalents.Add(talentSaveData);
     }
 
-    private bool IsDefault()
-    {
-        if (totalTalentPoints == 0)
-            return true;
-        if (allocatedTalents.Count == 0)
-            return true;
-        if (runsCompleted == 0)
-            return true;
+    // private bool IsDefault()
+    // {
+    //     if (totalTalentPoints == 0)
+    //         return true;
+    //     if (allocatedTalents.Count == 0)
+    //         return true;
+    //     if (runsCompleted == 0)
+    //         return true;
 
-        return false;
-    }
+    //     return false;
+    // }
 
     public void DeleteSaveData(string filePath = null)
     {

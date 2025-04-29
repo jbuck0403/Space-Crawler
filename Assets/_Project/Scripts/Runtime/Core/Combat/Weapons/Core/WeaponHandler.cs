@@ -232,6 +232,11 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
             OnFireWeapon.Raise(gameObject);
     }
 
+    public bool HasWeapon(BaseWeaponSO baseWeaponSO)
+    {
+        return weaponInstances.Contains(baseWeaponSO);
+    }
+
     // #if ENABLE_INPUT_SYSTEM
     //     // Input System integration
     //     public void OnFire(InputValue value)

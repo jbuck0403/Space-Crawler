@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 /// <summary>
 /// Manages all audio playback in the game using a singleton pattern
@@ -19,10 +20,16 @@ public class AudioManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // Initialize audio sources in Awake to ensure they're available immediately
         InitializeAudioSources();
     }
     #endregion
+
+    [Header("Audio Mixer")]
+    [SerializeField]
+    private AudioMixer audioMixer;
+
+    [SerializeField]
+    private AudioMixerGroup mainMixerGroup;
 
     [Header("Audio Sources")]
     [SerializeField]
@@ -30,6 +37,9 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField]
     private AudioSource sfxSource;
+
+    [SerializeField]
+    private AudioSource uiSource;
 
     [Header("Audio Clips")]
     [SerializeField]
@@ -51,14 +61,15 @@ public class AudioManager : MonoBehaviour
     [SerializeField, Range(0f, 1f)]
     private float pitchFlex = 0.1f;
 
-    private void Start() { }
+    // Channel names for the mixer
+    public const string CHANNEL_MASTER = "Master";
+    public const string CHANNEL_MUSIC = "Music";
+    public const string CHANNEL_SFX = "SFX";
+    public const string CHANNEL_UI = "UI";
+    public const string CHANNEL_WEAPONS = "Weapons";
 
-    /// <summary>
-    /// Ensures audio sources are properly initialized
-    /// </summary>
     private void InitializeAudioSources()
     {
-        // Ensure we have music source
         if (musicSource == null)
         {
             GameObject musicObj = new GameObject("MusicSource");
@@ -66,23 +77,37 @@ public class AudioManager : MonoBehaviour
             musicSource = musicObj.AddComponent<AudioSource>();
             musicSource.loop = true;
             musicSource.playOnAwake = false;
+            if (mainMixerGroup != null)
+                musicSource.outputAudioMixerGroup = mainMixerGroup;
             Debug.Log("Created MusicSource in AudioManager");
         }
 
-        // Ensure we have SFX source
         if (sfxSource == null)
         {
             GameObject sfxObj = new GameObject("SFXSource");
             sfxObj.transform.SetParent(transform);
             sfxSource = sfxObj.AddComponent<AudioSource>();
             sfxSource.playOnAwake = false;
+            if (mainMixerGroup != null)
+                sfxSource.outputAudioMixerGroup = mainMixerGroup;
             Debug.Log("Created SFXSource in AudioManager");
+        }
+
+        if (uiSource == null)
+        {
+            GameObject uiObj = new GameObject("UISource");
+            uiObj.transform.SetParent(transform);
+            uiSource = uiObj.AddComponent<AudioSource>();
+            uiSource.playOnAwake = false;
+            if (mainMixerGroup != null)
+                uiSource.outputAudioMixerGroup = mainMixerGroup;
+            Debug.Log("Created UISource in AudioManager");
         }
     }
 
     #region Public Methods
 
-    public static void PlayOneShot(AudioClip audio)
+    public static void PlayOneShot(AudioClip audio, string channel = CHANNEL_SFX)
     {
         if (Instance != null && audio != null)
         {
@@ -90,31 +115,45 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Plays a sound with random pitch variation within the defined range
-    /// </summary>
-    /// <param name="audio">The audio clip to play</param>
-    /// <param name="usePitchVariation">Whether to apply random pitch variation</param>
-    public static void PlayOneShotWithPitch(AudioClip audio, bool usePitchVariation = true)
+    public static void PlayUIOneShot(AudioClip audio)
+    {
+        if (Instance != null && audio != null)
+        {
+            Instance.uiSource.PlayOneShot(audio);
+        }
+    }
+
+    public static void PlayOneShotWithPitch(
+        AudioClip audio,
+        bool usePitchVariation = true,
+        string channel = CHANNEL_SFX
+    )
     {
         if (Instance != null && audio != null)
         {
             if (usePitchVariation)
             {
-                Instance.PlayFromTempAudioSource(audio);
+                Instance.PlayFromTempAudioSource(audio, channel);
             }
             else
             {
-                PlayOneShot(audio);
+                if (channel == CHANNEL_UI)
+                {
+                    Instance.uiSource.PlayOneShot(audio);
+                }
+                else if (channel == CHANNEL_WEAPONS)
+                {
+                    Instance.PlayFromTempAudioSource(audio, channel);
+                }
+                else
+                {
+                    Instance.sfxSource.PlayOneShot(audio);
+                }
             }
         }
     }
 
-    /// <summary>
-    /// Creates a temporary AudioSource to play a sound with pitch variation
-    /// </summary>
-    /// <param name="audio">The audio clip to play</param>
-    private void PlayFromTempAudioSource(AudioClip audio)
+    private void PlayFromTempAudioSource(AudioClip audio, string channel = CHANNEL_SFX)
     {
         GameObject tempAudio = new GameObject("TempAudio");
         tempAudio.transform.SetParent(transform);
@@ -123,6 +162,11 @@ public class AudioManager : MonoBehaviour
         tempSource.clip = audio;
         tempSource.volume = sfxSource.volume;
         tempSource.spatialBlend = sfxSource.spatialBlend;
+
+        if (mainMixerGroup != null)
+        {
+            tempSource.outputAudioMixerGroup = mainMixerGroup;
+        }
 
         tempSource.pitch = Random.Range(1f - pitchFlex, 1f + pitchFlex);
 
@@ -134,27 +178,56 @@ public class AudioManager : MonoBehaviour
     public static void PlayWeaponFire()
     {
         if (Instance != null)
-            PlayOneShotWithPitch(Instance.weaponFiringSound);
+            PlayOneShotWithPitch(Instance.weaponFiringSound, true, CHANNEL_WEAPONS);
     }
 
     public static void PlayButtonClickedSound()
     {
         if (Instance != null)
-            PlayOneShotWithPitch(Instance.buttonClickedSound);
+            PlayOneShotWithPitch(Instance.buttonClickedSound, true, CHANNEL_UI);
     }
 
     public static void PlayButtonHoveredSound()
     {
         if (Instance != null)
-            PlayOneShotWithPitch(Instance.buttonHoveredSound);
+            PlayOneShotWithPitch(Instance.buttonHoveredSound, true, CHANNEL_UI);
+    }
+
+    private static float PercentToDB(float volume)
+    {
+        return volume > 0.0f ? 20.0f * Mathf.Log10(volume) : -80.0f;
+    }
+
+    private static float DBToPercent(float db)
+    {
+        return db > -80.0f ? Mathf.Pow(10.0f, db / 20.0f) : 0.0f;
+    }
+
+    public static void SetChannelVolume(string channelName, float volume)
+    {
+        if (Instance != null && Instance.audioMixer != null)
+        {
+            float dbValue = PercentToDB(volume);
+            Instance.audioMixer.SetFloat(channelName + "Volume", dbValue);
+        }
+    }
+
+    public static float GetChannelVolume(string channelName)
+    {
+        if (Instance != null && Instance.audioMixer != null)
+        {
+            float dbValue;
+            if (Instance.audioMixer.GetFloat(channelName + "Volume", out dbValue))
+            {
+                return DBToPercent(dbValue);
+            }
+        }
+        return 1.0f;
     }
 
     public static void SetEngineVolume(float volume)
     {
-        if (Instance != null)
-        {
-            Instance.sfxSource.volume = Mathf.Clamp01(volume);
-        }
+        SetChannelVolume(CHANNEL_SFX, volume);
     }
 
     public static void PlayMainMenuMusic()
