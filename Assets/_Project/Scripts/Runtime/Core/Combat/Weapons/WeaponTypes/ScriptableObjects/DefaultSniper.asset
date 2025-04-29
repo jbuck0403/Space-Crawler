@@ -12,14 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66f75ece94d56a64cb0fc0bcc525a945, type: 3}
   m_Name: DefaultSniper
   m_EditorClassIdentifier: 
+  weaponType: 2
   fireConfig: {fileID: 11400000, guid: cf8f47ba36317ea4980d82639ffcc77c, type: 2}
   projectileType: {fileID: 11400000, guid: 2ae3f0555f5cae74080e5f6308ab8d07, type: 2}
   OnFireWeapon: {fileID: 11400000, guid: 223caf201c0b288429a112fd8f959e9b, type: 2}
   damageModifier: 1
   velocityModifier: 1
   abilityCooldown: 5
-  minChargeTime: 2
+  minFullChargeTime: 2
   maxChargeTime: 4
-  autoFireTime: 6
-  maxDamageModifier: 3
-  maxVelocityModifier: 3

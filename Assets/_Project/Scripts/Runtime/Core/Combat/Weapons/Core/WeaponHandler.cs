@@ -33,7 +33,7 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
     private Transform currentTarget;
 
     public BaseWeaponSO CurrentWeapon => currentWeapon;
-    public event Action<BaseWeaponSO> OnWeaponChanged;
+
     public Transform FirePoint => firePoint;
     public List<BaseWeaponSO> WeaponInstances => weaponInstances;
 
@@ -43,6 +43,8 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
     public OnHitFXEvent OnHitFX;
     public MuzzleFlareFXEvent OnMuzzleFlareFX;
     public VoidEvent OnFireWeapon;
+    public WeaponTypeEvent OnWeaponSwapped;
+    public WeaponTypeEvent OnWeaponInitialized;
 
     public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> modifiers =
         new Dictionary<ModifierType, List<(object Source, Delegate Modifier)>>();
@@ -113,13 +115,19 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
             return;
 
         BaseWeaponSO instance = weapon.Initialize(this);
+
         if (!weaponInstances.Contains(instance))
             weaponInstances.Add(instance);
+
+        OnWeaponInitialized.Raise(gameObject, instance.weaponType);
     }
 
     public bool CanFire()
     {
-        return currentWeapon.CanFire();
+        if (currentWeapon != null)
+            return currentWeapon.CanFire();
+
+        return false;
     }
 
     private void InitializeWeapons()
@@ -173,6 +181,9 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
         do
         {
             nextIndex = (currentProjectileIndex + (reverse ? -1 : 1)) % projectileTypes.Count;
+            if (nextIndex < 0)
+                nextIndex += projectileTypes.Count;
+
             currentProjectileIndex = nextIndex;
 
             if (AmmoUnlocked(nextIndex))
@@ -204,7 +215,7 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
         currentWeaponIndex = index;
         currentWeapon = weaponInstances[index];
 
-        OnWeaponChanged?.Invoke(currentWeapon);
+        OnWeaponSwapped.Raise(gameObject, currentWeapon.weaponType);
         OnWeaponSwitched.Raise(gameObject);
 
         return true;

@@ -9,6 +9,8 @@ public class WeaponDropSO : CollectibleDropSO
 
     public override void HandleCollection()
     {
+        Debug.Log("WEAPONHUD: WeaponDropSO.HandleCollection called");
+
         List<BaseWeaponSO> availableWeapons = new List<BaseWeaponSO>();
         foreach (BaseWeaponSO weapon in weapons)
         {
@@ -26,7 +28,13 @@ public class WeaponDropSO : CollectibleDropSO
 
         int randomIndex = Random.Range(0, availableWeapons.Count);
         BaseWeaponSO weaponSO = availableWeapons[randomIndex];
+
+        Debug.Log($"WEAPONHUD: Initializing new weapon of type {weaponSO.weaponType}");
         CollectibleManager.Instance.WeaponHandler.InitializeWeapon(weaponSO);
+
+        // Force a refresh of the weapon HUD
+        UIManager.RefreshWeaponDisplay();
+        Debug.Log("WEAPONHUD: Requested UI refresh after weapon initialization");
 
         GameManager.Instance.GameData.AddUnlockedWeapon(weaponSO.weaponType);
     }

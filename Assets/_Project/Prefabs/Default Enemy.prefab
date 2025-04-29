@@ -320,6 +320,8 @@ MonoBehaviour:
   OnHitFX: {fileID: 11400000, guid: 2173ec269946ff0478e8cd24117163b4, type: 2}
   OnMuzzleFlareFX: {fileID: 11400000, guid: c6fe7dcbf8f8a2b429030b167ee8b83b, type: 2}
   OnFireWeapon: {fileID: 11400000, guid: 223caf201c0b288429a112fd8f959e9b, type: 2}
+  OnWeaponSwapped: {fileID: 11400000, guid: 390856855c8bef347ac2fad44c1cbc62, type: 2}
+  OnWeaponInitialized: {fileID: 11400000, guid: b90ba02aec9a5f44dbffe89efb467844, type: 2}
 --- !u!114 &-5947956238731055698
 MonoBehaviour:
   m_ObjectHideFlags: 0

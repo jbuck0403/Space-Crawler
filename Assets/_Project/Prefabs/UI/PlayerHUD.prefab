@@ -186,6 +186,41 @@ RectTransform:
   m_AnchoredPosition: {x: 1502, y: -960}
   m_SizeDelta: {x: 704.5735, y: 41.4857}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &2477686771495490281
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1442894588889230346}
+  m_Layer: 5
+  m_Name: WeaponIcons
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1442894588889230346
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2477686771495490281}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6032273722456981278}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -925}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4022244608641598265
 GameObject:
   m_ObjectHideFlags: 0
@@ -423,6 +458,7 @@ GameObject:
   - component: {fileID: 9112542072640296875}
   - component: {fileID: 8994811464303295893}
   - component: {fileID: 1462459840372506941}
+  - component: {fileID: 1861396075300449551}
   m_Layer: 5
   m_Name: PlayerHUD
   m_TagString: Untagged
@@ -446,6 +482,7 @@ RectTransform:
   - {fileID: 295897143034720388}
   - {fileID: 2521150572643548146}
   - {fileID: 5853049047441561300}
+  - {fileID: 1442894588889230346}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -507,6 +544,24 @@ MonoBehaviour:
   shieldSlider: {fileID: 4456285318992831221}
   nextShotSlider: {fileID: 4339274911110877012}
   weaponAbilityCooldownSlider: {fileID: 7115641694556179287}
+  player: {fileID: 0}
+  initialized: 0
+--- !u!114 &1861396075300449551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6285589683538011719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e97f21a503bbcea48b0dc90f161bf26f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponIconPrefab: {fileID: 1651929262205138566, guid: 26f51b7d28ddda2479dd55f2e22f0cdc, type: 3}
+  iconContainer: {fileID: 1442894588889230346}
+  spacingBetweenIcons: 80
+  weaponIconData: {fileID: 11400000, guid: f96e3f0f0c6503d4ea6e2da8586cf447, type: 2}
 --- !u!1 &7650993160547115134
 GameObject:
   m_ObjectHideFlags: 0

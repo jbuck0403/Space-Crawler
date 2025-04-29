@@ -19,7 +19,7 @@ public class MainMenuState : GameState
             Object.Destroy(playerObj);
         }
         UIManager.ShowMainMenu();
-        AudioManager.PlayMainMenuMusic();
+        // AudioManager.PlayMainMenuMusic();
     }
 
     public override void UpdateState() { }

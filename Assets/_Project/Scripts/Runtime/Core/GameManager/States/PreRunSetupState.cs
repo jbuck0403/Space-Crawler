@@ -41,15 +41,36 @@ public class PreRunSetupState : GameState
 
     private void InitializePlayer()
     {
+        Debug.Log("WEAPONHUD: PreRunSetupState.InitializePlayer called");
         player = RoomManager.Instance.Player;
 
         if (player == null)
         {
-            Debug.LogError("PreRunSetupState: Could not find player!");
+            Debug.LogError("WEAPONHUD: PreRunSetupState - Could not find player!");
             return;
         }
 
-        Debug.Log("PreRunSetupState: Found player");
+        Debug.Log($"WEAPONHUD: Found player: {player.name}");
+
+        WeaponHandler weaponHandler = player.GetComponent<WeaponHandler>();
+        if (weaponHandler != null)
+        {
+            Debug.Log("WEAPONHUD: Found WeaponHandler on player, initializing HUD");
+            UIManager.Instance.InitializeWeaponHUD(weaponHandler);
+
+            Debug.Log(
+                $"WEAPONHUD: WeaponHandler has {weaponHandler.WeaponInstances.Count} weapon instances"
+            );
+            foreach (var weapon in weaponHandler.WeaponInstances)
+            {
+                Debug.Log($"WEAPONHUD: WeaponHandler has weapon of type {weapon.weaponType}");
+            }
+        }
+        else
+        {
+            Debug.LogError("WEAPONHUD: Player does not have WeaponHandler component!");
+        }
+        Debug.Log("WEAPONHUD: InitializePlayer complete");
     }
 
     private void InitializeTalentTree()
@@ -70,8 +91,6 @@ public class PreRunSetupState : GameState
         {
             playerTalentTree.Initialize();
 
-            // playerTalentTree.AddPoints(10);
-
             Debug.Log("PreRunSetupState: Initialized talent tree and added starting points");
         }
         else
@@ -80,9 +99,6 @@ public class PreRunSetupState : GameState
         }
 
         talentUI.UpdateUI();
-
-        // Load any previously saved talent configuration
-        // playerTalentTree.LoadConfiguration();
     }
 
     private void ShowTalentTreeUI()

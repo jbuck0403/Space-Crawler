@@ -64,6 +64,9 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject damageNumbersUIPanel;
 
+    [SerializeField]
+    private WeaponHUD weaponHUD;
+
     public GameObject DamageNumbersUIPanel => damageNumbersUIPanel;
 
     public TalentTreeUIManager TalentTreeUIManager => talentTreeUIManager;
@@ -120,6 +123,51 @@ public class UIManager : MonoBehaviour
         else
         {
             Debug.LogError("Primary Canvas not assigned in UIManager!");
+        }
+    }
+
+    public void InitializeWeaponHUD(WeaponHandler weaponHandler)
+    {
+        Debug.Log(
+            $"WEAPONHUD: UIManager.InitializeWeaponHUD called with handler: {(weaponHandler != null ? "Valid" : "NULL")}"
+        );
+
+        if (weaponHUD == null)
+        {
+            Debug.LogError("WEAPONHUD: weaponHUD reference is null in UIManager!");
+            return;
+        }
+
+        if (weaponHandler == null)
+        {
+            Debug.LogError(
+                "WEAPONHUD: WeaponHandler passed to UIManager.InitializeWeaponHUD is NULL!"
+            );
+            return;
+        }
+
+        weaponHUD.Initialize(weaponHandler);
+        Debug.Log("WEAPONHUD: UIManager successfully called weaponHUD.Initialize()");
+    }
+
+    public void RefreshWeaponHUD()
+    {
+        Debug.Log("WEAPONHUD: UIManager.RefreshWeaponHUD called");
+        if (weaponHUD != null)
+        {
+            weaponHUD.RefreshDisplay();
+        }
+        else
+        {
+            Debug.LogError("WEAPONHUD: Cannot refresh - weaponHUD reference is null in UIManager");
+        }
+    }
+
+    public static void RefreshWeaponDisplay()
+    {
+        if (Instance != null)
+        {
+            Instance.RefreshWeaponHUD();
         }
     }
 

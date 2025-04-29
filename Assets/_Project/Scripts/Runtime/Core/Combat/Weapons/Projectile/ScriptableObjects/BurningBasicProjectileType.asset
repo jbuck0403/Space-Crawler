@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 402f29634647c184a8184b4a7c43aeec, type: 3}
   m_Name: BurningBasicProjectileType
   m_EditorClassIdentifier: 
+  ammoType: 1
   damageProfile: {fileID: 11400000, guid: 0be5c12901072b64bb75425f7ef56468, type: 2}
   projectileVFXPrefabs:
     projectilePrefab: {fileID: 1881642356963322, guid: 7d56a4d7304cf8f43a69b4f2059515b4, type: 3}

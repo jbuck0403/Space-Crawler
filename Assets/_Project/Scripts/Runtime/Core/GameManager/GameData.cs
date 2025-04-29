@@ -136,7 +136,18 @@ public class GameData
 
     public void AddUnlockedWeapon(WeaponType weaponType)
     {
+        if (unlockedWeaponTypes.Contains(weaponType))
+            return;
+
         unlockedWeaponTypes.Add(weaponType);
+    }
+
+    public void AddUnlockedAmmo(AmmoType ammoType)
+    {
+        if (unlockedAmmoTypes.Contains(ammoType))
+            return;
+
+        unlockedAmmoTypes.Add(ammoType);
     }
 
     public void DeleteSaveData(string filePath = null)
