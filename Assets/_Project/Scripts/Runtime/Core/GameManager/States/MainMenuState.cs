@@ -19,37 +19,13 @@ public class MainMenuState : GameState
             Object.Destroy(playerObj);
         }
         UIManager.ShowMainMenu();
+        AudioManager.PlayMainMenuMusic();
     }
 
-    public override void UpdateState()
-    {
-        // Main menu state usually doesn't need per-frame updates
-    }
+    public override void UpdateState() { }
 
     public override void Exit(GameStateType stateTypeToEnter)
     {
         Debug.Log("Exiting Main Menu State");
-        // TODO: Hide main menu UI
-        // TODO: Clean up any resources
-    }
-
-    // Example of UI event handlers
-    private void OnNewGameClicked()
-    {
-        gameManager.StartNewGame();
-    }
-
-    private void OnContinueClicked()
-    {
-        gameManager.ContinueGame();
-    }
-
-    private void OnQuitClicked()
-    {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
     }
 }

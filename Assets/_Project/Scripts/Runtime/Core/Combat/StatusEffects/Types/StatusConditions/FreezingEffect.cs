@@ -44,7 +44,7 @@ public class FreezingEffect : BaseStatusConditionEffect
         base.OnStack();
         if (movementHandler != null)
         {
-            // Update freeze modifier with new stack count
+            // update freeze modifier with new stack count
             ModifierHelper.RemoveModifiersFromSource(movementHandler, this);
             ApplyFreezeModifier();
         }
@@ -52,13 +52,11 @@ public class FreezingEffect : BaseStatusConditionEffect
 
     private void ApplyFreezeModifier()
     {
-        // Create a movement multiplier modifier that reduces speed by 10% per stack (min 50%)
+        // create a movement multiplier modifier that reduces speed by 10% per stack (max 50%)
         ModifierHelper.FloatInFloatOutModifier freezeModifier = (float baseMultiplier) =>
         {
-            // Apply stack-based reduction to whatever the current multiplier is
             float reduction = SPEED_REDUCTION_PER_STACK * currentStacks;
 
-            // Ensure we don't reduce below 50% of the original value
             reduction = Mathf.Min(reduction, 0.5f);
 
             float finalMultiplier = baseMultiplier * (1f - reduction);
@@ -70,7 +68,6 @@ public class FreezingEffect : BaseStatusConditionEffect
             return finalMultiplier;
         };
 
-        // Add the modifier to affect the movement multiplier
         ModifierHelper.AddModifier(
             movementHandler,
             ModifierType.MOVEMENT_MULTIPLIER,

@@ -102,7 +102,9 @@ public class SniperWeapon : BaseWeaponSO
             Transform source = weaponHandler.transform;
             GameObject sourceObject = weaponHandler.gameObject;
 
-            base.FireWeapon(firePoint, direction, source, sourceObject, weaponHandler);
+            bool fired = base.FireWeapon(firePoint, direction, source, sourceObject, weaponHandler);
+            if (fired)
+                weaponHandler.RaiseOnFireWeaponEvent();
 
             // Restore original modifiers
             damageModifier = originalDamageModifier;

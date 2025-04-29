@@ -42,6 +42,7 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
     public FloatEvent OnWeaponAbilityCooldown;
     public OnHitFXEvent OnHitFX;
     public MuzzleFlareFXEvent OnMuzzleFlareFX;
+    public VoidEvent OnFireWeapon;
 
     public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> modifiers =
         new Dictionary<ModifierType, List<(object Source, Delegate Modifier)>>();
@@ -52,6 +53,12 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
     {
         Debug.Log($"!!!HANDLER: Event={OnNextFireTime != null}");
         InitializeWeapons();
+        InitializeListeners();
+    }
+
+    private void InitializeListeners()
+    {
+        OnFireWeapon.AddListener(gameObject, () => AudioManager.PlayWeaponFire());
     }
 
     private void Update()
@@ -167,6 +174,8 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
         if (!isFiring && currentWeapon != null)
         {
             isFiring = FireWeapon();
+            // if (isFiring)
+            //     OnFireWeapon.Raise(gameObject);
         }
     }
 
@@ -215,6 +224,12 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
         {
             currentWeapon.UseUniqueAbility(provider);
         }
+    }
+
+    public void RaiseOnFireWeaponEvent()
+    {
+        if (OnFireWeapon != null && CanFire())
+            OnFireWeapon.Raise(gameObject);
     }
 
     // #if ENABLE_INPUT_SYSTEM

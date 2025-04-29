@@ -19,6 +19,8 @@ public class PistolWeapon : BaseWeaponSO
     )
     {
         bool fired = base.FireWeapon(firePoint, direction, source, sourceObject, provider);
+        if (fired)
+            weaponHandler.RaiseOnFireWeaponEvent();
         Debug.Log("!!!PISTOL FIRED - Updating fire time");
         UpdateNextFireTime(sourceObject);
 

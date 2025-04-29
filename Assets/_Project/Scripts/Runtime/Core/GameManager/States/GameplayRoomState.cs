@@ -70,6 +70,7 @@ public class GameplayRoomState : GameState
         }
 
         SubscribeToEvents();
+        AudioManager.PlayGameplayMusic();
     }
 
     public void SetBossDefeated()

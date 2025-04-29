@@ -310,6 +310,7 @@ MonoBehaviour:
   OnWeaponAbilityCooldown: {fileID: 11400000, guid: 34130b0b08c210041b6fbacf26e0b04d, type: 2}
   OnHitFX: {fileID: 11400000, guid: 2173ec269946ff0478e8cd24117163b4, type: 2}
   OnMuzzleFlareFX: {fileID: 11400000, guid: c6fe7dcbf8f8a2b429030b167ee8b83b, type: 2}
+  OnFireWeapon: {fileID: 11400000, guid: 223caf201c0b288429a112fd8f959e9b, type: 2}
 --- !u!114 &-1961733163375840337
 MonoBehaviour:
   m_ObjectHideFlags: 0

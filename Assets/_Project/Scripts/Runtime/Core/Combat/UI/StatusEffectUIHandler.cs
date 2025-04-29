@@ -29,9 +29,6 @@ public class StatusEffectUIHandler : MonoBehaviour
     private GameObject targetEntity;
 
     [SerializeField]
-    private StatusEffectIconRegistry iconRegistry;
-
-    [SerializeField]
     private Vector2Event onDeath; // should match onDeath SO in HealthSystem
 
     [Tooltip("The spacing between status effect icons")]
@@ -130,20 +127,18 @@ public class StatusEffectUIHandler : MonoBehaviour
 
             if (newElement != null)
             {
-                var (configuredIcon, tint) = iconRegistry.GetConfiguredIcon(effectID);
-                Debug.Log(
-                    $"StatusEffectUIHandler: Got icon {configuredIcon != null} and tint {tint} for effect {effectID}"
-                );
+                // Get icon directly from the StatusEffectData
+                Sprite icon = eventData.EffectData.Icon;
 
-                if (configuredIcon == null)
+                if (icon == null)
                 {
                     Debug.LogError($"StatusEffectUIHandler: No icon found for effect {effectID}");
                     return;
                 }
 
                 newElement.Initialize(
-                    configuredIcon,
-                    tint,
+                    icon,
+                    Color.white, // Use default white color (no tint)
                     eventData.EffectData.EffectType.ToString(),
                     eventData.EffectData.Description,
                     eventData.CurrentStacks,

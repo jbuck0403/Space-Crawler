@@ -34,6 +34,9 @@ public class ShotgunWeapon : BaseWeaponSO
         bool fired2 = base.FireWeapon(firePoint, direction, source, sourceObject, provider);
         bool fired3 = base.FireWeapon(firePoint, direction, source, sourceObject, provider);
 
+        if (fired1 || fired2 || fired3)
+            weaponHandler.RaiseOnFireWeaponEvent();
+
         UpdateNextFireTime(sourceObject);
 
         return fired1 && fired2 && fired3;
@@ -41,44 +44,44 @@ public class ShotgunWeapon : BaseWeaponSO
 
     protected override void UniqueAbility(IWeaponAbilityDataProvider provider)
     {
-        Transform firePoint = provider.GetFirePoint();
-        Transform source = provider.GetWeaponOwnerTransform();
+        //     Transform firePoint = provider.GetFirePoint();
+        //     Transform source = provider.GetWeaponOwnerTransform();
 
-        Vector2 direction = MovementUtils.GetTargetDirection(
-            firePoint.position,
-            provider.GetAbilityTarget()
-        );
+        //     Vector2 direction = MovementUtils.GetTargetDirection(
+        //         firePoint.position,
+        //         provider.GetAbilityTarget()
+        //     );
 
-        object[] parameters = new object[]
-        {
-            numFragments,
-            grenadeShrapnelDamageProfile,
-            source,
-            fuseTime,
-            grenadeShrapnelFireConfig
-        };
+        //     object[] parameters = new object[]
+        //     {
+        //         numFragments,
+        //         grenadeShrapnelDamageProfile,
+        //         source,
+        //         fuseTime,
+        //         grenadeShrapnelFireConfig
+        //     };
 
-        Projectile grenadeProjectile =
-            ProjectileSpawner.SpawnProjectileWithBehavior<GrenadeProjectileBehavior>(
-                weaponHandler,
-                firePoint,
-                grenadeProjectileDamageProfile,
-                source,
-                projectileType.projectileVFXPrefabs,
-                parameters
-            );
+        //     Projectile grenadeProjectile =
+        //         ProjectileSpawner.SpawnProjectileWithBehavior<GrenadeProjectileBehavior>(
+        //             weaponHandler,
+        //             firePoint,
+        //             grenadeProjectileDamageProfile,
+        //             source,
+        //             projectileType.projectileVFXPrefabs,
+        //             parameters
+        //         );
 
-        // launch the grenade
-        if (grenadeProjectile != null)
-        {
-            ProjectileSpawner.ApplyVelocity(
-                grenadeProjectile.gameObject,
-                direction,
-                grenadeProjectileFireConfig,
-                velocityModifier
-            );
+        //     // launch the grenade
+        //     if (grenadeProjectile != null)
+        //     {
+        //         ProjectileSpawner.ApplyVelocity(
+        //             grenadeProjectile.gameObject,
+        //             direction,
+        //             grenadeProjectileFireConfig,
+        //             velocityModifier
+        //         );
 
-            UpdateNextAbilityTime(weaponHandler.gameObject);
-        }
+        //         UpdateNextAbilityTime(weaponHandler.gameObject);
+        //     }
     }
 }

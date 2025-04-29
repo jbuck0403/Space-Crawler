@@ -6,8 +6,5 @@ using System.Collections.Generic;
 /// </summary>
 public interface IModifiable
 {
-    /// <summary>
-    /// Gets the dictionary of modifiers for this object
-    /// </summary>
     Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> Modifiers { get; }
 }

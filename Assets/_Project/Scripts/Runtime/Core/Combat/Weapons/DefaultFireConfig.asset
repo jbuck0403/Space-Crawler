@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fireRate: 1
   accuracy: 0.8
-  spread: 90
+  spread: 120
   projectileSpeed: 15

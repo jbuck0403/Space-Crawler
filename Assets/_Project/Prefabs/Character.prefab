@@ -188,10 +188,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3402373cff3efa546a07ad4e194e580c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  registry: {fileID: 11400000, guid: c56df524f84704142a494a486f163b57, type: 2}
   OnDamageTaken: {fileID: 11400000, guid: 84635edb17010c84eb66cca8c8bdad52, type: 2}
   OnHealingReceived: {fileID: 11400000, guid: ec269003a615ca747871ee2133c0341b, type: 2}
   damageTextPrefab: {fileID: 3832803323735677624, guid: 7679dc64c63586449a698033aba28f34, type: 3}
+  damageColors:
+  - damageType: 0
+    color: {r: 0.3056603, g: 0.105953045, b: 0, a: 0}
+  - damageType: 1
+    color: {r: 1, g: 1, b: 1, a: 0}
+  - damageType: 2
+    color: {r: 1, g: 0.17911088, b: 0, a: 0}
+  - damageType: 3
+    color: {r: 0, g: 0.8140631, b: 1, a: 0}
   movementCurve:
     serializedVersion: 2
     m_Curve:

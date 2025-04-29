@@ -140,7 +140,7 @@ public abstract class BaseWeaponSO : ScriptableObject, IModifiable
                 velocityModifier
             );
 
-            OnFireWeapon.Raise(sourceObject);
+            // OnFireWeapon.Raise(sourceObject);
             MuzzleFlareFXData fxData = new MuzzleFlareFXData(
                 projectileType.projectileVFXPrefabs.muzzleFlashPrefab,
                 source,

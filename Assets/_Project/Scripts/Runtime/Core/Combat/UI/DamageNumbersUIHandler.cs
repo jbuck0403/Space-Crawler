@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,8 +9,8 @@ using UnityEngine.UI;
 public class DamageNumbersUIHandler : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField]
-    private StatusEffectIconRegistry registry;
+    // [SerializeField]
+    // private StatusEffectIconRegistry registry;
 
     [SerializeField]
     private DamageTakenEvent OnDamageTaken;
@@ -18,6 +20,9 @@ public class DamageNumbersUIHandler : MonoBehaviour
 
     [SerializeField]
     private GameObject damageTextPrefab;
+
+    [SerializeField]
+    public List<DamageColorData> damageColors = new List<DamageColorData>();
 
     [Header("Movement Settings")]
     [Tooltip(
@@ -66,6 +71,19 @@ public class DamageNumbersUIHandler : MonoBehaviour
         mainCamera = Camera.main;
     }
 
+    private Color GetColorByDamageType(DamageType damageType)
+    {
+        foreach (DamageColorData damageColorData in damageColors)
+        {
+            if (damageColorData.damageType == damageType)
+            {
+                return damageColorData.color;
+            }
+        }
+
+        return Color.gray;
+    }
+
     private void OnEnable()
     {
         // Subscribe to events
@@ -86,7 +104,7 @@ public class DamageNumbersUIHandler : MonoBehaviour
     private void HandleDamageEvent(GameObject target, DamageTakenEventData data)
     {
         // Use red color for damage
-        Color damageColor = registry.GetTintForDamageType(data.DamageType);
+        Color damageColor = GetColorByDamageType(data.DamageType);
         SpawnDamageNumber(target.transform.position, data.DamageAmount, damageColor, true);
     }
 
@@ -132,5 +150,18 @@ public class DamageNumbersUIHandler : MonoBehaviour
 
         // Toggle the direction for the next damage number
         shouldMoveRight = !shouldMoveRight;
+    }
+}
+
+[Serializable]
+public class DamageColorData
+{
+    public DamageType damageType;
+    public Color color;
+
+    public DamageColorData(DamageType damageType, Color color)
+    {
+        this.damageType = damageType;
+        this.color = color;
     }
 }
