@@ -50,18 +50,20 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
         modifiers;
 
     private List<WeaponType> unlockedWeaponTypes = new List<WeaponType>();
+    private List<AmmoType> unlockedAmmoTypes = new List<AmmoType>();
 
     private void Awake()
     {
         Debug.Log($"!!!HANDLER: Event={OnNextFireTime != null}");
-        LoadUnlockedWeapons();
+        LoadUnlockedWeaponsAndAmmo();
         InitializeWeapons();
         InitializeListeners();
     }
 
-    private void LoadUnlockedWeapons()
+    private void LoadUnlockedWeaponsAndAmmo()
     {
-        unlockedWeaponTypes.Add(WeaponType.pistol);
+        unlockedWeaponTypes.Add(WeaponType.Pistol);
+        unlockedAmmoTypes.Add(AmmoType.Basic);
 
         GameData gameData = GameData.LoadGameData();
         if (gameData != null)
@@ -72,6 +74,13 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
                     return;
 
                 unlockedWeaponTypes.Add(weaponType);
+            }
+            foreach (AmmoType ammoType in gameData.unlockedAmmoTypes)
+            {
+                if (unlockedAmmoTypes.Contains(ammoType))
+                    return;
+
+                unlockedAmmoTypes.Add(ammoType);
             }
         }
     }
@@ -140,23 +149,45 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
             return false;
         }
 
-        currentProjectileIndex = index;
         currentWeapon.SetProjectileType(projectileTypes[index]);
 
         return true;
     }
 
-    public bool SwitchToNextProjectile()
+    private bool AmmoUnlocked(int index)
     {
-        int nextIndex = (currentProjectileIndex + 1) % projectileTypes.Count;
-        return SwitchToProjectile(nextIndex);
+        if (index >= projectileTypes.Count || index < 0)
+            return false;
+
+        if (unlockedAmmoTypes.Contains(projectileTypes[index].ammoType))
+            return true;
+
+        return false;
+    }
+
+    public bool SwitchToNextProjectile(bool reverse = false)
+    {
+        int startIndex = currentProjectileIndex;
+        int nextIndex;
+
+        do
+        {
+            nextIndex = (currentProjectileIndex + (reverse ? -1 : 1)) % projectileTypes.Count;
+            currentProjectileIndex = nextIndex;
+
+            if (AmmoUnlocked(nextIndex))
+            {
+                SwitchToProjectile(nextIndex);
+                return true;
+            }
+        } while (nextIndex != startIndex);
+
+        return false;
     }
 
     public bool SwitchToPreviousProjectile()
     {
-        int prevIndex =
-            (currentProjectileIndex - 1 + projectileTypes.Count) % projectileTypes.Count;
-        return SwitchToProjectile(prevIndex);
+        return SwitchToNextProjectile(true);
     }
 
     public bool SwitchToWeapon(int index)
@@ -264,7 +295,14 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
 
 public enum WeaponType
 {
-    pistol,
-    shotgun,
-    sniper,
+    Pistol,
+    Shotgun,
+    Sniper,
+}
+
+public enum AmmoType
+{
+    Basic,
+    Burning,
+    Freezing,
 }

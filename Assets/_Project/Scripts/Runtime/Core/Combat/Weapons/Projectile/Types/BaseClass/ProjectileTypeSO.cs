@@ -6,6 +6,9 @@ using UnityEngine;
 /// </summary>
 public abstract class ProjectileTypeSO : ScriptableObject
 {
+    [SerializeField]
+    public AmmoType ammoType;
+
     [Header("Damage Configuration")]
     [SerializeField]
     public DamageProfile damageProfile;

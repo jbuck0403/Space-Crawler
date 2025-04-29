@@ -16,6 +16,7 @@ public class GameData
     public List<TalentTreeSaveData> allocatedTalents = new List<TalentTreeSaveData>();
 
     public List<WeaponType> unlockedWeaponTypes = new List<WeaponType>();
+    public List<AmmoType> unlockedAmmoTypes = new List<AmmoType>();
 
     // Statistics
     [Header("Game Statistics")]
