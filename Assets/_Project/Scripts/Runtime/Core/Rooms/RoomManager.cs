@@ -1,4 +1,6 @@
+// using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Profiling;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -132,6 +134,9 @@ public class RoomManager : MonoBehaviour
         );
         if (player != null)
         {
+            WeaponHandler weaponHandler = player.GetComponent<WeaponHandler>();
+            CollectibleManager.Instance.Initialize(weaponHandler);
+
             playerController = player.GetComponent<PlayerController>();
             defaultTarget = player.transform;
 
@@ -309,8 +314,28 @@ public class RoomManager : MonoBehaviour
         {
             Debug.LogError("#ROOM Could not find exit door in current room for given snap point");
         }
-        InstantiateEnemies(newRoomComponent, roomType);
+
+        if (roomType == RoomType.Treasure)
+            InstantiateTreasure(newRoomComponent, roomType);
+        else
+            InstantiateEnemies(newRoomComponent, roomType);
         Debug.Log($"#ROOM Room of type {roomPrefab.name} spawned at: {snapPoint.position}");
+    }
+
+    private void InstantiateTreasure(Room treasureRoom, RoomType roomType)
+    {
+        if (roomType != RoomType.Treasure)
+            return;
+
+        int numSpawnLocations = treasureRoom.enemySpawnLocations.Count();
+        Transform treasureTransform = null;
+
+        if (treasureRoom != null && numSpawnLocations > 0)
+        {
+            treasureTransform = treasureRoom.enemySpawnLocations[0].transform;
+        }
+
+        CollectibleManager.SpawnRandomWeapon(treasureTransform);
     }
 
     private int HowManyEnemiesToSpawn(Room roomComponent)

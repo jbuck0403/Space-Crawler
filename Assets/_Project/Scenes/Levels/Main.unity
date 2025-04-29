@@ -536,6 +536,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &859295814
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 859295816}
+  - component: {fileID: 859295815}
+  m_Layer: 0
+  m_Name: CollectibleManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &859295815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859295814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65af451838fa6d949ade042df5f48d18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponCollectVFX: {fileID: 0}
+  ammoCollectVFX: {fileID: 0}
+  talentPointCollectVFX: {fileID: 0}
+  weaponDropSO: {fileID: 11400000, guid: 5d828dd6ac6ec564da984634e074904f, type: 2}
+  ammoDropSO: {fileID: 0}
+  talentPointDropSO: {fileID: 0}
+  weaponHandler: {fileID: 0}
+--- !u!4 &859295816
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859295814}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1920, y: 1080, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1002,8 +1053,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be23646116feed0428be0cbc5b610a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioMixer: {fileID: 0}
+  mainMixerGroup: {fileID: 0}
   musicSource: {fileID: 0}
   sfxSource: {fileID: 0}
+  uiSource: {fileID: 0}
   weaponFiringSound: {fileID: 8300000, guid: 56f52a11fcbb343b48e572e0b5c65a05, type: 3}
   mainMenuBGM: {fileID: 8300000, guid: 033ac2f3711826d48b1a72c60b0d2474, type: 3}
   gameplayBGM: {fileID: 8300000, guid: 15d930af8bc2da94ba72e1fd41a33fc0, type: 3}
@@ -1572,3 +1626,4 @@ SceneRoots:
   - {fileID: 7405830}
   - {fileID: 304991767}
   - {fileID: 2140997339}
+  - {fileID: 859295816}

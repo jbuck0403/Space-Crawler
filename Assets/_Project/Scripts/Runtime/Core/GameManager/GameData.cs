@@ -15,7 +15,7 @@ public class GameData
 
     public List<TalentTreeSaveData> allocatedTalents = new List<TalentTreeSaveData>();
 
-    // public List<string> unlockedAmmoTypes = new List<string>();
+    public List<WeaponType> unlockedWeaponTypes = new List<WeaponType>();
 
     // Statistics
     [Header("Game Statistics")]
@@ -64,6 +64,7 @@ public class GameData
 
         runsCompleted = 0;
         allocatedTalents = new List<TalentTreeSaveData>();
+        unlockedWeaponTypes = new List<WeaponType>();
     }
 
     /// <summary>
@@ -131,6 +132,11 @@ public class GameData
 
     //     return false;
     // }
+
+    public void AddUnlockedWeapon(WeaponType weaponType)
+    {
+        unlockedWeaponTypes.Add(weaponType);
+    }
 
     public void DeleteSaveData(string filePath = null)
     {

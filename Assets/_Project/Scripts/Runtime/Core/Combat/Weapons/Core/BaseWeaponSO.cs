@@ -7,6 +7,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "SpaceShooter/Weapons/Base Weapon")]
 public abstract class BaseWeaponSO : ScriptableObject, IModifiable
 {
+    [SerializeField]
+    public WeaponType weaponType;
+
     [Header("Weapon Configuration")]
     [SerializeField]
     protected FireConfig fireConfig;

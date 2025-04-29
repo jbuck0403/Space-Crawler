@@ -12,10 +12,10 @@ public abstract class CollectibleDropSO : ScriptableObject
         return collectiblePrefab;
     }
 
-    public GameObject SpawnCollectible(Transform location)
+    public GameObject SpawnCollectible(Transform location, GameObject defaultVFXPrefab)
     {
         GameObject collectible = Instantiate(
-            collectiblePrefab,
+            collectiblePrefab != null ? collectiblePrefab : defaultVFXPrefab,
             location.position,
             Quaternion.identity
         );

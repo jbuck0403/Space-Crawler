@@ -24,15 +24,9 @@ public class CollectibleManager : MonoBehaviour
     [SerializeField]
     private TalentPointDropSO talentPointDropSO;
 
-    [Header("References")]
-    [SerializeField]
     private WeaponHandler weaponHandler;
 
-    // public TalentTreeHandler talentTreeHandler;
-
     public WeaponHandler WeaponHandler => weaponHandler;
-
-    // public TalentTreeHandler TalentTreeHandler => talentTreeHandler;
 
     private void Awake()
     {
@@ -45,6 +39,11 @@ public class CollectibleManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void Initialize(WeaponHandler weaponHandler)
+    {
+        this.weaponHandler = weaponHandler;
     }
 
     // Static methods for other systems to use
@@ -66,17 +65,17 @@ public class CollectibleManager : MonoBehaviour
     // Internal spawn methods
     private void SpawnWeaponCollectible(Transform location)
     {
-        weaponDropSO.SpawnCollectible(location);
+        weaponDropSO.SpawnCollectible(location, weaponCollectVFX);
     }
 
     private void SpawnAmmoCollectible(Transform location)
     {
-        ammoDropSO.SpawnCollectible(location);
+        ammoDropSO.SpawnCollectible(location, ammoCollectVFX);
     }
 
     private void SpawnTalentPointCollectible(Transform location)
     {
-        talentPointDropSO.SpawnCollectible(location);
+        talentPointDropSO.SpawnCollectible(location, talentPointCollectVFX);
     }
 
     // Collection handling methods

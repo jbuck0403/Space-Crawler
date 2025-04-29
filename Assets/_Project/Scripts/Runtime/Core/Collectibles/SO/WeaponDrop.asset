@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22adbebb0198de446ae9a2b47ad3cd3c, type: 3}
+  m_Name: WeaponDrop
+  m_EditorClassIdentifier: 
+  collectiblePrefab: {fileID: 3529096175660964215, guid: 7a87d1b68a9ba4e45a6aad133d043d82, type: 3}
+  weapons:
+  - {fileID: 11400000, guid: d45879d49c9afee4398238c7a8f9871f, type: 2}
+  - {fileID: 11400000, guid: 32ab956cac535ce45b46841a6a03c439, type: 2}

@@ -20,11 +20,14 @@ public class WeaponDropSO : CollectibleDropSO
 
         if (availableWeapons.Count == 0)
         {
+            Debug.Log("All Weapons already obtained...");
             return;
         }
 
         int randomIndex = Random.Range(0, availableWeapons.Count);
         BaseWeaponSO weaponSO = availableWeapons[randomIndex];
         CollectibleManager.Instance.WeaponHandler.InitializeWeapon(weaponSO);
+
+        GameManager.Instance.GameData.AddUnlockedWeapon(weaponSO.weaponType);
     }
 }

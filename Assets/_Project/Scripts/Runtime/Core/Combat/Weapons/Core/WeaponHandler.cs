@@ -49,11 +49,31 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
     public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> Modifiers =>
         modifiers;
 
+    private List<WeaponType> unlockedWeaponTypes = new List<WeaponType>();
+
     private void Awake()
     {
         Debug.Log($"!!!HANDLER: Event={OnNextFireTime != null}");
+        LoadUnlockedWeapons();
         InitializeWeapons();
         InitializeListeners();
+    }
+
+    private void LoadUnlockedWeapons()
+    {
+        unlockedWeaponTypes.Add(WeaponType.pistol);
+
+        GameData gameData = GameData.LoadGameData();
+        if (gameData != null)
+        {
+            foreach (WeaponType weaponType in gameData.unlockedWeaponTypes)
+            {
+                if (unlockedWeaponTypes.Contains(weaponType))
+                    return;
+
+                unlockedWeaponTypes.Add(weaponType);
+            }
+        }
     }
 
     private void InitializeListeners()
@@ -84,7 +104,8 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
             return;
 
         BaseWeaponSO instance = weapon.Initialize(this);
-        weaponInstances.Add(instance);
+        if (!weaponInstances.Contains(instance))
+            weaponInstances.Add(instance);
     }
 
     public bool CanFire()
@@ -102,7 +123,10 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
 
         foreach (var weaponDef in weaponDefinitions)
         {
-            InitializeWeapon(weaponDef);
+            if (unlockedWeaponTypes.Contains(weaponDef.weaponType))
+            {
+                InitializeWeapon(weaponDef);
+            }
         }
 
         currentWeaponIndex = Mathf.Clamp(startingWeaponIndex, 0, weaponInstances.Count - 1);
@@ -236,33 +260,11 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
     {
         return weaponInstances.Contains(baseWeaponSO);
     }
+}
 
-    // #if ENABLE_INPUT_SYSTEM
-    //     // Input System integration
-    //     public void OnFire(InputValue value)
-    //     {
-    //         if (value.isPressed)
-    //         {
-    //             StartFiring();
-    //         }
-    //         else
-    //         {
-    //             StopFiring();
-    //         }
-    //     }
-
-    //     public void OnSwitchWeapon(InputValue value)
-    //     {
-    //         float direction = value.Get<float>();
-
-    //         if (direction > 0)
-    //         {
-    //             SwitchToNextWeapon();
-    //         }
-    //         else if (direction < 0)
-    //         {
-    //             SwitchToPreviousWeapon();
-    //         }
-    //     }
-    // #endif
+public enum WeaponType
+{
+    pistol,
+    shotgun,
+    sniper,
 }

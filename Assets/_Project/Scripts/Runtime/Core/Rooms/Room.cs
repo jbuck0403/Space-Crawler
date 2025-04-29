@@ -21,7 +21,7 @@ public class Room : MonoBehaviour
 
     [Header("Enemy Spawn Locations")]
     [SerializeField]
-    Transform[] enemySpawnLocations;
+    public Transform[] enemySpawnLocations;
     public int numEnemiesToSpawn = 1;
     public int maxEnemiesToSpawn = 8;
     public int enemyPopulationIncrement = 1;
@@ -82,7 +82,7 @@ public class Room : MonoBehaviour
             }
         }
 
-        GameObject enemy = IntsantiateEnemy(enemyToAdd, spawnLocation);
+        GameObject enemy = InstantiateEnemy(enemyToAdd, spawnLocation);
         BaseEnemyController enemyController = enemy.GetComponent<BaseEnemyController>();
         if (enemyController != null)
         {
@@ -119,7 +119,7 @@ public class Room : MonoBehaviour
         return enemySpawnLocations;
     }
 
-    public GameObject IntsantiateEnemy(GameObject prefab, Transform spawnLocation)
+    public GameObject InstantiateEnemy(GameObject prefab, Transform spawnLocation)
     {
         return Instantiate(prefab, spawnLocation);
     }
