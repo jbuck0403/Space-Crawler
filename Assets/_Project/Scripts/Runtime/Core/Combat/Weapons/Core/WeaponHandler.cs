@@ -215,6 +215,9 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
         currentWeaponIndex = index;
         currentWeapon = weaponInstances[index];
 
+        // Debug the event before raising it
+        Debug.Log($"WEAPONHUD DEBUG: OnWeaponSwapped event is null? {OnWeaponSwapped == null}");
+
         OnWeaponSwapped.Raise(gameObject, currentWeapon.weaponType);
         OnWeaponSwitched.Raise(gameObject);
 
@@ -301,6 +304,29 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
     public bool HasWeapon(BaseWeaponSO baseWeaponSO)
     {
         return weaponInstances.Contains(baseWeaponSO);
+    }
+
+    // Add a public diagnostic method
+    public void DiagnoseWeaponSwappedEvent()
+    {
+        Debug.Log("========== WEAPON SWAPPED EVENT DIAGNOSIS ==========");
+        Debug.Log($"OnWeaponSwapped is null? {OnWeaponSwapped == null}");
+
+        if (OnWeaponSwapped != null)
+        {
+            // Attempt to force raise the event
+            Debug.Log("Attempting to force raise OnWeaponSwapped event...");
+            if (currentWeapon != null)
+            {
+                OnWeaponSwapped.Raise(gameObject, currentWeapon.weaponType);
+                Debug.Log($"Raised event with weapon type: {currentWeapon.weaponType}");
+            }
+            else
+            {
+                Debug.LogError("Cannot force raise event - currentWeapon is null");
+            }
+        }
+        Debug.Log("=====================================================");
     }
 }
 

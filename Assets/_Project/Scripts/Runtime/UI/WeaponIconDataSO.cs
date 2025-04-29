@@ -20,31 +20,17 @@ public class WeaponIconDataSO : ScriptableObject
 
     public Sprite GetIconForWeaponType(WeaponType weaponType)
     {
-        Debug.Log(
-            $"WEAPONHUD: GetIconForWeaponType called for {weaponType}, icons count: {weaponIcons.Count}"
-        );
-
         foreach (var mapping in weaponIcons)
         {
             if (mapping.weaponType == weaponType)
             {
                 if (mapping.iconSprite != null)
                 {
-                    Debug.Log($"WEAPONHUD: Found icon for {weaponType}");
                     return mapping.iconSprite;
-                }
-                else
-                {
-                    Debug.LogWarning(
-                        $"WEAPONHUD: Mapping found for {weaponType} but sprite is null"
-                    );
                 }
             }
         }
 
-        Debug.LogWarning(
-            $"WEAPONHUD: No icon found for weapon type {weaponType}, using default icon: {(defaultIcon != null ? "Available" : "NULL")}"
-        );
         return defaultIcon; // Return default icon instead of null
     }
 
@@ -55,9 +41,7 @@ public class WeaponIconDataSO : ScriptableObject
         {
             if (mapping.iconSprite == null)
             {
-                Debug.LogWarning(
-                    $"WEAPONHUD: No sprite assigned for weapon type {mapping.weaponType} in {name}"
-                );
+                // Missing sprite
             }
         }
 
