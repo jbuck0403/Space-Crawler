@@ -15,11 +15,10 @@ public class GameplayInitState : GameState
         Debug.Log("Entering Gameplay Initialization State");
         initializationComplete = false;
 
-        // Find or create RoomManager instance
         if (RoomManager.Instance == null)
         {
             Debug.Log("Creating RoomManager instance");
-            // Try to find an existing inactive manager first
+
             RoomManager existingManager = Object.FindObjectOfType<RoomManager>(true);
 
             if (existingManager != null)
@@ -29,7 +28,6 @@ public class GameplayInitState : GameState
             }
             else
             {
-                // Instantiate new RoomManager if none exists
                 GameObject roomManagerPrefab = gameManager.roomManagerPrefab;
                 if (roomManagerPrefab != null)
                 {
@@ -38,7 +36,6 @@ public class GameplayInitState : GameState
                 }
                 else
                 {
-                    // Create a new GameObject with RoomManager component as fallback
                     GameObject managerObj = new GameObject("RoomManager");
                     managerObj.AddComponent<RoomManager>();
                     Debug.Log("RoomManager created manually");

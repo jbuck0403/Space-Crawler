@@ -18,6 +18,9 @@ public class AudioManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         InitializeAudioSources();
+        musicSource.volume = 0.5f;
+        sfxSource.volume = 0.5f;
+        uiSource.volume = 0.5f;
     }
     #endregion
 

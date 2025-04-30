@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fd84e5b8593ba745ac9e3d0a6d5c1c5, type: 3}
   m_Name: DefaultPistol
   m_EditorClassIdentifier: 
-  fireConfig: {fileID: 11400000, guid: cf8f47ba36317ea4980d82639ffcc77c, type: 2}
+  weaponType: 0
+  fireConfig: {fileID: 11400000, guid: aa65fcbbd3b9a274f85705594959c13a, type: 2}
   projectileType: {fileID: 11400000, guid: 2ae3f0555f5cae74080e5f6308ab8d07, type: 2}
   OnFireWeapon: {fileID: 11400000, guid: 223caf201c0b288429a112fd8f959e9b, type: 2}
   damageModifier: 1

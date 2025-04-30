@@ -42,6 +42,8 @@ public class GameData
     [NonSerialized]
     public bool isNewGame = true;
 
+    private const string SAVE_KEY = "GameData";
+
     /// <summary>
     /// Reset all temporary data for a new run
     /// </summary>
@@ -66,6 +68,7 @@ public class GameData
         runsCompleted = 0;
         allocatedTalents = new List<TalentTreeSaveData>();
         unlockedWeaponTypes = new List<WeaponType>();
+        unlockedAmmoTypes = new List<AmmoType>();
     }
 
     /// <summary>
@@ -122,18 +125,6 @@ public class GameData
         allocatedTalents.Add(talentSaveData);
     }
 
-    // private bool IsDefault()
-    // {
-    //     if (totalTalentPoints == 0)
-    //         return true;
-    //     if (allocatedTalents.Count == 0)
-    //         return true;
-    //     if (runsCompleted == 0)
-    //         return true;
-
-    //     return false;
-    // }
-
     public void AddUnlockedWeapon(WeaponType weaponType)
     {
         if (unlockedWeaponTypes.Contains(weaponType))
@@ -152,6 +143,15 @@ public class GameData
 
     public void DeleteSaveData(string filePath = null)
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        DeleteSaveDataWebGL();
+#else
+        DeleteSaveDataDefault(filePath);
+#endif
+    }
+
+    private void DeleteSaveDataDefault(string filePath = null)
+    {
         if (filePath == null)
         {
             filePath = Path.Combine(Application.persistentDataPath, "gamedata.json");
@@ -160,7 +160,23 @@ public class GameData
         File.Delete(filePath);
     }
 
+    private void DeleteSaveDataWebGL()
+    {
+        PlayerPrefs.DeleteKey(SAVE_KEY);
+        PlayerPrefs.Save();
+        Debug.Log("WebGL: Deleted save data from PlayerPrefs");
+    }
+
     public void SaveGameData()
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        SaveGameDataWebGL();
+#else
+        SaveGameDataDefault();
+#endif
+    }
+
+    private void SaveGameDataDefault()
     {
         string filePath = Path.Combine(Application.persistentDataPath, "gamedata.json");
 
@@ -169,7 +185,24 @@ public class GameData
         Debug.Log($"Game data saved to: {filePath}");
     }
 
+    private void SaveGameDataWebGL()
+    {
+        string json = JsonUtility.ToJson(this);
+        PlayerPrefs.SetString(SAVE_KEY, json);
+        PlayerPrefs.Save();
+        Debug.Log("WebGL: Game data saved to PlayerPrefs");
+    }
+
     public static GameData LoadGameData()
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        return LoadGameDataWebGL();
+#else
+        return LoadGameDataDefault();
+#endif
+    }
+
+    private static GameData LoadGameDataDefault()
     {
         string filePath = Path.Combine(Application.persistentDataPath, "gamedata.json");
 
@@ -196,14 +229,52 @@ public class GameData
         }
     }
 
+    private static GameData LoadGameDataWebGL()
+    {
+        if (PlayerPrefs.HasKey(SAVE_KEY))
+        {
+            string json = PlayerPrefs.GetString(SAVE_KEY);
+            try
+            {
+                GameData loadedData = JsonUtility.FromJson<GameData>(json);
+                Debug.Log("WebGL: Game data loaded from PlayerPrefs");
+                return loadedData;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"WebGL: Error loading game data: {e.Message}");
+                return new GameData();
+            }
+        }
+        else
+        {
+            Debug.Log("WebGL: No saved game data found. Creating new game data.");
+            return new GameData();
+        }
+    }
+
     /// <summary>
     /// Checks if save data exists without loading the full file
     /// </summary>
     /// <returns>True if save data exists, false otherwise</returns>
     public static bool HasSaveData()
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        return HasSaveDataWebGL();
+#else
+        return HasSaveDataDefault();
+#endif
+    }
+
+    private static bool HasSaveDataDefault()
+    {
         string filePath = Path.Combine(Application.persistentDataPath, "gamedata.json");
         return File.Exists(filePath);
+    }
+
+    private static bool HasSaveDataWebGL()
+    {
+        return PlayerPrefs.HasKey(SAVE_KEY);
     }
 
     public void IncrementRunsCompleted()

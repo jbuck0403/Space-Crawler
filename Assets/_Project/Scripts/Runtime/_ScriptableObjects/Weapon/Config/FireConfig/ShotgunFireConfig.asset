@@ -9,12 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ba8f2198734e184da03d8c008b2b68d, type: 3}
-  m_Name: PlayerDamageProfile
+  m_Script: {fileID: 11500000, guid: cf803d711180c6444a6e973d346a5c2f, type: 3}
+  m_Name: ShotgunFireConfig
   m_EditorClassIdentifier: 
-  baseDamage: 20
-  critMultiplier: 1.5
-  critChance: 20
-  damageType: 0
-  penetratesShield: 0
-  statusEffectsToApply: []
+  fireRate: 2
+  accuracy: 0.7
+  spread: 150
+  projectileSpeed: 15

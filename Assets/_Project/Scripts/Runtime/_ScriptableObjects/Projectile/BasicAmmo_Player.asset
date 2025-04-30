@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 402f29634647c184a8184b4a7c43aeec, type: 3}
-  m_Name: PlayerBasicProjectile
+  m_Name: BasicAmmo_Player
   m_EditorClassIdentifier: 
   damageProfile: {fileID: 11400000, guid: dd031c7fc87e285409574368d7eea2aa, type: 2}
   projectileVFXPrefabs:

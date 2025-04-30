@@ -93,11 +93,11 @@ public class PlayerController
 
     private bool HandleWeaponSwap()
     {
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             return weaponHandler.SwitchToPreviousWeapon();
         }
-        else if (Input.GetKeyDown(KeyCode.F))
+        else if (Input.GetKeyDown(KeyCode.E))
         {
             return weaponHandler.SwitchToNextWeapon();
         }
@@ -107,11 +107,11 @@ public class PlayerController
 
     private bool HandleProjectileSwap()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.R))
         {
             return weaponHandler.SwitchToPreviousProjectile();
         }
-        else if (Input.GetKeyDown(KeyCode.E))
+        else if (Input.GetKeyDown(KeyCode.F))
         {
             return weaponHandler.SwitchToNextProjectile();
         }

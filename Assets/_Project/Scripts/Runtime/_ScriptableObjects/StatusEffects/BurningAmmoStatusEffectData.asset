@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: BurningAmmoStatusEffectData
   m_EditorClassIdentifier: 
   effectType: 0
-  duration: 2
+  duration: 5
   tickRate: 1
   isStackable: 1
   maxStacks: 5
   description: 
   icon: {fileID: 21300000, guid: 0599866e4a8a9f34ea2d3419d36973ed, type: 3}
-  baseDamage: 1
+  baseDamage: 2
   critMultiplier: 1.5
-  critChance: 0.1
+  critChance: 0.5
   damageType: 2
