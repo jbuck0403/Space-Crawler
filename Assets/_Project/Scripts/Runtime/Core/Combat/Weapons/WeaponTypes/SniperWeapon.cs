@@ -80,15 +80,13 @@ public class SniperWeapon : BaseWeaponSO
 
     public override void NotifyWeaponStoppedFiring()
     {
-        if (isCharging && weaponHandler != null)
+        if (isCharging && weaponHandler != null && CanFire())
         {
             Debug.Log($"SNIPER: FIRED with charge {chargePercent * 100:0}%");
 
-            // Store original modifiers
             float originalDamageModifier = damageModifier;
             float originalVelocityModifier = velocityModifier;
 
-            // Apply charge-based modifiers
             damageModifier *= chargePercent;
             velocityModifier *= chargePercent;
 
@@ -96,7 +94,6 @@ public class SniperWeapon : BaseWeaponSO
                 $"SNIPER: Damage multiplier: {damageModifier:0.00}x, Velocity multiplier: {velocityModifier:0.00}x"
             );
 
-            // Fire the projectile with modified damage/velocity
             Transform firePoint = weaponHandler.FirePoint;
             Vector2 direction = weaponHandler.transform.up;
             Transform source = weaponHandler.transform;
@@ -106,14 +103,11 @@ public class SniperWeapon : BaseWeaponSO
             if (fired)
                 weaponHandler.RaiseOnFireWeaponEvent();
 
-            // Restore original modifiers
             damageModifier = originalDamageModifier;
             velocityModifier = originalVelocityModifier;
 
-            // Set cooldown
             UpdateNextFireTime(sourceObject);
 
-            // Reset charging state
             isCharging = false;
         }
     }

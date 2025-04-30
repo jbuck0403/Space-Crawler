@@ -1,5 +1,40 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1439559090822935635
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2108813979399491050}
+  m_Layer: 5
+  m_Name: AmmoIcons
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2108813979399491050
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439559090822935635}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2419496908593371070}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -725}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3384131505331422328
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,6 +325,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6429564816857543531}
     m_Modifications:
+    - target: {fileID: 1861396075300449551, guid: 5668c6ff7ff139f4bae86df757575362, type: 3}
+      propertyPath: ammoIconData
+      value: 
+      objectReference: {fileID: 11400000, guid: 871396970128ccd48a573de2b36fa0b4, type: 2}
+    - target: {fileID: 1861396075300449551, guid: 5668c6ff7ff139f4bae86df757575362, type: 3}
+      propertyPath: ammoIconPrefab
+      value: 
+      objectReference: {fileID: 1651929262205138566, guid: 26f51b7d28ddda2479dd55f2e22f0cdc, type: 3}
+    - target: {fileID: 1861396075300449551, guid: 5668c6ff7ff139f4bae86df757575362, type: 3}
+      propertyPath: ammoIconContainer
+      value: 
+      objectReference: {fileID: 2108813979399491050}
+    - target: {fileID: 1861396075300449551, guid: 5668c6ff7ff139f4bae86df757575362, type: 3}
+      propertyPath: weaponIconContainer
+      value: 
+      objectReference: {fileID: 7359734566245287082}
     - target: {fileID: 6032273722456981278, guid: 5668c6ff7ff139f4bae86df757575362, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -380,11 +431,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 6032273722456981278, guid: 5668c6ff7ff139f4bae86df757575362, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2108813979399491050}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5668c6ff7ff139f4bae86df757575362, type: 3}
 --- !u!224 &2419496908593371070 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6032273722456981278, guid: 5668c6ff7ff139f4bae86df757575362, type: 3}
+  m_PrefabInstance: {fileID: 8225041196916254880}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &7359734566245287082 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1442894588889230346, guid: 5668c6ff7ff139f4bae86df757575362, type: 3}
   m_PrefabInstance: {fileID: 8225041196916254880}
   m_PrefabAsset: {fileID: 0}

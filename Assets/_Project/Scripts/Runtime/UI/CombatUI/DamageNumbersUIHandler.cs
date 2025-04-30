@@ -57,6 +57,8 @@ public class DamageNumbersUIHandler : MonoBehaviour
     private Camera mainCamera;
     private bool shouldMoveRight = true; // Toggle for alternating X direction
 
+    private List<GameObject> damageNumbers = new List<GameObject>();
+
     private void Awake()
     {
         if (canvasTransform == null)
@@ -86,31 +88,29 @@ public class DamageNumbersUIHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        // Subscribe to events
         OnDamageTaken.AddListener(gameObject, (data) => HandleDamageEvent(gameObject, data));
         OnHealingReceived.AddListener(gameObject, (data) => HandleHealingEvent(gameObject, data));
     }
 
     private void OnDisable()
     {
-        // Unsubscribe from events
         OnDamageTaken.RemoveListener(gameObject, (data) => HandleDamageEvent(gameObject, data));
         OnHealingReceived.RemoveListener(
             gameObject,
             (data) => HandleHealingEvent(gameObject, data)
         );
+
+        DestroyAllDamageNumbers();
     }
 
     private void HandleDamageEvent(GameObject target, DamageTakenEventData data)
     {
-        // Use red color for damage
         Color damageColor = GetColorByDamageType(data.DamageType);
         SpawnDamageNumber(target.transform.position, data.DamageAmount, damageColor, true);
     }
 
     private void HandleHealingEvent(GameObject target, float amount)
     {
-        // Use green color for healing
         Color healColor = Color.green;
         SpawnDamageNumber(target.transform.position, amount, healColor, false);
     }
@@ -137,6 +137,11 @@ public class DamageNumbersUIHandler : MonoBehaviour
             canvasTransform
         );
 
+        if (damageTextObj != null)
+        {
+            damageNumbers.Add(damageTextObj);
+        }
+
         DamageNumberUI damageNumber = damageTextObj.GetComponent<DamageNumberUI>();
         damageNumber.Initialize(
             isDamage ? $"{Mathf.Round(amount)}" : $"+{Mathf.Round(amount)}",
@@ -150,6 +155,17 @@ public class DamageNumbersUIHandler : MonoBehaviour
 
         // Toggle the direction for the next damage number
         shouldMoveRight = !shouldMoveRight;
+    }
+
+    private void DestroyAllDamageNumbers()
+    {
+        foreach (GameObject damageNumber in damageNumbers)
+        {
+            if (damageNumber != null)
+                Destroy(damageNumber);
+        }
+
+        damageNumbers.Clear();
     }
 }
 

@@ -29,7 +29,7 @@ public class StatusEffectUIHandler : MonoBehaviour
     private GameObject targetEntity;
 
     [SerializeField]
-    private Vector2Event onDeath; // should match onDeath SO in HealthSystem
+    private Vector2Event onDeath;
 
     [Tooltip("The spacing between status effect icons")]
     [SerializeField]
@@ -46,6 +46,7 @@ public class StatusEffectUIHandler : MonoBehaviour
     public void Initialize(GameObject targetEntity)
     {
         this.targetEntity = targetEntity;
+        ClearAllStatusEffects();
         SubscribeToListeners();
     }
 
