@@ -280,8 +280,48 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3959210740190861292}
     - target: {fileID: 7026595522505316636, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+      propertyPath: entranceDoor.door
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7026595522505316636, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+      propertyPath: maxEnemiesToSpawn
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7026595522505316636, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
       propertyPath: numEnemiesToSpawn
-      value: 2
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7026595522505316636, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+      propertyPath: entranceDoor.doorObject
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7026595522505316636, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+      propertyPath: enemyPopulationIncrement
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7026595522505316636, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+      propertyPath: enemySpawnLocations.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7026595522505316636, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+      propertyPath: enemySpawnLocations.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7026595522505316636, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+      propertyPath: enemySpawnLocations.Array.data[2]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7026595522505316636, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+      propertyPath: enemySpawnLocations.Array.data[3]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7026595522505316636, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+      propertyPath: enemySpawnLocations.Array.data[4]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7026595522505316636, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+      propertyPath: enemySpawnLocations.Array.data[5]
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8747739792224331403, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
       propertyPath: m_LocalPosition.y
@@ -290,6 +330,12 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 76548396224530756, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+    - {fileID: 3903055116525921554, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+    - {fileID: 1217532020546551333, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+    - {fileID: 3698809505010019063, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+    - {fileID: 209231699161990410, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+    - {fileID: 263693210248633433, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
+    - {fileID: 1910469143302776458, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2187286797349649066, guid: 4090faf8c72f76a439b27026053b0798, type: 3}
       insertIndex: -1

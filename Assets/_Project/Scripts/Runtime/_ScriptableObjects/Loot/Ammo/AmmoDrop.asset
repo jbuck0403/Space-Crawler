@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5876445e6d9ef244d8ef76e70c8374af, type: 3}
   m_Name: AmmoDrop
   m_EditorClassIdentifier: 
-  collectiblePrefab: {fileID: 0}
-  ammoAvailableForUnlock: []
+  collectiblePrefab: {fileID: 3529096175660964215, guid: 4f3d9403b0f6d984ea510509a6858f18, type: 3}
+  ammoAvailableForUnlock:
+  - {fileID: 11400000, guid: 8b140c9e724fe554ea09c3db1d60cbf6, type: 2}
+  - {fileID: 11400000, guid: 7578cf29b67d5194bb75a343c0293e27, type: 2}

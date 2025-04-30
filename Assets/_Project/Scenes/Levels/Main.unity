@@ -191,6 +191,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 047eba8e26760804e9dc72d1177df9d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &216121085 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7359734566245287082, guid: f1dba160eec7b8f4a9ccfe003e0fa7d1, type: 3}
+  m_PrefabInstance: {fileID: 1193269393}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &235037049 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4651539027038995465, guid: f1dba160eec7b8f4a9ccfe003e0fa7d1, type: 3}
@@ -334,6 +339,41 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8207864540026373974, guid: f1dba160eec7b8f4a9ccfe003e0fa7d1, type: 3}
   m_PrefabInstance: {fileID: 1193269393}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &546877094
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 546877095}
+  m_Layer: 5
+  m_Name: AmmoIcons
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &546877095
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 546877094}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1947956402}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -725}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &560371975 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7352615620465398287, guid: e8d7ca8dcaba15d4dadcfc2b8e3f8403, type: 3}
@@ -570,7 +610,7 @@ MonoBehaviour:
   ammoCollectVFX: {fileID: 0}
   talentPointCollectVFX: {fileID: 0}
   weaponDropSO: {fileID: 11400000, guid: 5d828dd6ac6ec564da984634e074904f, type: 2}
-  ammoDropSO: {fileID: 0}
+  ammoDropSO: {fileID: 11400000, guid: 6745b3ce5b2ea994096e27145d6d1fec, type: 2}
   talentPointDropSO: {fileID: 0}
 --- !u!4 &859295816
 Transform:
@@ -818,12 +858,35 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7777776744994653615, guid: f1dba160eec7b8f4a9ccfe003e0fa7d1, type: 3}
+      propertyPath: AmmoIconData
+      value: 
+      objectReference: {fileID: 11400000, guid: 871396970128ccd48a573de2b36fa0b4, type: 2}
+    - target: {fileID: 7777776744994653615, guid: f1dba160eec7b8f4a9ccfe003e0fa7d1, type: 3}
+      propertyPath: ammoIconData
+      value: 
+      objectReference: {fileID: 11400000, guid: 871396970128ccd48a573de2b36fa0b4, type: 2}
+    - target: {fileID: 7777776744994653615, guid: f1dba160eec7b8f4a9ccfe003e0fa7d1, type: 3}
+      propertyPath: ammoIconPrefab
+      value: 
+      objectReference: {fileID: 1651929262205138566, guid: 26f51b7d28ddda2479dd55f2e22f0cdc, type: 3}
+    - target: {fileID: 7777776744994653615, guid: f1dba160eec7b8f4a9ccfe003e0fa7d1, type: 3}
+      propertyPath: ammoIconContainer
+      value: 
+      objectReference: {fileID: 546877095}
+    - target: {fileID: 7777776744994653615, guid: f1dba160eec7b8f4a9ccfe003e0fa7d1, type: 3}
       propertyPath: spacingBetweenIcons
       value: 300
       objectReference: {fileID: 0}
+    - target: {fileID: 7777776744994653615, guid: f1dba160eec7b8f4a9ccfe003e0fa7d1, type: 3}
+      propertyPath: weaponIconContainer
+      value: 
+      objectReference: {fileID: 216121085}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 2419496908593371070, guid: f1dba160eec7b8f4a9ccfe003e0fa7d1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 546877095}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f1dba160eec7b8f4a9ccfe003e0fa7d1, type: 3}
 --- !u!1 &1416168892
@@ -1031,6 +1094,11 @@ MonoBehaviour:
   talentTreeUIManager: {fileID: 560371975}
   pointsAwardedOnSuccess: 2
   playerDied: 0
+--- !u!224 &1947956402 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2419496908593371070, guid: f1dba160eec7b8f4a9ccfe003e0fa7d1, type: 3}
+  m_PrefabInstance: {fileID: 1193269393}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2019037370 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1215485473631153077, guid: 41eb62ac6fefd7742bdb7f9f7b2e0134, type: 3}

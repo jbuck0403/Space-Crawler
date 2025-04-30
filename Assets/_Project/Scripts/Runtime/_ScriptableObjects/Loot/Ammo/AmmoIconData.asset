@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88eeef2b2eb927845ba87702b9b8843d, type: 3}
   m_Name: AmmoIconData
   m_EditorClassIdentifier: 
-  ammoIcons: []
+  ammoIcons:
+  - ammoType: 0
+    iconSprite: {fileID: 21300000, guid: 9601abcfff69e254cb9fc4665bed9dc8, type: 3}
+  - ammoType: 2
+    iconSprite: {fileID: 21300000, guid: 0a1df881558cebf4991ff495dfb13fe8, type: 3}
+  - ammoType: 1
+    iconSprite: {fileID: 21300000, guid: c2541016858bb6f429ef6083f5f95395, type: 3}
