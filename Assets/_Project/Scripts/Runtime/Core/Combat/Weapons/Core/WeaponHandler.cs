@@ -46,6 +46,9 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
     public WeaponTypeEvent OnWeaponSwapped;
     public WeaponTypeEvent OnWeaponInitialized;
 
+    public AmmoTypeEvent OnAmmoSwapped;
+    public AmmoTypeEvent OnAmmoInitialized;
+
     public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> modifiers =
         new Dictionary<ModifierType, List<(object Source, Delegate Modifier)>>();
     public Dictionary<ModifierType, List<(object Source, Delegate Modifier)>> Modifiers =>
@@ -55,15 +58,19 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
     private List<WeaponType> unlockedWeaponTypes = new List<WeaponType>();
     private List<AmmoType> unlockedAmmoTypes = new List<AmmoType>();
 
+    // Track which ammo type each weapon is using
+    private Dictionary<WeaponType, AmmoType> weaponAmmoSelections =
+        new Dictionary<WeaponType, AmmoType>();
+
     private void Awake()
     {
         Debug.Log($"!!!HANDLER: Event={OnNextFireTime != null}");
-        LoadUnlockedWeaponsAndAmmo();
+        LoadWeaponsAndAmmo();
         InitializeWeapons();
         InitializeListeners();
     }
 
-    private void LoadUnlockedWeaponsAndAmmo()
+    private void LoadWeaponsAndAmmo()
     {
         unlockedWeaponTypes.Add(WeaponType.Pistol);
         unlockedAmmoTypes.Add(AmmoType.Basic);
@@ -71,16 +78,26 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
         GameData gameData = GameData.LoadGameData();
         if (gameData != null)
         {
-            foreach (WeaponType weaponType in gameData.unlockedWeaponTypes)
-            {
-                if (!unlockedWeaponTypes.Contains(weaponType))
-                    unlockedWeaponTypes.Add(weaponType);
-            }
-            foreach (AmmoType ammoType in gameData.unlockedAmmoTypes)
-            {
-                if (!unlockedAmmoTypes.Contains(ammoType))
-                    unlockedAmmoTypes.Add(ammoType);
-            }
+            UnlockLoadedWeapons(gameData);
+            UnlockLoadedAmmo(gameData);
+        }
+    }
+
+    private void UnlockLoadedWeapons(GameData gameData)
+    {
+        foreach (WeaponType weaponType in gameData.unlockedWeaponTypes)
+        {
+            if (!unlockedWeaponTypes.Contains(weaponType))
+                unlockedWeaponTypes.Add(weaponType);
+        }
+    }
+
+    private void UnlockLoadedAmmo(GameData gameData)
+    {
+        foreach (AmmoType ammoType in gameData.unlockedAmmoTypes)
+        {
+            if (!unlockedAmmoTypes.Contains(ammoType))
+                unlockedAmmoTypes.Add(ammoType);
         }
     }
 
@@ -119,6 +136,17 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
         OnWeaponInitialized.Raise(gameObject, instance.weaponType);
     }
 
+    public void InitializeAmmo(AmmoType ammoType)
+    {
+        if (unlockedAmmoTypes.Contains(ammoType))
+            return;
+        else
+        {
+            unlockedAmmoTypes.Add(ammoType);
+            OnAmmoInitialized.Raise(gameObject, ammoType);
+        }
+    }
+
     public bool CanFire()
     {
         if (currentWeapon != null)
@@ -149,25 +177,29 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
 
     public bool SwitchToProjectile(int index)
     {
-        if (index < 0)
+        if (index < 0 || index >= projectileTypes.Count)
         {
             return false;
         }
 
+        AmmoType ammoType = projectileTypes[index].ammoType;
+        if (!HasAmmo(ammoType))
+        {
+            return false;
+        }
+
+        currentProjectileIndex = index;
         currentWeapon.SetProjectileType(projectileTypes[index]);
 
+        // Track which ammo this weapon is using
+        if (currentWeapon != null)
+        {
+            weaponAmmoSelections[currentWeapon.weaponType] = ammoType;
+            // Notify UI that ammo has changed
+            OnAmmoSwapped.Raise(gameObject, ammoType);
+        }
+
         return true;
-    }
-
-    private bool AmmoUnlocked(int index)
-    {
-        if (index >= projectileTypes.Count || index < 0)
-            return false;
-
-        if (unlockedAmmoTypes.Contains(projectileTypes[index].ammoType))
-            return true;
-
-        return false;
     }
 
     public bool SwitchToNextProjectile(bool reverse = false)
@@ -200,9 +232,6 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
 
     public bool SwitchToWeapon(int index)
     {
-        if (index < weaponInstances.Count)
-            print($"Swapping to {weaponInstances[index].name}");
-
         if (index < 0 || index >= weaponInstances.Count)
         {
             Debug.LogWarning($"Invalid weapon index: {index}");
@@ -214,6 +243,10 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
 
         OnWeaponSwapped.Raise(gameObject, currentWeapon.weaponType);
         OnWeaponSwitched.Raise(gameObject);
+
+        // Also raise the ammo swapped event with the current weapon's ammo
+        AmmoType currentAmmoType = GetCurrentAmmoType();
+        OnAmmoSwapped.Raise(gameObject, currentAmmoType);
 
         return true;
     }
@@ -301,6 +334,36 @@ public class WeaponHandler : MonoBehaviour, IProjectileDataProvider, IModifiable
                 return true;
         }
         return false;
+    }
+
+    public bool HasAmmo(AmmoType ammoType)
+    {
+        return unlockedAmmoTypes.Contains(ammoType);
+    }
+
+    private bool AmmoUnlocked(int index)
+    {
+        if (index >= projectileTypes.Count || index < 0)
+            return false;
+
+        return HasAmmo(projectileTypes[index].ammoType);
+    }
+
+    // Get the current ammo type for the active weapon
+    public AmmoType GetCurrentAmmoType()
+    {
+        if (currentWeapon == null)
+        {
+            return AmmoType.Basic; // Default
+        }
+
+        // Get the saved ammo type for this weapon, or default to Basic
+        if (weaponAmmoSelections.TryGetValue(currentWeapon.weaponType, out AmmoType ammoType))
+        {
+            return ammoType;
+        }
+
+        return AmmoType.Basic;
     }
 }
 

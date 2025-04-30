@@ -313,6 +313,9 @@ MonoBehaviour:
   OnFireWeapon: {fileID: 11400000, guid: 223caf201c0b288429a112fd8f959e9b, type: 2}
   OnWeaponSwapped: {fileID: 11400000, guid: 390856855c8bef347ac2fad44c1cbc62, type: 2}
   OnWeaponInitialized: {fileID: 11400000, guid: b90ba02aec9a5f44dbffe89efb467844, type: 2}
+  OnAmmoSwapped: {fileID: 11400000, guid: 7dbee74097e067646921219cb849e479, type: 2}
+  OnAmmoInitialized: {fileID: 11400000, guid: adc700b624787a14c88d8b98bd5cd7eb, type: 2}
+  unlockedWeaponTypes: 
 --- !u!114 &-1961733163375840337
 MonoBehaviour:
   m_ObjectHideFlags: 0

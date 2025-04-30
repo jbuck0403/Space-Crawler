@@ -1,10 +1,6 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-/// <summary>
-/// Manages UI panels and transitions between different UI states
-/// </summary>
 public class UIManager : MonoBehaviour
 {
     #region Singleton
@@ -12,7 +8,6 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        // Singleton pattern implementation
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -71,15 +66,12 @@ public class UIManager : MonoBehaviour
 
     public TalentTreeUIManager TalentTreeUIManager => talentTreeUIManager;
 
-    // Dictionary to store all panels for easier access
     private Dictionary<PanelType, GameObject> panels = new Dictionary<PanelType, GameObject>();
 
-    // Current active panel
     private PanelType currentPanel = PanelType.None;
 
     public bool playerHUDInitialized = false;
 
-    // Panel types enum
     public enum PanelType
     {
         None,
