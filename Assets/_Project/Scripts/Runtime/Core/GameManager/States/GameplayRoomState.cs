@@ -31,8 +31,8 @@ public class GameplayRoomState : GameState
     private bool enemiesCleared = false;
     private bool roomsSpawned = false;
 
-    // We'll need this flag to track if we've handled this completion already
     private bool roomCompletionHandled = false;
+    private bool playerDied = false;
 
     private void InitState()
     {
@@ -80,22 +80,13 @@ public class GameplayRoomState : GameState
 
     public override void UpdateState()
     {
-        // Check for player death
-        // if (CheckForPlayerDeath())
-        // {
-        //     HandlePlayerDeath();
-        //     return;
-        // }
-
-        // Skip if RoomManager isn't ready
         if (roomManager == null)
             return;
 
         Debug.Log($"#ROOM BOSSDEFEATED: {bossDefeated}");
-        // Update game stats if room was just completed
+
         if (roomManager.IsRoomCompleted && !roomCompletionHandled)
         {
-            // Update game data/stats
             gameManager.GameData.currentRunRoomsCleared++;
 
             roomCompletionHandled = true;
@@ -130,13 +121,10 @@ public class GameplayRoomState : GameState
 
     public override void HandleInput()
     {
-        // Check for pause button press
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             gameManager.TogglePause();
         }
-
-        // All other gameplay input handled by the player controller
     }
 
     private void InitReferences()
@@ -161,28 +149,27 @@ public class GameplayRoomState : GameState
 
     private void HandlePlayerDeath(Vector2 position)
     {
-        Debug.Log("Player has died - ending run");
-
-        // Add extra debugging
-        Debug.LogWarning("!!@ PLAYER DEATH DETECTED - About to call CompleteRun(false)");
-
-        // Complete run with failure
-        gameManager.CompleteRun(false);
-
-        // Check if state changed successfully
-        Debug.LogWarning(
-            $"!!@ After CompleteRun call - Current state is: {gameManager.CurrentStateType}"
-        );
+        playerDied = true;
+        TryCompleteRun();
+        // gameManager.CompleteRun(false);
     }
 
     private void HandleBossDefeated()
     {
-        Debug.Log("Boss defeated - successful run!");
-        // GameManager.Instance.IncreaseTalentPoints();
-        // GameManager.Instance.GameData.SaveRunRewards();
+        // gameManager.CompleteRun(true);
+        TryCompleteRun();
+    }
 
-        // Complete run with success
-        gameManager.CompleteRun(true);
+    private void TryCompleteRun()
+    {
+        if (bossDefeated)
+        {
+            gameManager.CompleteRun(true);
+        }
+        else if (playerDied)
+        {
+            gameManager.CompleteRun(false);
+        }
     }
 
     public void HandleEnemyDefeated(BaseEnemyController enemy)

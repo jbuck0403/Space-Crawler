@@ -49,7 +49,7 @@ MonoBehaviour:
   treasureRoomPrefab: {fileID: 1060505485327265152, guid: 8561d372ad75cc84da69baeed262f54d, type: 3}
   bossRoomPrefab: {fileID: 1971521178485243517, guid: 311a48edcf2c7884f80eebf3051bf6e8, type: 3}
   eliteRoomChance: 0.5
-  treasureRoomChance: 0.3
+  treasureRoomChance: 1
   baseRoomsBeforeBoss: 1
   playerPrefab: {fileID: 8065591907391604513, guid: 460338ceeaba0fb4ca9d6afedfe14186, type: 3}
   defaultTarget: {fileID: 0}
